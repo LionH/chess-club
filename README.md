@@ -1,5 +1,5 @@
-[travis-image]: https://travis-ci.org/ChessCorp/chess-club.svg?branch=master
-[travis-url]: https://travis-ci.org/ChessCorp/chess-club
+#  [![Build Status][travis-image]][travis-url]
+
 
 > Chess Server that will provide restful APIs and a complete Web UI.
 
