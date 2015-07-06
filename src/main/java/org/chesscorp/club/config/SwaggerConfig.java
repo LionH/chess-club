@@ -21,6 +21,7 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.UiConfiguration;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.List;
 
@@ -28,7 +29,11 @@ import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 @Configuration
+@EnableSwagger2
 public class SwaggerConfig {
+
+    @Autowired
+    private TypeResolver typeResolver;
 
     @Bean
     public Docket petApi() {
@@ -57,9 +62,6 @@ public class SwaggerConfig {
                 ;
     }
 
-    @Autowired
-    private TypeResolver typeResolver;
-
     private ApiKey apiKey() {
         return new ApiKey("mykey", "api_key", "header");
     }
@@ -71,7 +73,7 @@ public class SwaggerConfig {
                 .build();
     }
 
-    List<SecurityReference> defaultAuth() {
+    private List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope
                 = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
@@ -81,7 +83,7 @@ public class SwaggerConfig {
     }
 
     @Bean
-    SecurityConfiguration security() {
+    public SecurityConfiguration security() {
         return new SecurityConfiguration(
                 "test-app-client-id",
                 "test-app-realm",
@@ -90,7 +92,7 @@ public class SwaggerConfig {
     }
 
     @Bean
-    UiConfiguration uiConfig() {
+    public UiConfiguration uiConfig() {
         return new UiConfiguration(
                 "validatorUrl");
     }
