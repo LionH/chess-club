@@ -1,5 +1,8 @@
 package org.chesscorp.club.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Objects;
 
 /**
@@ -7,10 +10,16 @@ import java.util.Objects;
  *
  * @author Yannick Kirschhoffer <alcibiade@alcibiade.org>
  */
+@Entity
 public class Player {
 
+    @Id
     private String id;
+    @Column
     private String fullName;
+
+    public Player() {
+    }
 
     public Player(String id, String fullName) {
         this.id = id;

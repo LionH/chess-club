@@ -1,5 +1,6 @@
 package org.chesscorp.club.model;
 
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -9,6 +10,7 @@ import java.util.Objects;
  *
  * @author Yannick Kirschhoffer <alcibiade@alcibiade.org>
  */
+@Entity
 public class ChessGame {
 
     /**
@@ -16,14 +18,22 @@ public class ChessGame {
      */
     public enum Status {
 
-        OPEN, PAT, WHITEWON, BLACKWON;
-    };
+        OPEN, PAT, WHITEWON, BLACKWON
+    }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
+    @ManyToOne
     private Player whitePlayer;
+    @ManyToOne
     private Player blackPlayer;
+    @ElementCollection(targetClass = String.class)
     private List<String> moves;
     private Status status;
+
+    public ChessGame() {
+    }
 
     public ChessGame(String id, Player whitePlayer, Player blackPlayer, List<String> moves, Status status) {
         this.id = id;
