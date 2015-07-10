@@ -1,12 +1,26 @@
 package org.chesscorp.club.service;
 
+import org.chesscorp.club.model.ChessGame;
+import org.chesscorp.club.model.Player;
+import org.chesscorp.club.persistence.ChessGameRepository;
+import org.chesscorp.club.persistence.PlayerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 @Component
 public class ChessGameServiceImpl implements ChessGameService {
-    @PersistenceContext
-    private EntityManager em;
+
+    @Autowired
+    private ChessGameRepository chessGameRepository;
+    @Autowired
+    private PlayerRepository playerRepository;
+
+
+    @Override
+    public ChessGame createGame(String whitePlayer, String blackPlayer) {
+        Player white = playerRepository.getOne(whitePlayer);
+        Player black = playerRepository.getOne(blackPlayer);
+        ChessGame game = new ChessGame(white, black);
+        return chessGameRepository.save(game);
+    }
 }

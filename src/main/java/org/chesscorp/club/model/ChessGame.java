@@ -1,9 +1,7 @@
 package org.chesscorp.club.model;
 
 import javax.persistence.*;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Chess game data model.
@@ -28,19 +26,24 @@ public class ChessGame {
     private Player whitePlayer;
     @ManyToOne
     private Player blackPlayer;
-    @ElementCollection(targetClass = String.class)
-    private List<String> moves;
+    @ElementCollection(targetClass = ChessMove.class)
+    private List<ChessMove> moves;
+    private Date startDate;
     private Status status;
 
     public ChessGame() {
     }
 
-    public ChessGame(String id, Player whitePlayer, Player blackPlayer, List<String> moves, Status status) {
-        this.id = id;
+    public ChessGame(Player whitePlayer, Player blackPlayer) {
+        this(whitePlayer, blackPlayer, new ArrayList<>(), Status.OPEN, new Date());
+    }
+
+    public ChessGame(Player whitePlayer, Player blackPlayer, List<ChessMove> moves, Status status, Date startDate) {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
         this.moves = moves;
         this.status = status;
+        this.startDate = startDate;
     }
 
     public String getId() {
@@ -55,12 +58,16 @@ public class ChessGame {
         return blackPlayer;
     }
 
-    public List<String> getMoves() {
+    public List<ChessMove> getMoves() {
         return Collections.unmodifiableList(moves);
     }
 
     public Status getStatus() {
         return status;
+    }
+
+    public Date getStartDate() {
+        return startDate;
     }
 
     @Override
