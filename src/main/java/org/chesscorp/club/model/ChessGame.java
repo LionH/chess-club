@@ -86,10 +86,18 @@ public class ChessGame {
             return false;
         }
         final ChessGame other = (ChessGame) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.id, other.id);
     }
 
+    @Override
+    public String toString() {
+        return "ChessGame{" +
+                "id='" + id + '\'' +
+                ", whitePlayer=" + whitePlayer +
+                ", blackPlayer=" + blackPlayer +
+                ", moves=" + moves +
+                ", startDate=" + startDate +
+                ", status=" + status +
+                '}';
+    }
 }
