@@ -23,4 +23,9 @@ public class ChessGameServiceImpl implements ChessGameService {
         ChessGame game = new ChessGame(white, black);
         return chessGameRepository.save(game);
     }
+
+    @Override
+    public ChessGame getGame(String id) {
+        return chessGameRepository.getOne(id);
+    }
 }

@@ -87,7 +87,7 @@ public class SwaggerConfig {
     @Bean
     public SecurityConfiguration security() {
         return new SecurityConfiguration(
-                "test-app-client-id",
+                "test-app-client-gameId",
                 "test-app-realm",
                 "test-app",
                 "apiKey");
