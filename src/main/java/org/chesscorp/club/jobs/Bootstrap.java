@@ -16,9 +16,11 @@ public class Bootstrap {
 
     @PostConstruct
     public void populate() {
-        playerRepository.save(new Player("alcibiade", "Alcibiade"));
-        playerRepository.save(new Player("john", "John"));
-        playerRepository.save(new Player("bob", "Bob"));
-        playerRepository.save(new Player("steve", "Steve"));
+        if (playerRepository.count() == 0) {
+            playerRepository.save(new Player("alcibiade", "Alcibiade"));
+            playerRepository.save(new Player("john", "John"));
+            playerRepository.save(new Player("bob", "Bob"));
+            playerRepository.save(new Player("steve", "Steve"));
+        }
     }
 }
