@@ -1,5 +1,7 @@
 package org.chesscorp.club.model;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,6 +13,7 @@ import java.util.Objects;
  * @author Yannick Kirschhoffer <alcibiade@alcibiade.org>
  */
 @Entity
+@Proxy(lazy = false)
 public class Player {
 
     @Id
@@ -50,10 +53,7 @@ public class Player {
             return false;
         }
         final Player other = (Player) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.id, other.id);
     }
 
 }

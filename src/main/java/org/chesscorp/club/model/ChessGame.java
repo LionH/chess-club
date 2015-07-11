@@ -1,5 +1,7 @@
 package org.chesscorp.club.model;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -9,6 +11,7 @@ import java.util.*;
  * @author Yannick Kirschhoffer <alcibiade@alcibiade.org>
  */
 @Entity
+@Proxy(lazy = false)
 public class ChessGame {
 
     /**

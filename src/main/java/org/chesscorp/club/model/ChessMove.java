@@ -1,5 +1,7 @@
 package org.chesscorp.club.model;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +14,7 @@ import java.util.Date;
  * @author Yannick Kirschhoffer <alcibiade@alcibiade.org>
  */
 @Entity
+@Proxy(lazy = false)
 public class ChessMove {
 
     @Id
@@ -41,10 +44,7 @@ public class ChessMove {
 
         ChessMove chessMove = (ChessMove) o;
 
-        if (!id.equals(chessMove.id)) return false;
-        if (!pgn.equals(chessMove.pgn)) return false;
-        return date.equals(chessMove.date);
-
+        return id.equals(chessMove.id) && pgn.equals(chessMove.pgn) && date.equals(chessMove.date);
     }
 
     @Override
