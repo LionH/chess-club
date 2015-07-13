@@ -41,4 +41,14 @@ public class ChessGameServiceTest {
         Assertions.assertThat(game.getStartDate()).isInThePast();
     }
 
+    @Test(expected = IllegalStateException.class)
+    @Transactional
+    public void testRefuseSamePlayer() {
+        Player p1 = new Player("yannick", "Alcibiade");
+        Player p2 = new Player("anatoli", "Chessmaster");
+        playerService.register(p1);
+        playerService.register(p2);
+
+        ChessGame game = chessGameService.createGame(p1.getId(), p1.getId());
+    }
 }

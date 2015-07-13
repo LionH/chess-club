@@ -20,6 +20,11 @@ public class ChessGameServiceImpl implements ChessGameService {
     public ChessGame createGame(String whitePlayer, String blackPlayer) {
         Player white = playerRepository.getOne(whitePlayer);
         Player black = playerRepository.getOne(blackPlayer);
+
+        if (white.equals(black)) {
+            throw new IllegalStateException("Can't open a game with a single player on both sides");
+        }
+
         ChessGame game = new ChessGame(white, black);
         return chessGameRepository.save(game);
     }
