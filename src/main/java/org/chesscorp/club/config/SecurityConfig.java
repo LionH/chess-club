@@ -1,7 +1,6 @@
 package org.chesscorp.club.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -24,9 +23,6 @@ import javax.sql.DataSource;
 @EnableSocial
 @Profile("facebook")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    private ApplicationContext context;
 
     @Inject
     private DataSource dataSource;
@@ -51,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+                .headers().frameOptions().disable()
                 .formLogin()
                 .loginPage("/signin")
                 .loginProcessingUrl("/signin/authenticate")
