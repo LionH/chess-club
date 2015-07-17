@@ -1,8 +1,10 @@
 package org.chesscorp.club.jobs;
 
 
+import org.chesscorp.club.model.Account;
 import org.chesscorp.club.model.ChessGame;
 import org.chesscorp.club.model.Player;
+import org.chesscorp.club.persistence.AccountRepository;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.slf4j.Logger;
@@ -23,6 +25,9 @@ public class Bootstrap {
     @Autowired
     private ChessGameRepository chessGameRepository;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
     @PostConstruct
     public void populate() {
         if (playerRepository.count() == 0) {
@@ -37,6 +42,12 @@ public class Bootstrap {
             logger.info("Creating sample games");
             chessGameRepository.save(new ChessGame(playerRepository.getOne("john"), playerRepository.getOne("bob")));
             chessGameRepository.save(new ChessGame(playerRepository.getOne("alcibiade"), playerRepository.getOne("bob")));
+        }
+
+        if (accountRepository.count() == 0) {
+            logger.info("Creating sample accounts");
+            accountRepository.save(new Account("alcibiade", "toto"));
+            accountRepository.save(new Account("john", "toto"));
         }
     }
 }
