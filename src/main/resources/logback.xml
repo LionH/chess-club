@@ -2,7 +2,7 @@
 <configuration debug="false">
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>[%-22thread] %-5level %-18logger{0} - %msg%n</pattern>
+            <pattern>[%-22thread] %highlight(%-5level) %cyan(%-18logger{0}) - %msg%n</pattern>
         </encoder>
     </appender>
 
