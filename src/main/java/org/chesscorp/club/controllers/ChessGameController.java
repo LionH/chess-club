@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
  * @author Yannick Kirschhoffer alcibiade@alcibiade.org
  */
 @RestController
-@RequestMapping("/api/game")
+@RequestMapping("/api/chess/game")
 public class ChessGameController {
     private Logger logger = LoggerFactory.getLogger(ChessGameController.class);
 

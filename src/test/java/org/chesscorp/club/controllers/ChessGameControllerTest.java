@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.model.ChessGame;
 import org.chesscorp.club.model.Player;
-import org.chesscorp.club.service.ChessGameService;
 import org.chesscorp.club.service.PlayerService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
