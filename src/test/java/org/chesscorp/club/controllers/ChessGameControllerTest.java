@@ -2,9 +2,11 @@ package org.chesscorp.club.controllers;
 
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
+import org.chesscorp.club.exception.ChessException;
 import org.chesscorp.club.model.ChessGame;
 import org.chesscorp.club.model.Player;
-import org.chesscorp.club.service.PlayerService;
+import org.chesscorp.club.persistence.PlayerRepository;
+import org.chesscorp.club.service.AuthenticationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -25,17 +27,47 @@ public class ChessGameControllerTest {
     private ChessGameController chessGameController;
 
     @Autowired
-    private PlayerService playerService;
+    private AuthenticationService authenticationService;
+
+    @Autowired
+    private PlayerRepository playerRepository;
 
     @Test
     @Transactional
     public void testGameCreation() {
-        Player p1 = new Player("yannick", "Alcibiade");
-        Player p2 = new Player("anatoli", "Chessmaster");
-        playerService.register(p1);
-        playerService.register(p2);
+        authenticationService.signup("a@b.c", "pwd", "Alcibiade");
+        String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
+        Player p1 = authenticationService.getPlayer(alcibiadeToken);
 
-        ChessGame game1 = chessGameController.createGame(p1.getId(), p2.getId());
+        authenticationService.signup("b@b.c", "pwd", "Bob");
+        String bobToken = authenticationService.signin("b@b.c", "pwd");
+        Player p2 = authenticationService.getPlayer(bobToken);
+
+        ChessGame game1 = chessGameController.createGame(alcibiadeToken, p1.getId(), p2.getId());
+        Assertions.assertThat(game1.getWhitePlayer()).isEqualToComparingFieldByField(p1);
+        Assertions.assertThat(game1.getBlackPlayer()).isEqualToComparingFieldByField(p2);
+        Assertions.assertThat(game1.getId()).isNotEmpty();
+        Assertions.assertThat(game1.getStartDate()).isInThePast();
+
+        ChessGame game2 = chessGameController.getGame(game1.getId());
+        Assertions.assertThat(game2).isEqualToComparingFieldByField(game1);
+    }
+
+    @Test(expected = ChessException.class)
+    @Transactional
+    public void testRefuseThirdPartyCreation() {
+        authenticationService.signup("a@b.c", "pwd", "Alcibiade");
+        String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
+        Player p1 = authenticationService.getPlayer(alcibiadeToken);
+
+        authenticationService.signup("b@b.c", "pwd", "Bob");
+        String bobToken = authenticationService.signin("b@b.c", "pwd");
+        Player p2 = authenticationService.getPlayer(bobToken);
+
+        authenticationService.signup("c@b.c", "pwd", "Charlie");
+        String charlieToken = authenticationService.signin("c@b.c", "pwd");
+
+        ChessGame game1 = chessGameController.createGame(charlieToken, p1.getId(), p2.getId());
         Assertions.assertThat(game1.getWhitePlayer()).isEqualToComparingFieldByField(p1);
         Assertions.assertThat(game1.getBlackPlayer()).isEqualToComparingFieldByField(p2);
         Assertions.assertThat(game1.getId()).isNotEmpty();

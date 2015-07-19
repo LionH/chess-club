@@ -5,6 +5,7 @@ import org.hibernate.annotations.Proxy;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.util.Objects;
 
 /**
@@ -17,24 +18,31 @@ import java.util.Objects;
 public class Account {
 
     @Id
-    private String username;
+    private String identifier;
     @Column
     private String password;
+    @ManyToOne
+    private Player player;
 
     public Account() {
     }
 
-    public Account(String username, String password) {
-        this.username = username;
+    public Account(String identifier, String password, Player player) {
+        this.identifier = identifier;
         this.password = password;
+        this.player = player;
     }
 
-    public String getUsername() {
-        return username;
+    public String getIdentifier() {
+        return identifier;
     }
 
     public String getPassword() {
         return password;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     @Override
@@ -42,11 +50,20 @@ public class Account {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
-        return Objects.equals(username, account.username);
+        return Objects.equals(identifier, account.identifier);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username);
+        return Objects.hash(identifier);
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "identifier='" + identifier + '\'' +
+                ", password='" + password + '\'' +
+                ", player=" + player +
+                '}';
     }
 }

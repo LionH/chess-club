@@ -26,7 +26,7 @@ public class AuthenticationControllerTest {
     @Test
     @Transactional
     public void testSignUpAndSignIn() {
-        authenticationController.signup("a@b.c", "Password1");
+        authenticationController.signup("a@b.c", "Password1", "A");
         authenticationController.signin("a@b.c", "Password1");
     }
 
@@ -39,8 +39,8 @@ public class AuthenticationControllerTest {
     @Test(expected = UserAlreadyExistsException.class)
     @Transactional
     public void testUserAlreadyExisting() {
-        authenticationController.signup("a@b.c", "Password1");
-        authenticationController.signup("a@b.c", "Password1");
+        authenticationController.signup("a@b.c", "Password1", "A");
+        authenticationController.signup("a@b.c", "Password1", "A");
     }
 
 }

@@ -1,6 +1,9 @@
 package org.chesscorp.club.controllers;
 
+import org.chesscorp.club.exception.ChessException;
 import org.chesscorp.club.model.ChessGame;
+import org.chesscorp.club.model.Player;
+import org.chesscorp.club.service.AuthenticationService;
 import org.chesscorp.club.service.ChessGameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,9 @@ public class ChessGameController {
     @Autowired
     private ChessGameService chessGameService;
 
+    @Autowired
+    private AuthenticationService authenticationService;
+
     /**
      * Create a new game between two players.
      *
@@ -30,8 +36,14 @@ public class ChessGameController {
     @Transactional
     @RequestMapping(method = RequestMethod.POST)
     public ChessGame createGame(
+            @RequestParam String authenticationToken,
             @RequestParam String whitePlayerId,
             @RequestParam String blackPlayerId) {
+        Player player = authenticationService.getPlayer(authenticationToken);
+        if (!player.getId().equals(whitePlayerId) && !player.getId().equals(blackPlayerId)) {
+            throw new ChessException("Can't create a game without playing in it.");
+        }
+
         ChessGame created = chessGameService.createGame(whitePlayerId, blackPlayerId);
         logger.info("Game created {} vs. {} created: {}", whitePlayerId, blackPlayerId, created);
 

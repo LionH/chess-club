@@ -2,9 +2,7 @@ package org.chesscorp.club.model;
 
 import org.hibernate.annotations.Proxy;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
@@ -17,24 +15,24 @@ import java.util.Objects;
 public class Player {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
     @Column
-    private String fullName;
+    private String displayName;
 
     public Player() {
     }
 
-    public Player(String id, String fullName) {
-        this.id = id;
-        this.fullName = fullName;
+    public Player(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getDisplayName() {
+        return displayName;
     }
 
     @Override

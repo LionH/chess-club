@@ -32,24 +32,20 @@ public class Bootstrap {
 
     @PostConstruct
     public void populate() {
-        if (playerRepository.count() == 0) {
+        if (playerRepository.count() == 0 && chessGameRepository.count() == 0 && accountRepository.count() == 0) {
             logger.info("Creating sample players");
-            playerRepository.save(new Player("alcibiade", "Alcibiade"));
-            playerRepository.save(new Player("john", "John"));
-            playerRepository.save(new Player("bob", "Bob"));
-            playerRepository.save(new Player("steve", "Steve"));
-        }
+            Player alcibiade = playerRepository.save(new Player("Alcibiade"));
+            Player john = playerRepository.save(new Player("John"));
+            Player bob = playerRepository.save(new Player("Bob"));
+            Player steve = playerRepository.save(new Player("Steve"));
 
-        if (chessGameRepository.count() == 0) {
             logger.info("Creating sample games");
-            chessGameRepository.save(new ChessGame(playerRepository.getOne("john"), playerRepository.getOne("bob")));
-            chessGameRepository.save(new ChessGame(playerRepository.getOne("alcibiade"), playerRepository.getOne("bob")));
-        }
+            chessGameRepository.save(new ChessGame(playerRepository.getOne(john.getId()), playerRepository.getOne(bob.getId())));
+            chessGameRepository.save(new ChessGame(playerRepository.getOne(alcibiade.getId()), playerRepository.getOne(bob.getId())));
 
-        if (accountRepository.count() == 0) {
             logger.info("Creating sample accounts");
-            accountRepository.save(new Account("alcibiade", "toto"));
-            accountRepository.save(new Account("john", "toto"));
+            accountRepository.save(new Account("alcibiade", "toto", alcibiade));
+            accountRepository.save(new Account("john", "toto", john));
         }
     }
 }

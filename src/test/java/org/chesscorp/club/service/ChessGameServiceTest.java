@@ -24,15 +24,18 @@ public class ChessGameServiceTest {
     private ChessGameService chessGameService;
 
     @Autowired
-    private PlayerService playerService;
+    private AuthenticationService authenticationService;
 
     @Test
     @Transactional
     public void testGameCreation() {
-        Player p1 = new Player("yannick", "Alcibiade");
-        Player p2 = new Player("anatoli", "Chessmaster");
-        playerService.register(p1);
-        playerService.register(p2);
+        authenticationService.signup("a@b.c","pwd","Alcibiade");
+        String alcibiadeToken = authenticationService.signin("a@b.c","pwd");
+        Player p1 = authenticationService.getPlayer(alcibiadeToken);
+
+        authenticationService.signup("b@b.c","pwd","Bob");
+        String bobToken = authenticationService.signin("b@b.c","pwd");
+        Player p2 = authenticationService.getPlayer(bobToken);
 
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
         Assertions.assertThat(game.getWhitePlayer()).isEqualToComparingFieldByField(p1);
@@ -44,11 +47,10 @@ public class ChessGameServiceTest {
     @Test(expected = IllegalStateException.class)
     @Transactional
     public void testRefuseSamePlayer() {
-        Player p1 = new Player("yannick", "Alcibiade");
-        Player p2 = new Player("anatoli", "Chessmaster");
-        playerService.register(p1);
-        playerService.register(p2);
+        authenticationService.signup("a@b.c","pwd","Alcibiade");
+        String alcibiadeToken = authenticationService.signin("a@b.c","pwd");
+        Player p1 = authenticationService.getPlayer(alcibiadeToken);
 
-        ChessGame game = chessGameService.createGame(p1.getId(), p1.getId());
+        chessGameService.createGame(p1.getId(), p1.getId());
     }
 }
