@@ -4,18 +4,25 @@
 > Chess Server that will provide restful APIs and a complete Web UI.
 
 
-## Install
+## Build and Run
 
 ```sh
-$ mvn clean install
+$ mvn clean package
 ```
 
-## Test
+This builds an executable jar file in the target folder.
+This jar file can now be started as:
 
 ```sh
-$ mvn test
+$ java -jar chess-club-1.0.0.jar
 ```
 
+The server is then listening on port 8080. This port can be overridden:
+
+```sh
+$ java -Dserver.port=8888 -jar chess-club-1.0.0.jar
+```
+ 
 
 ## License
 
