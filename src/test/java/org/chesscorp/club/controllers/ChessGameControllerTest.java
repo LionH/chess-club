@@ -96,4 +96,21 @@ public class ChessGameControllerTest {
         Assertions.assertThat(game2).isEqualToComparingFieldByField(game1);
     }
 
+    @Test(expected = ChessException.class)
+    @Transactional
+    public void testRefuseMove() {
+        authenticationService.signup("a@b.c", "pwd", "Alcibiade");
+        String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
+        Player alcibiade = authenticationService.getPlayer(alcibiadeToken);
+
+        authenticationService.signup("b@b.c", "pwd", "Bob");
+        String bobToken = authenticationService.signin("b@b.c", "pwd");
+        Player bob = authenticationService.getPlayer(bobToken);
+
+        ChessGame game1 = chessGameController.createGame(alcibiadeToken, alcibiade.getId(), bob.getId());
+        chessGameController.postMove(game1.getId(), alcibiadeToken, "e4");
+        // Refuse 2nd move from same player
+        chessGameController.postMove(game1.getId(), alcibiadeToken, "e5");
+    }
+
 }
