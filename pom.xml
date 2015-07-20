@@ -84,6 +84,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/*Config.*</exclude>
+                        <exclude>**/*Application.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
