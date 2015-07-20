@@ -6,4 +6,5 @@ public interface ChessGameService {
 
     ChessGame createGame(String whitePlayer, String blackPlayer);
     ChessGame getGame(String id);
+    ChessGame move(ChessGame game, String pgnMove);
 }

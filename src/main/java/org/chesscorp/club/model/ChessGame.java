@@ -1,5 +1,6 @@
 package org.chesscorp.club.model;
 
+import org.alcibiade.chess.model.ChessGameStatus;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -14,14 +15,6 @@ import java.util.*;
 @Proxy(lazy = false)
 public class ChessGame {
 
-    /**
-     * Possible game statuses.
-     */
-    public enum Status {
-
-        OPEN, PAT, WHITEWON, BLACKWON
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
@@ -32,21 +25,34 @@ public class ChessGame {
     @ElementCollection(targetClass = ChessMove.class)
     private List<ChessMove> moves;
     private Date startDate;
-    private Status status;
+    private ChessGameStatus status;
 
     public ChessGame() {
     }
 
     public ChessGame(Player whitePlayer, Player blackPlayer) {
-        this(whitePlayer, blackPlayer, new ArrayList<>(), Status.OPEN, new Date());
+        this(whitePlayer, blackPlayer, new ArrayList<>(), ChessGameStatus.OPEN, new Date());
     }
 
-    public ChessGame(Player whitePlayer, Player blackPlayer, List<ChessMove> moves, Status status, Date startDate) {
+    public ChessGame(Player whitePlayer, Player blackPlayer, List<ChessMove> moves, ChessGameStatus status, Date startDate) {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
         this.moves = moves;
         this.status = status;
         this.startDate = startDate;
+    }
+
+    public ChessGame(ChessGame game, ChessMove move, ChessGameStatus status) {
+        this.id = game.id;
+        this.whitePlayer = game.whitePlayer;
+        this.blackPlayer = game.blackPlayer;
+        this.startDate = game.getStartDate();
+
+        // Moves is a clone of the original list that is updated
+        this.moves = new ArrayList<>(game.moves);
+        this.moves.add(move);
+
+        this.status = status;
     }
 
     public String getId() {
@@ -65,7 +71,7 @@ public class ChessGame {
         return Collections.unmodifiableList(moves);
     }
 
-    public Status getStatus() {
+    public ChessGameStatus getStatus() {
         return status;
     }
 

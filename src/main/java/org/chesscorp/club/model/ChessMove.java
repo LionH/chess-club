@@ -25,6 +25,14 @@ public class ChessMove {
 
     private Date date;
 
+    public ChessMove() {
+    }
+
+    public ChessMove(String pgn) {
+        this.pgn = pgn;
+        this.date = new Date();
+    }
+
     public String getId() {
         return id;
     }

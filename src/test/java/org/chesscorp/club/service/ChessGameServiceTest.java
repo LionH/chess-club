@@ -3,6 +3,7 @@ package org.chesscorp.club.service;
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.model.ChessGame;
+import org.chesscorp.club.model.ChessMove;
 import org.chesscorp.club.model.Player;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,12 +30,12 @@ public class ChessGameServiceTest {
     @Test
     @Transactional
     public void testGameCreation() {
-        authenticationService.signup("a@b.c","pwd","Alcibiade");
-        String alcibiadeToken = authenticationService.signin("a@b.c","pwd");
+        authenticationService.signup("a@b.c", "pwd", "Alcibiade");
+        String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
         Player p1 = authenticationService.getPlayer(alcibiadeToken);
 
-        authenticationService.signup("b@b.c","pwd","Bob");
-        String bobToken = authenticationService.signin("b@b.c","pwd");
+        authenticationService.signup("b@b.c", "pwd", "Bob");
+        String bobToken = authenticationService.signin("b@b.c", "pwd");
         Player p2 = authenticationService.getPlayer(bobToken);
 
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
@@ -42,13 +43,19 @@ public class ChessGameServiceTest {
         Assertions.assertThat(game.getBlackPlayer()).isEqualToComparingFieldByField(p2);
         Assertions.assertThat(game.getId()).isNotEmpty();
         Assertions.assertThat(game.getStartDate()).isInThePast();
+
+        game = chessGameService.move(game, "e2e4");
+        Assertions.assertThat(game.getMoves()).extracting(ChessMove::getPgn).containsExactly("e4");
+
+        game = chessGameService.move(game, "e7e5");
+        Assertions.assertThat(game.getMoves()).extracting(ChessMove::getPgn).containsExactly("e4", "e5");
     }
 
     @Test(expected = IllegalStateException.class)
     @Transactional
     public void testRefuseSamePlayer() {
-        authenticationService.signup("a@b.c","pwd","Alcibiade");
-        String alcibiadeToken = authenticationService.signin("a@b.c","pwd");
+        authenticationService.signup("a@b.c", "pwd", "Alcibiade");
+        String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
         Player p1 = authenticationService.getPlayer(alcibiadeToken);
 
         chessGameService.createGame(p1.getId(), p1.getId());
