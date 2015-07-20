@@ -1,6 +1,7 @@
 package org.chesscorp.club.controllers;
 
 import org.chesscorp.club.exception.ChessException;
+import org.chesscorp.club.exception.InvalidChessMoveException;
 import org.chesscorp.club.model.ChessGame;
 import org.chesscorp.club.model.Player;
 import org.chesscorp.club.service.AuthenticationService;
@@ -55,6 +56,27 @@ public class ChessGameController {
     public ChessGame getGame(@PathVariable String gameId) {
         ChessGame game = chessGameService.getGame(gameId);
         logger.info("Game fetched: {}", game);
+
+        return game;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{gameId}", method = RequestMethod.POST)
+    public ChessGame postMove(
+            @PathVariable String gameId,
+            @RequestParam String authenticationToken,
+            @RequestParam String move) {
+        Player player = authenticationService.getPlayer(authenticationToken);
+        ChessGame game = chessGameService.getGame(gameId);
+
+        Player nextPlayer = game.getNextPlayer();
+
+        if (!player.equals(nextPlayer)) {
+            throw new InvalidChessMoveException("It is " + nextPlayer.getDisplayName() + "'s turn");
+        }
+
+        game = chessGameService.move(game, move);
+        logger.info("Move {} played in {}", move, game);
 
         return game;
     }

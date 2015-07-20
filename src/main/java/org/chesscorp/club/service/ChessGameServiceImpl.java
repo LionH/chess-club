@@ -11,15 +11,19 @@ import org.chesscorp.club.model.ChessGame;
 import org.chesscorp.club.model.ChessMove;
 import org.chesscorp.club.model.Player;
 import org.chesscorp.club.persistence.ChessGameRepository;
+import org.chesscorp.club.persistence.ChessMoveRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class ChessGameServiceImpl implements ChessGameService {
 
     @Autowired
     private ChessGameRepository chessGameRepository;
+    @Autowired
+    private ChessMoveRepository chessMoveRepository;
     @Autowired
     private PlayerRepository playerRepository;
     @Autowired
@@ -28,6 +32,7 @@ public class ChessGameServiceImpl implements ChessGameService {
     private PgnMarshaller pgnMarshaller;
 
     @Override
+    @Transactional
     public ChessGame createGame(String whitePlayer, String blackPlayer) {
         Player white = playerRepository.getOne(whitePlayer);
         Player black = playerRepository.getOne(blackPlayer);
@@ -41,11 +46,13 @@ public class ChessGameServiceImpl implements ChessGameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ChessGame getGame(String id) {
         return chessGameRepository.getOne(id);
     }
 
     @Override
+    @Transactional
     public ChessGame move(ChessGame game, String pgnMove) {
         try {
             ChessPosition position = chessRules.getInitialPosition();
@@ -59,7 +66,11 @@ public class ChessGameServiceImpl implements ChessGameService {
             String canonicalPgn = pgnMarshaller.convertMoveToPgn(position, path);
             ChessPosition updatedPosition = ChessHelper.applyMoveAndSwitch(chessRules, position, path);
             ChessGameStatus status = chessRules.getStatus(updatedPosition);
-            return new ChessGame(game, new ChessMove(canonicalPgn), status);
+
+            ChessMove move = chessMoveRepository.save(new ChessMove(canonicalPgn));
+            ChessGame updatedGame = chessGameRepository.save(new ChessGame(game, move, status));
+
+            return updatedGame;
         } catch (org.alcibiade.chess.model.ChessException e) {
             throw new InvalidChessMoveException(pgnMove, e);
         }

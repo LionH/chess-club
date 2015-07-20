@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.exception.ChessException;
 import org.chesscorp.club.model.ChessGame;
+import org.chesscorp.club.model.ChessMove;
 import org.chesscorp.club.model.Player;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.chesscorp.club.service.AuthenticationService;
@@ -34,23 +35,41 @@ public class ChessGameControllerTest {
 
     @Test
     @Transactional
-    public void testGameCreation() {
+    public void testBasicGame() {
         authenticationService.signup("a@b.c", "pwd", "Alcibiade");
         String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
-        Player p1 = authenticationService.getPlayer(alcibiadeToken);
+        Player alcibiade = authenticationService.getPlayer(alcibiadeToken);
 
         authenticationService.signup("b@b.c", "pwd", "Bob");
         String bobToken = authenticationService.signin("b@b.c", "pwd");
-        Player p2 = authenticationService.getPlayer(bobToken);
+        Player bob = authenticationService.getPlayer(bobToken);
 
-        ChessGame game1 = chessGameController.createGame(alcibiadeToken, p1.getId(), p2.getId());
-        Assertions.assertThat(game1.getWhitePlayer()).isEqualToComparingFieldByField(p1);
-        Assertions.assertThat(game1.getBlackPlayer()).isEqualToComparingFieldByField(p2);
+        /*
+         * Game creation.
+         */
+
+        ChessGame game1 = chessGameController.createGame(alcibiadeToken, alcibiade.getId(), bob.getId());
+        Assertions.assertThat(game1.getWhitePlayer()).isEqualToComparingFieldByField(alcibiade);
+        Assertions.assertThat(game1.getBlackPlayer()).isEqualToComparingFieldByField(bob);
         Assertions.assertThat(game1.getId()).isNotEmpty();
         Assertions.assertThat(game1.getStartDate()).isInThePast();
 
+        /*
+         * Game fetch
+         */
+
         ChessGame game2 = chessGameController.getGame(game1.getId());
         Assertions.assertThat(game2).isEqualToComparingFieldByField(game1);
+
+        /*
+         * Game moves
+         */
+
+        ChessGame game3 = chessGameController.postMove(game1.getId(), alcibiadeToken, "e4");
+        Assertions.assertThat(game3.getMoves()).extracting(ChessMove::getPgn).containsExactly("e4");
+
+        ChessGame game4 = chessGameController.postMove(game1.getId(), bobToken, "e5");
+        Assertions.assertThat(game4.getMoves()).extracting(ChessMove::getPgn).containsExactly("e4", "e5");
     }
 
     @Test(expected = ChessException.class)
@@ -58,18 +77,18 @@ public class ChessGameControllerTest {
     public void testRefuseThirdPartyCreation() {
         authenticationService.signup("a@b.c", "pwd", "Alcibiade");
         String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
-        Player p1 = authenticationService.getPlayer(alcibiadeToken);
+        Player alcibiade = authenticationService.getPlayer(alcibiadeToken);
 
         authenticationService.signup("b@b.c", "pwd", "Bob");
         String bobToken = authenticationService.signin("b@b.c", "pwd");
-        Player p2 = authenticationService.getPlayer(bobToken);
+        Player bob = authenticationService.getPlayer(bobToken);
 
         authenticationService.signup("c@b.c", "pwd", "Charlie");
         String charlieToken = authenticationService.signin("c@b.c", "pwd");
 
-        ChessGame game1 = chessGameController.createGame(charlieToken, p1.getId(), p2.getId());
-        Assertions.assertThat(game1.getWhitePlayer()).isEqualToComparingFieldByField(p1);
-        Assertions.assertThat(game1.getBlackPlayer()).isEqualToComparingFieldByField(p2);
+        ChessGame game1 = chessGameController.createGame(charlieToken, alcibiade.getId(), bob.getId());
+        Assertions.assertThat(game1.getWhitePlayer()).isEqualToComparingFieldByField(alcibiade);
+        Assertions.assertThat(game1.getBlackPlayer()).isEqualToComparingFieldByField(bob);
         Assertions.assertThat(game1.getId()).isNotEmpty();
         Assertions.assertThat(game1.getStartDate()).isInThePast();
 

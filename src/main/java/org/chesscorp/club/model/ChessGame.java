@@ -79,6 +79,11 @@ public class ChessGame {
         return startDate;
     }
 
+    public Player getNextPlayer() {
+        boolean whiteIsNext = moves.size() % 2 == 0;
+        return whiteIsNext ? whitePlayer : blackPlayer;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
