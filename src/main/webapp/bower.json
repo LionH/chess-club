@@ -1,0 +1,9 @@
+{
+  "name": "chess-club",
+  "authors": [
+    "Yannick Kirschhoffer <alcibiade@alcibiade.org>"
+  ],
+  "dependencies": {
+    "chess-board": "ChessCorp/chess-board#0.2.0"
+  }
+}
