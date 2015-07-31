@@ -1,4 +1,4 @@
 target/
 *.iml
 /.idea/
-bower_components/
+src/main/webapp/components/
