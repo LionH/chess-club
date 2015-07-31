@@ -6,9 +6,9 @@
         </encoder>
     </appender>
 
-    <logger name="org.chesscorp" level="OFF" />
+    <logger name="org.chesscorp" level="DEBUG" />
 
-    <root level="OFF">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>
