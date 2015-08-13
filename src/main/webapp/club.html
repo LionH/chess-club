@@ -34,9 +34,23 @@
 <div class="container" role="main">
     <div class="row">
         <div class="col-md-12">
-            <chess-board></chess-board>
+            <chess-board piece-size="42px"></chess-board>
         </div>
     </div>
 </div>
+
+<script>
+    (function () {
+        var board = $('chess-board')[0];
+        board.addEventListener('piece-move', function (e) {
+            console.log(e);
+            var moves = board.moves;
+            moves.push(e.detail.pgn);
+            console.log("Updating moves", moves);
+            board.setAttribute("moves", JSON.stringify(moves));
+        })
+    })();
+</script>
+
 </body>
 </html>
