@@ -3,6 +3,8 @@ package org.chesscorp.club.service;
 import org.alcibiade.chess.model.ChessGameStatus;
 import org.alcibiade.chess.model.ChessMovePath;
 import org.alcibiade.chess.model.ChessPosition;
+import org.alcibiade.chess.persistence.PgnBookReader;
+import org.alcibiade.chess.persistence.PgnGameModel;
 import org.alcibiade.chess.persistence.PgnMarshaller;
 import org.alcibiade.chess.rules.ChessHelper;
 import org.alcibiade.chess.rules.ChessRules;
@@ -13,12 +15,21 @@ import org.chesscorp.club.model.Player;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.ChessMoveRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 @Component
 public class ChessGameServiceImpl implements ChessGameService {
+    private Logger logger = LoggerFactory.getLogger(ChessGameServiceImpl.class);
 
     @Autowired
     private ChessGameRepository chessGameRepository;
@@ -74,5 +85,34 @@ public class ChessGameServiceImpl implements ChessGameService {
         } catch (org.alcibiade.chess.model.ChessException e) {
             throw new InvalidChessMoveException(pgnMove, e);
         }
+    }
+
+    @Override
+    @Transactional
+    public void batchImport(InputStream pgnStream) throws IOException {
+        logger.debug("Importing games as batch");
+        PgnBookReader bookReader = new PgnBookReader(pgnStream);
+        int gamesCount = 0;
+        PgnGameModel pgnGameModel;
+
+        while ((pgnGameModel = bookReader.readGame()) != null) {
+            gamesCount += 1;
+            logger.trace("    - {}", pgnGameModel);
+
+            List<ChessMove> chessMoves = new ArrayList<>();
+
+            pgnGameModel.getMoves().forEach(m -> {
+                ChessMove move = new ChessMove(m);
+                chessMoveRepository.save(move);
+                chessMoves.add(move);
+            });
+
+            Player playerW = playerRepository.findByDisplayName("Alcibiade").get(0);
+            Player playerB = playerRepository.findByDisplayName("Bob").get(0);
+            ChessGame chessGame = new ChessGame(playerW, playerB, chessMoves, ChessGameStatus.OPEN, new Date());
+            chessGameRepository.saveAndFlush(chessGame);
+        }
+
+        logger.debug("Imported {} games", gamesCount);
     }
 }
