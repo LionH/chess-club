@@ -7,11 +7,13 @@ before_install:
 - "npm install -g bower gulp"
 before_script:
 - "git clone https://github.com/ChessCorp/chess-club-ui.git chess-club-ui"
+- "pushd ."
 - "cd chess-club-ui"
 - "npm install"
 - "bower install"
 - "gulp"
 - "rm -rf ../src/main/webapp/"
 - "mv dist/ ../src/main/webapp"
+- "popd"
 after_success:
 - mvn clean test jacoco:report coveralls:report
