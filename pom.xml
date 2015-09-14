@@ -25,6 +25,9 @@
         <java.version>1.8</java.version>
     </properties>
 
+    <distributionManagement>
+        <!-- No distribution configured in the maven build -->
+    </distributionManagement>
 
     <dependencies>
         <dependency>
