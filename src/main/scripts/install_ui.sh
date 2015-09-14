@@ -1,6 +1,5 @@
 #!/bin/bash
 
-set -e -x
 UI_URL=https://github.com/ChessCorp/chess-club-ui/releases/download/0.0.4/chess-club-ui-0.0.4.zip
 
 echo "
