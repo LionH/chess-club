@@ -22,8 +22,6 @@
     <!--</appender>-->
 
     <logger name="org.chesscorp" level="DEBUG"/>
-    <logger name="org.springframework.security" level="DEBUG"/>
-    <logger name="org.springframework.social" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
