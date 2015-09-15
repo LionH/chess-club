@@ -1,7 +1,6 @@
 package org.chesscorp.club.config;
 
 import com.fasterxml.classmate.TypeResolver;
-import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,18 +37,17 @@ public class SwaggerConfig {
     private TypeResolver typeResolver;
 
     @Bean
-    public Docket petApi() {
+    public Docket clubApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build()
                 .pathMapping("/")
-                .directModelSubstitute(LocalDate.class,
-                        String.class)
                 .genericModelSubstitutes(ResponseEntity.class)
                 .alternateTypeRules(
-                        newRule(typeResolver.resolve(DeferredResult.class,
+                        newRule(
+                                typeResolver.resolve(DeferredResult.class,
                                         typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
                                 typeResolver.resolve(WildcardType.class)))
                 .useDefaultResponseMessages(false)
