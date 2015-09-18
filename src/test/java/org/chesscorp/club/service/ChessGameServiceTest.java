@@ -41,7 +41,7 @@ public class ChessGameServiceTest {
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
         Assertions.assertThat(game.getWhitePlayer()).isEqualToComparingFieldByField(p1);
         Assertions.assertThat(game.getBlackPlayer()).isEqualToComparingFieldByField(p2);
-        Assertions.assertThat(game.getId()).isNotEmpty();
+        Assertions.assertThat(game.getId().longValue()).isGreaterThan(0L);
         Assertions.assertThat(game.getStartDate()).isInThePast();
 
         game = chessGameService.move(game, "e2e4");

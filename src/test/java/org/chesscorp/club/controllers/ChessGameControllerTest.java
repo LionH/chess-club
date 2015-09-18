@@ -51,7 +51,7 @@ public class ChessGameControllerTest {
         ChessGame game1 = chessGameController.createGame(alcibiadeToken, alcibiade.getId(), bob.getId());
         Assertions.assertThat(game1.getWhitePlayer()).isEqualToComparingFieldByField(alcibiade);
         Assertions.assertThat(game1.getBlackPlayer()).isEqualToComparingFieldByField(bob);
-        Assertions.assertThat(game1.getId()).isNotEmpty();
+        Assertions.assertThat(game1.getId().longValue()).isGreaterThan(0L);
         Assertions.assertThat(game1.getStartDate()).isInThePast();
 
         /*
@@ -89,7 +89,7 @@ public class ChessGameControllerTest {
         ChessGame game1 = chessGameController.createGame(charlieToken, alcibiade.getId(), bob.getId());
         Assertions.assertThat(game1.getWhitePlayer()).isEqualToComparingFieldByField(alcibiade);
         Assertions.assertThat(game1.getBlackPlayer()).isEqualToComparingFieldByField(bob);
-        Assertions.assertThat(game1.getId()).isNotEmpty();
+        Assertions.assertThat(game1.getId().longValue()).isGreaterThan(0L);
         Assertions.assertThat(game1.getStartDate()).isInThePast();
 
         ChessGame game2 = chessGameController.getGame(game1.getId());

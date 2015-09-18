@@ -38,8 +38,8 @@ public class ChessGameController {
     @RequestMapping(method = RequestMethod.POST)
     public ChessGame createGame(
             @RequestParam String authenticationToken,
-            @RequestParam String whitePlayerId,
-            @RequestParam String blackPlayerId) {
+            @RequestParam Number whitePlayerId,
+            @RequestParam Number blackPlayerId) {
         Player player = authenticationService.getPlayer(authenticationToken);
         if (!player.getId().equals(whitePlayerId) && !player.getId().equals(blackPlayerId)) {
             throw new ChessException("Can't create a game without playing in it.");
@@ -53,7 +53,7 @@ public class ChessGameController {
 
     @Transactional
     @RequestMapping(value = "/{gameId}", method = RequestMethod.GET)
-    public ChessGame getGame(@PathVariable String gameId) {
+    public ChessGame getGame(@PathVariable Number gameId) {
         ChessGame game = chessGameService.getGame(gameId);
         logger.info("Game fetched: {}", game);
 
@@ -63,7 +63,7 @@ public class ChessGameController {
     @Transactional
     @RequestMapping(value = "/{gameId}", method = RequestMethod.POST)
     public ChessGame postMove(
-            @PathVariable String gameId,
+            @PathVariable Number gameId,
             @RequestParam String authenticationToken,
             @RequestParam String move) {
         Player player = authenticationService.getPlayer(authenticationToken);

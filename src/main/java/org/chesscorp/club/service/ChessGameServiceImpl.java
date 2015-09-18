@@ -44,7 +44,7 @@ public class ChessGameServiceImpl implements ChessGameService {
 
     @Override
     @Transactional
-    public ChessGame createGame(String whitePlayer, String blackPlayer) {
+    public ChessGame createGame(Number whitePlayer, Number blackPlayer) {
         Player white = playerRepository.getOne(whitePlayer);
         Player black = playerRepository.getOne(blackPlayer);
 
@@ -58,7 +58,7 @@ public class ChessGameServiceImpl implements ChessGameService {
 
     @Override
     @Transactional(readOnly = true)
-    public ChessGame getGame(String id) {
+    public ChessGame getGame(Number id) {
         return chessGameRepository.getOne(id);
     }
 

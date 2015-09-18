@@ -16,7 +16,7 @@ public class Player {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private Long id;
     @Column
     private String displayName;
 
@@ -27,7 +27,7 @@ public class Player {
         this.displayName = displayName;
     }
 
-    public String getId() {
+    public Number getId() {
         return id;
     }
 

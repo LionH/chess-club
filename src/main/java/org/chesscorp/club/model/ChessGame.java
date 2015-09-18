@@ -17,7 +17,7 @@ public class ChessGame {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private Long id;
     @ManyToOne
     private Player whitePlayer;
     @ManyToOne
@@ -55,7 +55,7 @@ public class ChessGame {
         this.status = status;
     }
 
-    public String getId() {
+    public Number getId() {
         return id;
     }
 

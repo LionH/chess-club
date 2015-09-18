@@ -19,7 +19,7 @@ public class ChessMove {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private Long id;
 
     private String pgn;
 
@@ -33,7 +33,7 @@ public class ChessMove {
         this.date = new Date();
     }
 
-    public String getId() {
+    public Number getId() {
         return id;
     }
 
