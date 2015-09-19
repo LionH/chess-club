@@ -1,5 +1,6 @@
 package org.chesscorp.club.controllers;
 
+import org.chesscorp.club.dto.AuthenticationResult;
 import org.chesscorp.club.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +33,10 @@ public class AuthenticationController {
 
     @Transactional
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
-    public String signin(
+    public AuthenticationResult signin(
             @RequestParam String email,
             @RequestParam String password) {
-        return authenticationService.signin(email, password);
+        String token = authenticationService.signin(email, password);
+        return new AuthenticationResult(token);
     }
 }
