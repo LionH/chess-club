@@ -1,6 +1,7 @@
 package org.chesscorp.club.controllers;
 
 import org.chesscorp.club.Application;
+import org.chesscorp.club.dto.AuthenticationRequest;
 import org.chesscorp.club.exception.AuthenticationFailedException;
 import org.chesscorp.club.exception.UserAlreadyExistsException;
 import org.junit.Test;
@@ -27,13 +28,13 @@ public class AuthenticationControllerTest {
     @Transactional
     public void testSignUpAndSignIn() {
         authenticationController.signup("a@b.c", "Password1", "A");
-        authenticationController.signin("a@b.c", "Password1");
+        authenticationController.signin(new AuthenticationRequest("a@b.c", "Password1"));
     }
 
     @Test(expected = AuthenticationFailedException.class)
     @Transactional
     public void testUserNotFound() {
-        authenticationController.signin("a@b.c", "Password1");
+        authenticationController.signin(new AuthenticationRequest("a@b.c", "Password1"));
     }
 
     @Test(expected = UserAlreadyExistsException.class)

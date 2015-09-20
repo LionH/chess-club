@@ -1,15 +1,13 @@
 package org.chesscorp.club.controllers;
 
+import org.chesscorp.club.dto.AuthenticationRequest;
 import org.chesscorp.club.dto.AuthenticationResult;
 import org.chesscorp.club.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Yannick Kirschhoffer alcibiade@alcibiade.org
@@ -34,9 +32,10 @@ public class AuthenticationController {
     @Transactional
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
     public AuthenticationResult signin(
-            @RequestParam String email,
-            @RequestParam String password) {
-        String token = authenticationService.signin(email, password);
+            @RequestBody AuthenticationRequest authenticationRequest) {
+        String token = authenticationService.signin(
+                authenticationRequest.getEmail(),
+                authenticationRequest.getPassword());
         return new AuthenticationResult(token);
     }
 }
