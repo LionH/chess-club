@@ -12,7 +12,7 @@ public class SubscriptionRequest {
     public SubscriptionRequest() {
     }
 
-    public SubscriptionRequest(String displayName, String email, String password) {
+    public SubscriptionRequest(String email, String password, String displayName) {
         this.displayName = displayName;
         this.email = email;
         this.password = password;
