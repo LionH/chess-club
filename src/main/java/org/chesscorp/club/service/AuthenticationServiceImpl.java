@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 /**
- * Created by yk on 19/07/15.
+ * Authentication mechanisms based on account/player repositories.
  */
 @Component
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -42,8 +42,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         Player p = playerRepository.save(new Player(displayName));
-        accountRepository.save(new Account(email, password, p));
-        logger.info("Account created for {}");
+        Account a = accountRepository.save(new Account(email, password, p));
+        logger.info("Account {} created for player {}", a, p);
     }
 
     @Override
