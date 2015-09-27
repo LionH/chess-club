@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author Yannick Kirschhoffer alcibiade@alcibiade.org
  */
@@ -27,7 +30,8 @@ public class AuthenticationController {
     @Transactional
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public AuthenticationResult signup(
-            @RequestBody SubscriptionRequest subscriptionRequest) {
+            @RequestBody SubscriptionRequest subscriptionRequest,
+            HttpServletResponse response) {
         authenticationService.signup(
                 subscriptionRequest.getEmail(),
                 subscriptionRequest.getPassword(),
@@ -38,16 +42,23 @@ public class AuthenticationController {
                 subscriptionRequest.getEmail(),
                 subscriptionRequest.getPassword());
 
+        response.addCookie(new Cookie("AUTH_TOKEN", token));
+
         return new AuthenticationResult(token);
     }
 
     @Transactional
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
     public AuthenticationResult signin(
-            @RequestBody AuthenticationRequest authenticationRequest) {
+            @RequestBody AuthenticationRequest authenticationRequest,
+            HttpServletResponse response) {
+
         String token = authenticationService.signin(
                 authenticationRequest.getEmail(),
                 authenticationRequest.getPassword());
+
+        response.addCookie(new Cookie("AUTH_TOKEN", token));
+
         return new AuthenticationResult(token);
     }
 }
