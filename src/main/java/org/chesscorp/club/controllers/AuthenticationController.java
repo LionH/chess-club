@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -60,5 +57,11 @@ public class AuthenticationController {
         response.addCookie(new Cookie("AUTH_TOKEN", token));
 
         return new AuthenticationResult(token);
+    }
+
+    @Transactional
+    @RequestMapping(value = "/signout", method = RequestMethod.POST)
+    public void signout(@CookieValue("AUTH_TOKEN") String token) {
+        authenticationService.revoke(token);
     }
 }
