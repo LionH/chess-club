@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -23,6 +22,9 @@ public class AuthenticationController {
 
     @Autowired
     private AuthenticationService authenticationService;
+
+    @Autowired
+    private CookieFactory cookieFactory;
 
     @Transactional
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
@@ -39,7 +41,7 @@ public class AuthenticationController {
                 subscriptionRequest.getEmail(),
                 subscriptionRequest.getPassword());
 
-        response.addCookie(new Cookie("AUTH_TOKEN", token));
+        response.addCookie(cookieFactory.createCookie(token));
 
         return new AuthenticationResult(token);
     }
@@ -54,14 +56,19 @@ public class AuthenticationController {
                 authenticationRequest.getEmail(),
                 authenticationRequest.getPassword());
 
-        response.addCookie(new Cookie("AUTH_TOKEN", token));
+        response.addCookie(cookieFactory.createCookie(token));
 
         return new AuthenticationResult(token);
     }
 
     @Transactional
     @RequestMapping(value = "/signout", method = RequestMethod.POST)
-    public void signout(@CookieValue("AUTH_TOKEN") String token) {
-        authenticationService.revoke(token);
+    public void signout(@CookieValue(value = "AUTH_TOKEN", required = false) String token) {
+        if (token == null) {
+            logger.debug("No token found on sign out.");
+        } else {
+            authenticationService.revoke(token);
+        }
     }
+
 }
