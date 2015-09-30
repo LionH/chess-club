@@ -57,8 +57,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             account = null;
         }
 
-        if (account == null || !account.getPassword().equals(password)) {
-            throw new AuthenticationFailedException();
+        if (account == null ) {
+            throw new AuthenticationFailedException("No account for '" + email + "'");
+        }
+
+        if ( !account.getPassword().equals(password)){
+            throw new AuthenticationFailedException("");
         }
 
         String token = UUID.randomUUID().toString();

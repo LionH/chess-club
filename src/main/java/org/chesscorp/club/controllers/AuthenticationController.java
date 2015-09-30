@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author Yannick Kirschhoffer alcibiade@alcibiade.org
  */
@@ -23,14 +21,9 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @Autowired
-    private CookieFactory cookieFactory;
-
     @Transactional
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public AuthenticationResult signup(
-            @RequestBody SubscriptionRequest subscriptionRequest,
-            HttpServletResponse response) {
+    public AuthenticationResult signup(@RequestBody SubscriptionRequest subscriptionRequest) {
         authenticationService.signup(
                 subscriptionRequest.getEmail(),
                 subscriptionRequest.getPassword(),
@@ -41,22 +34,16 @@ public class AuthenticationController {
                 subscriptionRequest.getEmail(),
                 subscriptionRequest.getPassword());
 
-        response.addCookie(cookieFactory.createCookie(token));
-
         return new AuthenticationResult(token);
     }
 
     @Transactional
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
-    public AuthenticationResult signin(
-            @RequestBody AuthenticationRequest authenticationRequest,
-            HttpServletResponse response) {
+    public AuthenticationResult signin(@RequestBody AuthenticationRequest authenticationRequest) {
 
         String token = authenticationService.signin(
                 authenticationRequest.getEmail(),
                 authenticationRequest.getPassword());
-
-        response.addCookie(cookieFactory.createCookie(token));
 
         return new AuthenticationResult(token);
     }
