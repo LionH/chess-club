@@ -24,6 +24,7 @@ public class AuthenticationController {
     @Transactional
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public AuthenticationResult signup(@RequestBody SubscriptionRequest subscriptionRequest) {
+        logger.debug("Signing up user {}", subscriptionRequest.getEmail());
         authenticationService.signup(
                 subscriptionRequest.getEmail(),
                 subscriptionRequest.getPassword(),
@@ -40,6 +41,7 @@ public class AuthenticationController {
     @Transactional
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
     public AuthenticationResult signin(@RequestBody AuthenticationRequest authenticationRequest) {
+        logger.debug("Authenticating user {}", authenticationRequest.getEmail());
 
         String token = authenticationService.signin(
                 authenticationRequest.getEmail(),
@@ -54,6 +56,7 @@ public class AuthenticationController {
         if (token == null) {
             logger.debug("No token found on sign out.");
         } else {
+            logger.debug("Signing out token {}", token);
             authenticationService.revoke(token);
         }
     }
