@@ -1,10 +1,12 @@
 package org.chesscorp.club.controllers;
 
+import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.dto.AuthenticationRequest;
 import org.chesscorp.club.dto.AuthenticationResult;
 import org.chesscorp.club.dto.SubscriptionRequest;
 import org.chesscorp.club.exception.AuthenticationFailedException;
+import org.chesscorp.club.exception.NotAuthenticatedException;
 import org.chesscorp.club.exception.UserAlreadyExistsException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,4 +55,17 @@ public class AuthenticationControllerTest {
         authenticationController.signup(new SubscriptionRequest("a@b.c", "Password1", "A"));
     }
 
+    @Test(expected = NotAuthenticatedException.class)
+    @Transactional
+    public void testCredentialsUnauthenticated() {
+        authenticationController.getCredentials("TT");
+    }
+
+    @Test
+    @Transactional
+    public void testCredentialsAuthenticated() {
+        AuthenticationResult auth = authenticationController.signup(new SubscriptionRequest("a@b.c", "Password1", "A"));
+        AuthenticationResult credentials = authenticationController.getCredentials(auth.getToken());
+        Assertions.assertThat(credentials).isEqualToComparingFieldByField(auth);
+    }
 }

@@ -3,6 +3,8 @@ package org.chesscorp.club.controllers;
 import org.chesscorp.club.dto.AuthenticationRequest;
 import org.chesscorp.club.dto.AuthenticationResult;
 import org.chesscorp.club.dto.SubscriptionRequest;
+import org.chesscorp.club.exception.NotAuthenticatedException;
+import org.chesscorp.club.model.Player;
 import org.chesscorp.club.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +37,9 @@ public class AuthenticationController {
                 subscriptionRequest.getEmail(),
                 subscriptionRequest.getPassword());
 
-        return new AuthenticationResult(token);
+        Player player = authenticationService.getPlayer(token);
+
+        return new AuthenticationResult(token, player);
     }
 
     @Transactional
@@ -47,7 +51,22 @@ public class AuthenticationController {
                 authenticationRequest.getEmail(),
                 authenticationRequest.getPassword());
 
-        return new AuthenticationResult(token);
+        Player player = authenticationService.getPlayer(token);
+
+        return new AuthenticationResult(token, player);
+    }
+
+    @Transactional
+    @RequestMapping(value = "/getCredentials", method = RequestMethod.POST)
+    public AuthenticationResult getCredentials(@CookieValue(value = "AUTH_TOKEN", required = false) String token) {
+        if (token == null) {
+            logger.debug("No token found while reading credentials.");
+            throw new NotAuthenticatedException("No token found in request");
+        } else {
+            Player player = authenticationService.getPlayer(token);
+            logger.debug("Credentials found for {}", player);
+            return new AuthenticationResult(token, player);
+        }
     }
 
     @Transactional
