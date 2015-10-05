@@ -57,11 +57,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             account = null;
         }
 
-        if (account == null ) {
+        if (account == null) {
             throw new AuthenticationFailedException("No account for '" + email + "'");
         }
 
-        if ( !account.getPassword().equals(password)){
+        if (!account.getPassword().equals(password)) {
             throw new AuthenticationFailedException("");
         }
 
@@ -72,11 +72,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     @Transactional(readOnly = true)
-    public Player getPlayer(String token) {
+    public Session getSession(String token) {
         try {
             Session session = sessionRepository.getOne(token);
-            Account account = session.getAccount();
-            return account.getPlayer();
+            return session;
         } catch (JpaObjectRetrievalFailureException e) {
             throw new NotAuthenticatedException();
         }

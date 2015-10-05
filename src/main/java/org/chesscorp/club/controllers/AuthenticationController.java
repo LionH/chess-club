@@ -4,7 +4,9 @@ import org.chesscorp.club.dto.AuthenticationRequest;
 import org.chesscorp.club.dto.AuthenticationResult;
 import org.chesscorp.club.dto.SubscriptionRequest;
 import org.chesscorp.club.exception.NotAuthenticatedException;
+import org.chesscorp.club.model.Account;
 import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.Session;
 import org.chesscorp.club.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +39,11 @@ public class AuthenticationController {
                 subscriptionRequest.getEmail(),
                 subscriptionRequest.getPassword());
 
-        Player player = authenticationService.getPlayer(token);
+        Session session = authenticationService.getSession(token);
+        Account account = session.getAccount();
+        Player player = account.getPlayer();
 
-        return new AuthenticationResult(token, player);
+        return new AuthenticationResult(token, account, player);
     }
 
     @Transactional
@@ -51,9 +55,11 @@ public class AuthenticationController {
                 authenticationRequest.getEmail(),
                 authenticationRequest.getPassword());
 
-        Player player = authenticationService.getPlayer(token);
+        Session session = authenticationService.getSession(token);
+        Account account = session.getAccount();
+        Player player = account.getPlayer();
 
-        return new AuthenticationResult(token, player);
+        return new AuthenticationResult(token, account, player);
     }
 
     @Transactional
@@ -63,9 +69,11 @@ public class AuthenticationController {
             logger.debug("No token found while reading credentials.");
             throw new NotAuthenticatedException("No token found in request");
         } else {
-            Player player = authenticationService.getPlayer(token);
+            Session session = authenticationService.getSession(token);
+            Account account = session.getAccount();
+            Player player = account.getPlayer();
             logger.debug("Credentials found for {}", player);
-            return new AuthenticationResult(token, player);
+            return new AuthenticationResult(token, account, player);
         }
     }
 

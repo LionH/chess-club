@@ -2,7 +2,6 @@ package org.chesscorp.club.service;
 
 import org.chesscorp.club.Application;
 import org.chesscorp.club.exception.NotAuthenticatedException;
-import org.chesscorp.club.model.Player;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -28,11 +27,9 @@ public class AuthenticationServiceTest {
         authenticationService.signup("alcibiade@alcibiade.org", "password", "Alcibiade");
         String token = authenticationService.signin("alcibiade@alcibiade.org", "password");
 
-        Player player = authenticationService.getPlayer(token);
-
+        authenticationService.getSession(token);
         authenticationService.revoke(token);
-
-        authenticationService.getPlayer(token);
+        authenticationService.getSession(token);
     }
 
 }

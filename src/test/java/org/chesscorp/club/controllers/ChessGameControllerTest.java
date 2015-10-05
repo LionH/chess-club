@@ -38,11 +38,12 @@ public class ChessGameControllerTest {
     public void testBasicGame() {
         authenticationService.signup("a@b.c", "pwd", "Alcibiade");
         String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
-        Player alcibiade = authenticationService.getPlayer(alcibiadeToken);
+        Player alcibiade = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
+
 
         authenticationService.signup("b@b.c", "pwd", "Bob");
         String bobToken = authenticationService.signin("b@b.c", "pwd");
-        Player bob = authenticationService.getPlayer(bobToken);
+        Player bob = authenticationService.getSession(bobToken).getAccount().getPlayer();
 
         /*
          * Game creation.
@@ -77,11 +78,11 @@ public class ChessGameControllerTest {
     public void testRefuseThirdPartyCreation() {
         authenticationService.signup("a@b.c", "pwd", "Alcibiade");
         String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
-        Player alcibiade = authenticationService.getPlayer(alcibiadeToken);
+        Player alcibiade = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
 
         authenticationService.signup("b@b.c", "pwd", "Bob");
         String bobToken = authenticationService.signin("b@b.c", "pwd");
-        Player bob = authenticationService.getPlayer(bobToken);
+        Player bob = authenticationService.getSession(bobToken).getAccount().getPlayer();
 
         authenticationService.signup("c@b.c", "pwd", "Charlie");
         String charlieToken = authenticationService.signin("c@b.c", "pwd");
@@ -101,11 +102,11 @@ public class ChessGameControllerTest {
     public void testRefuseMove() {
         authenticationService.signup("a@b.c", "pwd", "Alcibiade");
         String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
-        Player alcibiade = authenticationService.getPlayer(alcibiadeToken);
+        Player alcibiade = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
 
         authenticationService.signup("b@b.c", "pwd", "Bob");
         String bobToken = authenticationService.signin("b@b.c", "pwd");
-        Player bob = authenticationService.getPlayer(bobToken);
+        Player bob = authenticationService.getSession(bobToken).getAccount().getPlayer();
 
         ChessGame game1 = chessGameController.createGame(alcibiadeToken, alcibiade.getId(), bob.getId());
         chessGameController.postMove(game1.getId(), alcibiadeToken, "e4");

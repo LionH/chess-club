@@ -40,7 +40,7 @@ public class ChessGameController {
             @RequestParam String authenticationToken,
             @RequestParam Number whitePlayerId,
             @RequestParam Number blackPlayerId) {
-        Player player = authenticationService.getPlayer(authenticationToken);
+        Player player = authenticationService.getSession(authenticationToken).getAccount().getPlayer();
         if (!player.getId().equals(whitePlayerId) && !player.getId().equals(blackPlayerId)) {
             throw new ChessException("Can't create a game without playing in it.");
         }
@@ -66,7 +66,7 @@ public class ChessGameController {
             @PathVariable Number gameId,
             @RequestParam String authenticationToken,
             @RequestParam String move) {
-        Player player = authenticationService.getPlayer(authenticationToken);
+        Player player = authenticationService.getSession(authenticationToken).getAccount().getPlayer();
         ChessGame game = chessGameService.getGame(gameId);
 
         Player nextPlayer = game.getNextPlayer();

@@ -32,11 +32,11 @@ public class ChessGameServiceTest {
     public void testGameCreation() {
         authenticationService.signup("a@b.c", "pwd", "Alcibiade");
         String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
-        Player p1 = authenticationService.getPlayer(alcibiadeToken);
+        Player p1 = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
 
         authenticationService.signup("b@b.c", "pwd", "Bob");
         String bobToken = authenticationService.signin("b@b.c", "pwd");
-        Player p2 = authenticationService.getPlayer(bobToken);
+        Player p2 = authenticationService.getSession(bobToken).getAccount().getPlayer();
 
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
         Assertions.assertThat(game.getWhitePlayer()).isEqualToComparingFieldByField(p1);
@@ -56,7 +56,7 @@ public class ChessGameServiceTest {
     public void testRefuseSamePlayer() {
         authenticationService.signup("a@b.c", "pwd", "Alcibiade");
         String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
-        Player p1 = authenticationService.getPlayer(alcibiadeToken);
+        Player p1 = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
 
         chessGameService.createGame(p1.getId(), p1.getId());
     }
