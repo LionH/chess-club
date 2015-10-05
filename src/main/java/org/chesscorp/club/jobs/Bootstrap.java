@@ -11,12 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.repository.cdi.Eager;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
 @Component
 @Profile("bootstrap")
+@Eager
 public class Bootstrap {
 
     private Logger logger = LoggerFactory.getLogger(Bootstrap.class);
@@ -32,12 +34,18 @@ public class Bootstrap {
 
     @PostConstruct
     public void populate() {
-        if (playerRepository.count() == 0 && chessGameRepository.count() == 0 && accountRepository.count() == 0) {
+        long playerCount = playerRepository.count();
+        long gameCount = chessGameRepository.count();
+        long accountCount = accountRepository.count();
+
+        logger.info("Found {} accounts, {} players, {} games", accountCount, playerCount, gameCount);
+
+        if (playerCount == 0 && gameCount == 0 && accountCount == 0) {
             logger.info("Creating sample players");
             Player alcibiade = playerRepository.save(new Player("Alcibiade"));
             Player john = playerRepository.save(new Player("John"));
             Player bob = playerRepository.save(new Player("Bob"));
-            Player steve = playerRepository.save(new Player("Steve"));
+            playerRepository.save(new Player("Steve"));
 
             logger.info("Creating sample games");
             chessGameRepository.save(new ChessGame(playerRepository.getOne(john.getId()), playerRepository.getOne(bob.getId())));
