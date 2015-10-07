@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/authentication")
 public class AuthenticationController {
+    public static final String AUTHENTICATION_TOKEN = "AUTHENTICATION_TOKEN";
     private Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     @Autowired
@@ -64,7 +65,7 @@ public class AuthenticationController {
 
     @Transactional
     @RequestMapping(value = "/getCredentials", method = RequestMethod.POST)
-    public AuthenticationResult getCredentials(@CookieValue(value = "AUTH_TOKEN", required = false) String token) {
+    public AuthenticationResult getCredentials(@CookieValue(value = AUTHENTICATION_TOKEN, required = false) String token) {
         if (token == null) {
             logger.debug("No token found while reading credentials.");
             throw new NotAuthenticatedException("No token found in request");
@@ -79,7 +80,7 @@ public class AuthenticationController {
 
     @Transactional
     @RequestMapping(value = "/signout", method = RequestMethod.POST)
-    public void signout(@CookieValue(value = "AUTH_TOKEN", required = false) String token) {
+    public void signout(@CookieValue(value = AUTHENTICATION_TOKEN, required = false) String token) {
         if (token == null) {
             logger.debug("No token found on sign out.");
         } else {

@@ -66,10 +66,10 @@ public class ChessGameControllerTest {
          * Game moves
          */
 
-        ChessGame game3 = chessGameController.postMove(game1.getId(), alcibiadeToken, "e4");
+        ChessGame game3 = chessGameController.postMove(alcibiadeToken, game1.getId(), "e4");
         Assertions.assertThat(game3.getMoves()).extracting(ChessMove::getPgn).containsExactly("e4");
 
-        ChessGame game4 = chessGameController.postMove(game1.getId(), bobToken, "e5");
+        ChessGame game4 = chessGameController.postMove(bobToken, game1.getId(), "e5");
         Assertions.assertThat(game4.getMoves()).extracting(ChessMove::getPgn).containsExactly("e4", "e5");
     }
 
@@ -109,9 +109,9 @@ public class ChessGameControllerTest {
         Player bob = authenticationService.getSession(bobToken).getAccount().getPlayer();
 
         ChessGame game1 = chessGameController.createGame(alcibiadeToken, alcibiade.getId(), bob.getId());
-        chessGameController.postMove(game1.getId(), alcibiadeToken, "e4");
+        chessGameController.postMove(alcibiadeToken, game1.getId(), "e4");
         // Refuse 2nd move from same player
-        chessGameController.postMove(game1.getId(), alcibiadeToken, "e5");
+        chessGameController.postMove(alcibiadeToken, game1.getId(), "e5");
     }
 
 }

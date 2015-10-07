@@ -88,6 +88,12 @@ public class ChessGameServiceImpl implements ChessGameService {
     }
 
     @Override
+    public List<ChessGame> searchGames(Number playerId) {
+        List<ChessGame> games = new ArrayList<>();
+        return games;
+    }
+
+    @Override
     @Transactional
     public void batchImport(InputStream pgnStream) throws IOException {
         logger.debug("Importing games as batch");

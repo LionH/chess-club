@@ -4,6 +4,7 @@ import org.chesscorp.club.model.ChessGame;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public interface ChessGameService {
 
@@ -12,6 +13,8 @@ public interface ChessGameService {
     ChessGame getGame(Number id);
 
     ChessGame move(ChessGame game, String pgnMove);
+
+    List<ChessGame> searchGames(Number playerId);
 
     void batchImport(InputStream pgnStream) throws IOException;
 }
