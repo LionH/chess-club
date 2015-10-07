@@ -18,6 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @TransactionConfiguration(defaultRollback = true)
@@ -71,6 +73,9 @@ public class ChessGameControllerTest {
 
         ChessGame game4 = chessGameController.postMove(bobToken, game1.getId(), "e5");
         Assertions.assertThat(game4.getMoves()).extracting(ChessMove::getPgn).containsExactly("e4", "e5");
+
+        List<ChessGame> games = chessGameController.search(alcibiade.getId());
+        Assertions.assertThat(games).containsExactly(game1);
     }
 
     @Test(expected = ChessException.class)

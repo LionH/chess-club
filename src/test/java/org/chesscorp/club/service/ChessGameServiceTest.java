@@ -15,8 +15,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @TransactionConfiguration(defaultRollback = true)
@@ -31,7 +29,7 @@ public class ChessGameServiceTest {
 
     @Test
     @Transactional
-    public void testGameCreation() {
+    public void testGameOperations() {
         authenticationService.signup("a@b.c", "pwd", "Alcibiade");
         String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
         Player p1 = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
@@ -52,10 +50,10 @@ public class ChessGameServiceTest {
         game = chessGameService.move(game, "e7e5");
         Assertions.assertThat(game.getMoves()).extracting(ChessMove::getPgn).containsExactly("e4", "e5");
 
-        Assertions.assertThat(chessGameService.searchGames(12345)).isEmpty();
+        Assertions.assertThat(chessGameService.searchGames(12345L)).isEmpty();
 
-        Assertions.assertThat(chessGameService.searchGames(p1.getId()).contains(game));
-        Assertions.assertThat(chessGameService.searchGames(p2.getId()).contains(game));
+        Assertions.assertThat(chessGameService.searchGames(p1.getId())).hasSize(1).containsExactly(game);
+        Assertions.assertThat(chessGameService.searchGames(p2.getId())).hasSize(1).containsExactly(game);
     }
 
     @Test(expected = IllegalStateException.class)
