@@ -90,7 +90,8 @@ public class ChessGameServiceImpl implements ChessGameService {
     @Override
     @Transactional(readOnly = true)
     public List<ChessGame> searchGames(Number playerId) {
-        List<ChessGame> games = chessGameRepository.findByWhitePlayerIdOrBlackPlayerId(playerId, playerId);
+        long longValue = playerId.longValue();
+        List<ChessGame> games = chessGameRepository.findByWhitePlayerIdOrBlackPlayerId(longValue, longValue);
         return games;
     }
 
