@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/authentication")
 public class AuthenticationController {
-    public static final String AUTHENTICATION_TOKEN = "AUTHENTICATION_TOKEN";
+    public static final String AUTHENTICATION_TOKEN = "AUTH_TOKEN";
     private Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     @Autowired
