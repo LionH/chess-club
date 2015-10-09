@@ -22,7 +22,7 @@ public class ChessGame {
     private Player whitePlayer;
     @ManyToOne
     private Player blackPlayer;
-    @ElementCollection(targetClass = ChessMove.class)
+    @ElementCollection(targetClass = ChessMove.class, fetch = FetchType.EAGER)
     private List<ChessMove> moves;
     private Date startDate;
     private ChessGameStatus status;

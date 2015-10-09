@@ -4,9 +4,11 @@ package org.chesscorp.club.jobs;
 import org.chesscorp.club.model.Account;
 import org.chesscorp.club.model.ChessGame;
 import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.Robot;
 import org.chesscorp.club.persistence.AccountRepository;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
+import org.chesscorp.club.persistence.RobotRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class Bootstrap {
     private PlayerRepository playerRepository;
 
     @Autowired
+    private RobotRepository robotRepository;
+
+    @Autowired
     private ChessGameRepository chessGameRepository;
 
     @Autowired
@@ -41,6 +46,9 @@ public class Bootstrap {
         logger.info("Found {} accounts, {} players, {} games", accountCount, playerCount, gameCount);
 
         if (playerCount == 0 && gameCount == 0 && accountCount == 0) {
+            logger.info("Creating sample robots");
+            Robot gnuChess = robotRepository.save(new Robot("Gnu Chess", "gnuchess", "{depth=3}"));
+
             logger.info("Creating sample players");
             Player alcibiade = playerRepository.save(new Player("Alcibiade"));
             Player john = playerRepository.save(new Player("John"));
