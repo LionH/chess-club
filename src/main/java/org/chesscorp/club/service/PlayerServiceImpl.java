@@ -29,7 +29,7 @@ public class PlayerServiceImpl implements PlayerService {
         for (Player player : playerRepository.findAll()) {
             String displayName = player.getDisplayName().toLowerCase();
 
-            if (displayName.contains(query)) {
+            if (displayName.contains(processedQuery)) {
                 result.add(player);
             }
         }

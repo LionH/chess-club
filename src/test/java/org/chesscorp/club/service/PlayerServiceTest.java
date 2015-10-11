@@ -34,6 +34,6 @@ public class PlayerServiceTest {
 
         Assertions.assertThat(playerService.search("Billy")).isEmpty();
         Assertions.assertThat(playerService.search("bri")).hasSize(1);
-        Assertions.assertThat(playerService.search("er")).hasSize(2);
+        Assertions.assertThat(playerService.search("ER")).hasSize(2);
     }
 }
