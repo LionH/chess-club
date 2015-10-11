@@ -5,6 +5,9 @@ import org.chesscorp.club.Application;
 import org.chesscorp.club.model.ChessGame;
 import org.chesscorp.club.model.ChessMove;
 import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.Robot;
+import org.chesscorp.club.persistence.PlayerRepository;
+import org.chesscorp.club.persistence.RobotRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -25,18 +28,16 @@ public class ChessGameServiceTest {
     private ChessGameService chessGameService;
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private PlayerRepository playerRepository;
+
+    @Autowired
+    private RobotRepository robotRepository;
 
     @Test
     @Transactional
     public void testGameOperations() {
-        authenticationService.signup("a@b.c", "pwd", "Alcibiade");
-        String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
-        Player p1 = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
-
-        authenticationService.signup("b@b.c", "pwd", "Bob");
-        String bobToken = authenticationService.signin("b@b.c", "pwd");
-        Player p2 = authenticationService.getSession(bobToken).getAccount().getPlayer();
+        Player p1 = playerRepository.save(new Player("Player 1"));
+        Player p2 = playerRepository.save(new Player("Player 2"));
 
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
         Assertions.assertThat(game.getWhitePlayer()).isEqualToComparingFieldByField(p1);
@@ -56,13 +57,31 @@ public class ChessGameServiceTest {
         Assertions.assertThat(chessGameService.searchGames(p2.getId())).hasSize(1).containsExactly(game);
     }
 
+    @Test
+    @Transactional
+    public void testRobotAsBlack() {
+        Player p1 = playerRepository.save(new Player("Player 1"));
+        Robot rob = robotRepository.save(new Robot("rob", "gnuchess", "{level=3}"));
+
+        ChessGame game = chessGameService.createGame(p1.getId(), rob.getId());
+        Assertions.assertThat(game.getMoves()).isEmpty();
+    }
+
+    @Test
+    @Transactional
+    public void testRobotAsWhite() {
+        Player p1 = playerRepository.save(new Player("Player 1"));
+        Robot rob = robotRepository.save(new Robot("rob", "gnuchess", "{level=3}"));
+
+        ChessGame game = chessGameService.createGame(rob.getId(), p1.getId());
+        // This is not implemented yet but the robot move should already be computed
+        // Assertions.assertThat(game.getMoves()).isNotEmpty();
+    }
+
     @Test(expected = IllegalStateException.class)
     @Transactional
     public void testRefuseSamePlayer() {
-        authenticationService.signup("a@b.c", "pwd", "Alcibiade");
-        String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
-        Player p1 = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
-
+        Player p1 = playerRepository.save(new Player("Player 1"));
         chessGameService.createGame(p1.getId(), p1.getId());
     }
 }
