@@ -2,9 +2,7 @@ package org.chesscorp.club.controllers;
 
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
-import org.chesscorp.club.dto.AuthenticationRequest;
 import org.chesscorp.club.dto.AuthenticationResult;
-import org.chesscorp.club.dto.SubscriptionRequest;
 import org.chesscorp.club.exception.AuthenticationFailedException;
 import org.chesscorp.club.exception.NotAuthenticatedException;
 import org.chesscorp.club.exception.UserAlreadyExistsException;
@@ -31,28 +29,28 @@ public class AuthenticationControllerTest {
     @Test
     @Transactional
     public void testSignUpAndSignIn() {
-        authenticationController.signup(new SubscriptionRequest("a@b.c", "Password1", "A"));
-        authenticationController.signin(new AuthenticationRequest("a@b.c", "Password1"));
+        authenticationController.signup("a@b.c", "Password1", "A");
+        authenticationController.signin("a@b.c", "Password1");
     }
 
     @Test
     @Transactional
     public void testSignUpAndSignOut() {
-        AuthenticationResult auth = authenticationController.signup(new SubscriptionRequest("a@b.c", "Password1", "A"));
+        AuthenticationResult auth = authenticationController.signup("a@b.c", "Password1", "A");
         authenticationController.signout(auth.getToken());
     }
 
     @Test(expected = AuthenticationFailedException.class)
     @Transactional
     public void testUserNotFound() {
-        authenticationController.signin(new AuthenticationRequest("a@b.c", "Password1"));
+        authenticationController.signin("a@b.c", "Password1");
     }
 
     @Test(expected = UserAlreadyExistsException.class)
     @Transactional
     public void testUserAlreadyExisting() {
-        authenticationController.signup(new SubscriptionRequest("a@b.c", "Password1", "A"));
-        authenticationController.signup(new SubscriptionRequest("a@b.c", "Password1", "A"));
+        authenticationController.signup("a@b.c", "Password1", "A");
+        authenticationController.signup("a@b.c", "Password1", "A");
     }
 
     @Test(expected = NotAuthenticatedException.class)
@@ -64,7 +62,7 @@ public class AuthenticationControllerTest {
     @Test
     @Transactional
     public void testCredentialsAuthenticated() {
-        AuthenticationResult auth = authenticationController.signup(new SubscriptionRequest("a@b.c", "Password1", "A"));
+        AuthenticationResult auth = authenticationController.signup("a@b.c", "Password1", "A");
         AuthenticationResult credentials = authenticationController.getCredentials(auth.getToken());
         Assertions.assertThat(credentials).isEqualToComparingFieldByField(auth);
     }

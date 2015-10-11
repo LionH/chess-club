@@ -1,8 +1,6 @@
 package org.chesscorp.club.controllers;
 
-import org.chesscorp.club.dto.AuthenticationRequest;
 import org.chesscorp.club.dto.AuthenticationResult;
-import org.chesscorp.club.dto.SubscriptionRequest;
 import org.chesscorp.club.exception.NotAuthenticatedException;
 import org.chesscorp.club.model.Account;
 import org.chesscorp.club.model.Player;
@@ -28,17 +26,14 @@ public class AuthenticationController {
 
     @Transactional
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public AuthenticationResult signup(@RequestBody SubscriptionRequest subscriptionRequest) {
-        logger.debug("Signing up user {}", subscriptionRequest.getEmail());
-        authenticationService.signup(
-                subscriptionRequest.getEmail(),
-                subscriptionRequest.getPassword(),
-                subscriptionRequest.getDisplayName()
-        );
+    public AuthenticationResult signup(
+            @RequestParam String email,
+            @RequestParam String password,
+            @RequestParam String displayName) {
+        logger.debug("Signing up user {}", email);
+        authenticationService.signup(email, password, displayName);
 
-        String token = authenticationService.signin(
-                subscriptionRequest.getEmail(),
-                subscriptionRequest.getPassword());
+        String token = authenticationService.signin(email, password);
 
         Session session = authenticationService.getSession(token);
         Account account = session.getAccount();
@@ -49,12 +44,12 @@ public class AuthenticationController {
 
     @Transactional
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
-    public AuthenticationResult signin(@RequestBody AuthenticationRequest authenticationRequest) {
-        logger.debug("Authenticating user {}", authenticationRequest.getEmail());
+    public AuthenticationResult signin(
+            @RequestParam String email,
+            @RequestParam String password) {
+        logger.debug("Authenticating user {}", email);
 
-        String token = authenticationService.signin(
-                authenticationRequest.getEmail(),
-                authenticationRequest.getPassword());
+        String token = authenticationService.signin(email, password);
 
         Session session = authenticationService.getSession(token);
         Account account = session.getAccount();
