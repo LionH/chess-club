@@ -47,7 +47,7 @@ public class Bootstrap {
 
         if (playerCount == 0 && gameCount == 0 && accountCount == 0) {
             logger.info("Creating sample robots");
-            Robot gnuChess = robotRepository.save(new Robot("Gnu Chess", "gnuchess", "{depth=3}"));
+            robotRepository.save(new Robot("Simple AI", "randomAI", ""));
 
             logger.info("Creating sample players");
             Player alcibiade = playerRepository.save(new Player("Alcibiade"));

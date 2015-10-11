@@ -1,5 +1,6 @@
 package org.chesscorp.club.service;
 
+import org.alcibiade.chess.model.ChessException;
 import org.alcibiade.chess.model.ChessGameStatus;
 import org.alcibiade.chess.model.ChessMovePath;
 import org.alcibiade.chess.model.ChessPosition;
@@ -8,10 +9,12 @@ import org.alcibiade.chess.persistence.PgnGameModel;
 import org.alcibiade.chess.persistence.PgnMarshaller;
 import org.alcibiade.chess.rules.ChessHelper;
 import org.alcibiade.chess.rules.ChessRules;
+import org.chesscorp.club.ai.ChessAI;
 import org.chesscorp.club.exception.InvalidChessMoveException;
 import org.chesscorp.club.model.ChessGame;
 import org.chesscorp.club.model.ChessMove;
 import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.Robot;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.ChessMoveRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
@@ -26,6 +29,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class ChessGameServiceImpl implements ChessGameService {
@@ -41,6 +45,8 @@ public class ChessGameServiceImpl implements ChessGameService {
     private ChessRules chessRules;
     @Autowired
     private PgnMarshaller pgnMarshaller;
+    @Autowired
+    private Map<String, ChessAI> aiMap;
 
     @Override
     @Transactional
@@ -53,7 +59,9 @@ public class ChessGameServiceImpl implements ChessGameService {
         }
 
         ChessGame game = new ChessGame(white, black);
-        return chessGameRepository.save(game);
+        game = chessGameRepository.save(game);
+        game = checkForRobotMove(game);
+        return game;
     }
 
     @Override
@@ -80,6 +88,8 @@ public class ChessGameServiceImpl implements ChessGameService {
 
             ChessMove move = chessMoveRepository.save(new ChessMove(canonicalPgn));
             ChessGame updatedGame = chessGameRepository.save(new ChessGame(game, move, status));
+
+            updatedGame = checkForRobotMove(updatedGame);
 
             return updatedGame;
         } catch (org.alcibiade.chess.model.ChessException e) {
@@ -122,5 +132,37 @@ public class ChessGameServiceImpl implements ChessGameService {
         }
 
         logger.debug("Imported {} games", gamesCount);
+    }
+
+    /**
+     * Make a robot move if this game's turn is on a robot.
+     *
+     * @param game the current game object
+     * @return the new value of the game object
+     */
+    private ChessGame checkForRobotMove(ChessGame game) {
+        Player nextPlayer = game.getNextPlayer();
+
+        if (nextPlayer instanceof Robot) {
+            Robot robot = (Robot) nextPlayer;
+            ChessAI ai = aiMap.get(robot.getEngine());
+
+            if (ai == null) {
+                throw new IllegalStateException("Unknwown AI: " + robot.getEngine() + " for robot " + robot.getId());
+            }
+
+            List<String> pgnMoves = new ArrayList<>();
+            game.getMoves().forEach(m -> pgnMoves.add(m.getPgn()));
+            try {
+                String robotMove = ai.computeNextMove(robot.getParameters(), pgnMoves);
+                if (robotMove != null) {
+                    game = move(game, robotMove);
+                }
+            } catch (ChessException e) {
+                logger.warn("Inconsistent move in game " + game.getId(), e);
+            }
+        }
+
+        return game;
     }
 }

@@ -61,21 +61,31 @@ public class ChessGameServiceTest {
     @Transactional
     public void testRobotAsBlack() {
         Player p1 = playerRepository.save(new Player("Player 1"));
-        Robot rob = robotRepository.save(new Robot("rob", "gnuchess", "{level=3}"));
+        Robot rob = robotRepository.save(new Robot("rob", "randomAI", ""));
 
         ChessGame game = chessGameService.createGame(p1.getId(), rob.getId());
         Assertions.assertThat(game.getMoves()).isEmpty();
+        game = chessGameService.move(game, "e4");
+        Assertions.assertThat(game.getMoves()).hasSize(2);
     }
 
     @Test
     @Transactional
     public void testRobotAsWhite() {
         Player p1 = playerRepository.save(new Player("Player 1"));
-        Robot rob = robotRepository.save(new Robot("rob", "gnuchess", "{level=3}"));
+        Robot rob = robotRepository.save(new Robot("rob", "randomAI", "{level=3}"));
 
         ChessGame game = chessGameService.createGame(rob.getId(), p1.getId());
-        // This is not implemented yet but the robot move should already be computed
-        // Assertions.assertThat(game.getMoves()).isNotEmpty();
+        Assertions.assertThat(game.getMoves()).isNotEmpty();
+    }
+
+    @Test(expected = RuntimeException.class)
+    @Transactional
+    public void testUnknownAI() {
+        Player p1 = playerRepository.save(new Player("Player 1"));
+        Robot rob = robotRepository.save(new Robot("rob", "bogusAI", "{level=3}"));
+
+        ChessGame game = chessGameService.createGame(rob.getId(), p1.getId());
     }
 
     @Test(expected = IllegalStateException.class)
