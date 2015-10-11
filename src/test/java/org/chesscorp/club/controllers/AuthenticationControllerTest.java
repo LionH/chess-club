@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.dto.AuthenticationResult;
 import org.chesscorp.club.exception.AuthenticationFailedException;
-import org.chesscorp.club.exception.NotAuthenticatedException;
 import org.chesscorp.club.exception.UserAlreadyExistsException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,10 +52,12 @@ public class AuthenticationControllerTest {
         authenticationController.signup("a@b.c", "Password1", "A");
     }
 
-    @Test(expected = NotAuthenticatedException.class)
+    @Test
     @Transactional
     public void testCredentialsUnauthenticated() {
-        authenticationController.getCredentials("TT");
+        AuthenticationResult authentication = authenticationController.getCredentials("TT");
+        Assertions.assertThat(authentication.getToken()).isNull();
+        Assertions.assertThat(authentication.getPlayer()).isNull();
     }
 
     @Test

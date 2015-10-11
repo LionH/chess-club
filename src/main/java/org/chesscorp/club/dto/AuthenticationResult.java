@@ -14,6 +14,9 @@ public class AuthenticationResult {
 
     private Player player;
 
+    public AuthenticationResult() {
+    }
+
     public AuthenticationResult(String token, Account account, Player player) {
         this.token = token;
         this.accountIdentifier = account.getIdentifier();

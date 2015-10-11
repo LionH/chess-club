@@ -1,7 +1,6 @@
 package org.chesscorp.club.controllers;
 
 import org.chesscorp.club.dto.AuthenticationResult;
-import org.chesscorp.club.exception.NotAuthenticatedException;
 import org.chesscorp.club.model.Account;
 import org.chesscorp.club.model.Player;
 import org.chesscorp.club.model.Session;
@@ -58,19 +57,21 @@ public class AuthenticationController {
         return new AuthenticationResult(token, account, player);
     }
 
-    @Transactional
     @RequestMapping(value = "/getCredentials", method = RequestMethod.POST)
     public AuthenticationResult getCredentials(@CookieValue(value = AUTHENTICATION_TOKEN, required = false) String token) {
-        if (token == null) {
-            logger.debug("No token found while reading credentials.");
-            throw new NotAuthenticatedException("No token found in request");
-        } else {
+        AuthenticationResult authenticationResult = new AuthenticationResult();
+
+        try {
             Session session = authenticationService.getSession(token);
             Account account = session.getAccount();
             Player player = account.getPlayer();
             logger.debug("Credentials found for {}", player);
-            return new AuthenticationResult(token, account, player);
+            authenticationResult = new AuthenticationResult(token, account, player);
+        } catch (Exception ex) {
+            logger.debug("No credentials found for token " + token);
         }
+
+        return authenticationResult;
     }
 
     @Transactional
