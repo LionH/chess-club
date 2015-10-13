@@ -32,6 +32,8 @@ public class PlayerServiceTest {
         playerRepository.save(new Player("John Deacon"));
         playerRepository.save(new Player("Roger Taylor"));
 
+
+        Assertions.assertThat(playerService.search("")).hasSize(9);
         Assertions.assertThat(playerService.search("Billy")).isEmpty();
         Assertions.assertThat(playerService.search("bri")).hasSize(1);
         Assertions.assertThat(playerService.search("ER")).hasSize(2);
