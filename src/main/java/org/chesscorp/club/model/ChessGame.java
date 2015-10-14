@@ -55,7 +55,7 @@ public class ChessGame {
         this.status = status;
     }
 
-    public Number getId() {
+    public Long getId() {
         return id;
     }
 

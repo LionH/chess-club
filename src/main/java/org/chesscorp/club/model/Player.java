@@ -27,7 +27,7 @@ public class Player {
         this.displayName = displayName;
     }
 
-    public Number getId() {
+    public Long getId() {
         return id;
     }
 

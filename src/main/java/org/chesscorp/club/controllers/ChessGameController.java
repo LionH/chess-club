@@ -55,10 +55,13 @@ public class ChessGameController {
     @RequestMapping(method = RequestMethod.POST)
     public ChessGame createGame(
             @CookieValue(value = AuthenticationController.AUTHENTICATION_TOKEN) String authenticationToken,
-            @RequestParam Number whitePlayerId,
-            @RequestParam Number blackPlayerId) {
+            @RequestParam Long whitePlayerId,
+            @RequestParam Long blackPlayerId) {
         Player player = authenticationService.getSession(authenticationToken).getAccount().getPlayer();
-        if (!player.getId().equals(whitePlayerId) && !player.getId().equals(blackPlayerId)) {
+
+        logger.debug("Game creation {} vs. {} by {} ...", whitePlayerId, blackPlayerId, player.getId());
+        if (player.getId().longValue() != whitePlayerId
+                && player.getId().longValue() != blackPlayerId) {
             throw new ChessException("Can't create a game without playing in it.");
         }
 
