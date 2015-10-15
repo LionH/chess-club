@@ -25,7 +25,8 @@ public class PgnImportProcessor {
         logger.info("Processing File: " + file);
 
         try (InputStream stream = new FileInputStream(file)) {
-            chessGameService.batchImport(stream);
+            long importCount = chessGameService.batchImport(stream);
+            logger.info("Imported {} game(s)", importCount);
         } catch (IOException e) {
             throw new IllegalStateException("File processing failed on " + file, e);
         }

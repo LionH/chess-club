@@ -16,5 +16,12 @@ public interface ChessGameService {
 
     List<ChessGame> searchGames(Number playerId);
 
-    void batchImport(InputStream pgnStream) throws IOException;
+    /**
+     * Import a series of games from a PGN data stream.
+     *
+     * @param pgnStream the PGN stream which can contain either a single of multiple game files
+     * @return the number of imported games
+     * @throws IOException whenever stream reading fails
+     */
+    long batchImport(InputStream pgnStream) throws IOException;
 }

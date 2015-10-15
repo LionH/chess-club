@@ -107,10 +107,10 @@ public class ChessGameServiceImpl implements ChessGameService {
 
     @Override
     @Transactional
-    public void batchImport(InputStream pgnStream) throws IOException {
+    public long batchImport(InputStream pgnStream) throws IOException {
         logger.debug("Importing games as batch");
         PgnBookReader bookReader = new PgnBookReader(pgnStream);
-        int gamesCount = 0;
+        long gamesCount = 0;
         PgnGameModel pgnGameModel;
 
         while ((pgnGameModel = bookReader.readGame()) != null) {
@@ -132,6 +132,8 @@ public class ChessGameServiceImpl implements ChessGameService {
         }
 
         logger.debug("Imported {} games", gamesCount);
+
+        return gamesCount;
     }
 
     /**
