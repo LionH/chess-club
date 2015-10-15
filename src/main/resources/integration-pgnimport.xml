@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-file="http://www.springframework.org/schema/integration/file"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd"
+        >
+
+
+    <int:service-activator input-channel="filesInChannel" output-channel="filesOutChannel">
+        <bean class="org.chesscorp.club.jobs.PgnImportProcessor"/>
+    </int:service-activator>
+
+    <int-file:inbound-channel-adapter id="filesInChannel" directory="file:import" filename-pattern="*.pgn">
+        <int:poller id="poller" fixed-rate="10000"/>
+    </int-file:inbound-channel-adapter>
+
+    <int:channel id="filesOutChannel">
+        <int:queue/>
+    </int:channel>
+
+</beans>
