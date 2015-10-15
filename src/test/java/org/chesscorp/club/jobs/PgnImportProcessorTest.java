@@ -35,7 +35,7 @@ public class PgnImportProcessorTest {
 
     @Test
     @Transactional
-    public void testSingleFileSingeImport1() throws IOException {
+    public void testImportMcDonnell() throws IOException {
         PgnImportProcessor pgnImportProcessor = pgnImportProcessorObjectFactory.getObject();
         Assertions.assertThat(playerRepository.findAll()).isEmpty();
         Assertions.assertThat(chessGameRepository.findAll()).isEmpty();
@@ -50,7 +50,7 @@ public class PgnImportProcessorTest {
 
     @Test
     @Transactional
-    public void testSingleFileSingleImport2() throws IOException {
+    public void testImportDeLaBourdonnais() throws IOException {
         PgnImportProcessor pgnImportProcessor = pgnImportProcessorObjectFactory.getObject();
         Assertions.assertThat(playerRepository.findAll()).isEmpty();
         Assertions.assertThat(chessGameRepository.findAll()).isEmpty();
@@ -74,6 +74,6 @@ public class PgnImportProcessorTest {
         pgnImportProcessor.process(new ClassPathResource("samples-pgn/DeLaBourdonnais.pgn").getFile());
 
         Assertions.assertThat(playerRepository.count()).isEqualTo(19);
-        Assertions.assertThat(chessGameRepository.count()).isEqualTo(207);
+        Assertions.assertThat(chessGameRepository.count()).isEqualTo(122);
     }
 }

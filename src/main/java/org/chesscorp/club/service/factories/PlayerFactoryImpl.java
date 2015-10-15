@@ -25,7 +25,7 @@ public class PlayerFactoryImpl implements PlayerFactory {
 
         if (players.isEmpty()) {
             Player player = new Player(displayName);
-            result = playerRepository.save(player);
+            result = playerRepository.saveAndFlush(player);
         } else {
             result = players.get(0);
         }

@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class ChessGameServiceImpl implements ChessGameService {
@@ -117,8 +118,28 @@ public class ChessGameServiceImpl implements ChessGameService {
         PgnGameModel pgnGameModel;
 
         while ((pgnGameModel = bookReader.readGame()) != null) {
+            final PgnGameModel pgnGame = pgnGameModel;
+            Player playerW = playerFactory.findOrCreatePlayer(pgnGameModel.getWhitePlayerName());
+            Player playerB = playerFactory.findOrCreatePlayer(pgnGameModel.getBlackPlayerName());
+            Date gameDate = pgnGameModel.getGameDate();
+
+            List<ChessGame> matchingGames = chessGameRepository
+                    .findByWhitePlayerIdAndBlackPlayerIdAndStartDate(playerW.getId(), playerB.getId(), gameDate)
+                    .stream()
+                    .filter(g -> g.getMoves().stream().map(ChessMove::getPgn).collect(Collectors.toList()).equals(pgnGame.getMoves()))
+                    .collect(Collectors.toList());
+
+            logger.trace("    - {}: {} vs. {}: {} games matching",
+                    pgnGameModel.getGameDate(),
+                    pgnGameModel.getWhitePlayerName(),
+                    pgnGameModel.getBlackPlayerName(),
+                    matchingGames.size());
+
+            if (!matchingGames.isEmpty()) {
+                continue;
+            }
+
             gamesCount += 1;
-            logger.trace("    - {}", pgnGameModel);
 
             List<ChessMove> chessMoves = new ArrayList<>();
 
@@ -128,9 +149,7 @@ public class ChessGameServiceImpl implements ChessGameService {
                 chessMoves.add(move);
             });
 
-            Player playerW = playerFactory.findOrCreatePlayer(pgnGameModel.getWhitePlayerName());
-            Player playerB = playerFactory.findOrCreatePlayer(pgnGameModel.getBlackPlayerName());
-            ChessGame chessGame = new ChessGame(playerW, playerB, chessMoves, ChessGameStatus.OPEN, new Date());
+            ChessGame chessGame = new ChessGame(playerW, playerB, chessMoves, ChessGameStatus.OPEN, gameDate);
             chessGameRepository.saveAndFlush(chessGame);
         }
 
