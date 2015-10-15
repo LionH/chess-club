@@ -35,11 +35,12 @@ public class ChessGameServiceTest {
 
     @Test
     @Transactional
-    public void testGameOperations() {
+    public void testGameOperations() throws InterruptedException {
         Player p1 = playerRepository.save(new Player("Player 1"));
         Player p2 = playerRepository.save(new Player("Player 2"));
 
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
+        Thread.sleep(10);
         Assertions.assertThat(game.getWhitePlayer()).isEqualToComparingFieldByField(p1);
         Assertions.assertThat(game.getBlackPlayer()).isEqualToComparingFieldByField(p2);
         Assertions.assertThat(game.getId().longValue()).isGreaterThan(0L);

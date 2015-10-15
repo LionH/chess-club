@@ -18,6 +18,7 @@ import org.chesscorp.club.model.Robot;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.ChessMoveRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
+import org.chesscorp.club.service.factories.PlayerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,8 @@ public class ChessGameServiceImpl implements ChessGameService {
     private ChessMoveRepository chessMoveRepository;
     @Autowired
     private PlayerRepository playerRepository;
+    @Autowired
+    private PlayerFactory playerFactory;
     @Autowired
     private ChessRules chessRules;
     @Autowired
@@ -125,8 +128,8 @@ public class ChessGameServiceImpl implements ChessGameService {
                 chessMoves.add(move);
             });
 
-            Player playerW = playerRepository.findByDisplayName("Alcibiade").get(0);
-            Player playerB = playerRepository.findByDisplayName("Bob").get(0);
+            Player playerW = playerFactory.findOrCreatePlayer(pgnGameModel.getWhitePlayerName());
+            Player playerB = playerFactory.findOrCreatePlayer(pgnGameModel.getBlackPlayerName());
             ChessGame chessGame = new ChessGame(playerW, playerB, chessMoves, ChessGameStatus.OPEN, new Date());
             chessGameRepository.saveAndFlush(chessGame);
         }

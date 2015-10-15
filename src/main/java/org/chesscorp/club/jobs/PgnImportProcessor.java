@@ -4,6 +4,9 @@ import org.chesscorp.club.service.ChessGameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,9 +14,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Import a single PGN file in the database. Not that this component is not annotated as such as it will dynamically
- * be declared in integration description files.
+ * Import a single PGN file in the database.
  */
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PgnImportProcessor {
 
     private Logger logger = LoggerFactory.getLogger(PgnImportProcessor.class);
@@ -21,7 +25,7 @@ public class PgnImportProcessor {
     @Autowired
     private ChessGameService chessGameService;
 
-    public File process(File file) throws Exception {
+    public File process(File file) {
         logger.info("Processing File: " + file);
 
         try (InputStream stream = new FileInputStream(file)) {

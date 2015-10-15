@@ -8,7 +8,6 @@
 		http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd"
         >
 
-
     <int:service-activator input-channel="filesInChannel" output-channel="filesOutChannel">
         <bean class="org.chesscorp.club.jobs.PgnImportProcessor"/>
     </int:service-activator>
