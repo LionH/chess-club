@@ -35,7 +35,7 @@ public class PgnImportProcessorTest {
 
     @Test
     @Transactional
-    public void testSingleFileImport() throws IOException {
+    public void testSingleFileSingeImport1() throws IOException {
         PgnImportProcessor pgnImportProcessor = pgnImportProcessorObjectFactory.getObject();
         Assertions.assertThat(playerRepository.findAll()).isEmpty();
         Assertions.assertThat(chessGameRepository.findAll()).isEmpty();
@@ -46,5 +46,34 @@ public class PgnImportProcessorTest {
 
         Assertions.assertThat(playerRepository.count()).isEqualTo(8);
         Assertions.assertThat(chessGameRepository.count()).isEqualTo(106);
+    }
+
+    @Test
+    @Transactional
+    public void testSingleFileSingleImport2() throws IOException {
+        PgnImportProcessor pgnImportProcessor = pgnImportProcessorObjectFactory.getObject();
+        Assertions.assertThat(playerRepository.findAll()).isEmpty();
+        Assertions.assertThat(chessGameRepository.findAll()).isEmpty();
+
+        ClassPathResource cpr = new ClassPathResource("samples-pgn/DeLaBourdonnais.pgn");
+        File pgnFile = cpr.getFile();
+        pgnImportProcessor.process(pgnFile);
+
+        Assertions.assertThat(playerRepository.count()).isEqualTo(15);
+        Assertions.assertThat(chessGameRepository.count()).isEqualTo(101);
+    }
+
+    @Test
+    @Transactional
+    public void testDualImport() throws IOException {
+        PgnImportProcessor pgnImportProcessor = pgnImportProcessorObjectFactory.getObject();
+        Assertions.assertThat(playerRepository.findAll()).isEmpty();
+        Assertions.assertThat(chessGameRepository.findAll()).isEmpty();
+
+        pgnImportProcessor.process(new ClassPathResource("samples-pgn/McDonnell.pgn").getFile());
+        pgnImportProcessor.process(new ClassPathResource("samples-pgn/DeLaBourdonnais.pgn").getFile());
+
+        Assertions.assertThat(playerRepository.count()).isEqualTo(19);
+        Assertions.assertThat(chessGameRepository.count()).isEqualTo(207);
     }
 }
