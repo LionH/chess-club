@@ -2,10 +2,7 @@ package org.chesscorp.club.model;
 
 import org.hibernate.annotations.Proxy;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -20,6 +17,10 @@ public class ChessMove {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "GAME_ID")
+    private ChessGame game;
 
     private String pgn;
 
@@ -43,6 +44,10 @@ public class ChessMove {
 
     public Date getDate() {
         return date;
+    }
+
+    public ChessGame getGame() {
+        return game;
     }
 
     @Override
