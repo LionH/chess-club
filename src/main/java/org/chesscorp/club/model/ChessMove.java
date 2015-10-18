@@ -29,9 +29,10 @@ public class ChessMove {
     public ChessMove() {
     }
 
-    public ChessMove(String pgn) {
+    public ChessMove(ChessGame game, Date date, String pgn) {
+        this.game = game;
         this.pgn = pgn;
-        this.date = new Date();
+        this.date = date;
     }
 
     public Number getId() {

@@ -3,6 +3,7 @@ package org.chesscorp.club.jobs;
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.persistence.ChessGameRepository;
+import org.chesscorp.club.persistence.ChessMoveRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,9 @@ public class PgnImportProcessorTest {
     private ChessGameRepository chessGameRepository;
 
     @Autowired
+    private ChessMoveRepository chessMoveRepository;
+
+    @Autowired
     private ObjectFactory<PgnImportProcessor> pgnImportProcessorObjectFactory;
 
     @Test
@@ -46,6 +50,7 @@ public class PgnImportProcessorTest {
 
         Assertions.assertThat(playerRepository.count()).isEqualTo(8);
         Assertions.assertThat(chessGameRepository.count()).isEqualTo(106);
+        Assertions.assertThat(chessMoveRepository.count()).isEqualTo(8434L);
     }
 
     @Test
@@ -61,6 +66,7 @@ public class PgnImportProcessorTest {
 
         Assertions.assertThat(playerRepository.count()).isEqualTo(15);
         Assertions.assertThat(chessGameRepository.count()).isEqualTo(101);
+        Assertions.assertThat(chessMoveRepository.count()).isEqualTo(8204L);
     }
 
     @Test
@@ -75,5 +81,6 @@ public class PgnImportProcessorTest {
 
         Assertions.assertThat(playerRepository.count()).isEqualTo(19);
         Assertions.assertThat(chessGameRepository.count()).isEqualTo(122);
+        Assertions.assertThat(chessMoveRepository.count()).isEqualTo(9381L);
     }
 }

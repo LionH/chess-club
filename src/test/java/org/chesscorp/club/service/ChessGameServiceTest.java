@@ -6,6 +6,7 @@ import org.chesscorp.club.model.ChessGame;
 import org.chesscorp.club.model.ChessMove;
 import org.chesscorp.club.model.Player;
 import org.chesscorp.club.model.Robot;
+import org.chesscorp.club.persistence.ChessMoveRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.chesscorp.club.persistence.RobotRepository;
 import org.junit.Test;
@@ -29,6 +30,9 @@ public class ChessGameServiceTest {
 
     @Autowired
     private PlayerRepository playerRepository;
+
+    @Autowired
+    private ChessMoveRepository chessMoveRepository;
 
     @Autowired
     private RobotRepository robotRepository;
@@ -56,6 +60,21 @@ public class ChessGameServiceTest {
 
         Assertions.assertThat(chessGameService.searchGames(p1.getId())).hasSize(1).containsExactly(game);
         Assertions.assertThat(chessGameService.searchGames(p2.getId())).hasSize(1).containsExactly(game);
+    }
+
+    @Test
+    @Transactional
+    public void testSaveAndReload() throws InterruptedException {
+        Player p1 = playerRepository.save(new Player("Player 1"));
+        Player p2 = playerRepository.save(new Player("Player 2"));
+
+        ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
+        game = chessGameService.move(game, "e2e4");
+        game = chessGameService.move(game, "e7e5");
+
+        ChessGame game2 = chessGameService.getGame(game.getId());
+        Assertions.assertThat(game2.getMoves()).isNotEmpty();
+        Assertions.assertThat(chessMoveRepository.findByGameId(game.getId())).isNotEmpty();
     }
 
     @Test

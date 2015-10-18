@@ -90,7 +90,7 @@ public class ChessGameServiceImpl implements ChessGameService {
             ChessPosition updatedPosition = ChessHelper.applyMoveAndSwitch(chessRules, position, path);
             ChessGameStatus status = chessRules.getStatus(updatedPosition);
 
-            ChessMove move = chessMoveRepository.save(new ChessMove(canonicalPgn));
+            ChessMove move = chessMoveRepository.save(new ChessMove(game, new Date(), canonicalPgn));
             ChessGame updatedGame = chessGameRepository.save(new ChessGame(game, move, status));
 
             updatedGame = checkForRobotMove(updatedGame);
@@ -141,16 +141,11 @@ public class ChessGameServiceImpl implements ChessGameService {
 
             gamesCount += 1;
 
-            List<ChessMove> chessMoves = new ArrayList<>();
+            ChessGame chessGame = new ChessGame(playerW, playerB, new ArrayList<>(), ChessGameStatus.OPEN, gameDate);
+            pgnGameModel.getMoves().forEach(m -> chessGame.addMove(gameDate, m));
 
-            pgnGameModel.getMoves().forEach(m -> {
-                ChessMove move = new ChessMove(m);
-                chessMoveRepository.save(move);
-                chessMoves.add(move);
-            });
-
-            ChessGame chessGame = new ChessGame(playerW, playerB, chessMoves, ChessGameStatus.OPEN, gameDate);
-            chessGameRepository.saveAndFlush(chessGame);
+            chessGameRepository.save(chessGame);
+            chessGame.getMoves().stream().forEach(chessMoveRepository::save);
         }
 
         logger.debug("Imported {} games", gamesCount);
