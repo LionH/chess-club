@@ -5,7 +5,7 @@ import org.chesscorp.club.Application;
 import org.chesscorp.club.model.ChessGame;
 import org.chesscorp.club.model.ChessMove;
 import org.chesscorp.club.model.Player;
-import org.chesscorp.club.model.Robot;
+import org.chesscorp.club.model.RobotPlayer;
 import org.chesscorp.club.persistence.ChessMoveRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.chesscorp.club.persistence.RobotRepository;
@@ -81,7 +81,7 @@ public class ChessGameServiceTest {
     @Transactional
     public void testRobotAsBlack() {
         Player p1 = playerRepository.save(new Player("Player 1"));
-        Robot rob = robotRepository.save(new Robot("rob", "randomAI", ""));
+        RobotPlayer rob = robotRepository.save(new RobotPlayer("rob", "randomAI", ""));
 
         ChessGame game = chessGameService.createGame(p1.getId(), rob.getId());
         Assertions.assertThat(game.getMoves()).isEmpty();
@@ -93,7 +93,7 @@ public class ChessGameServiceTest {
     @Transactional
     public void testRobotAsWhite() {
         Player p1 = playerRepository.save(new Player("Player 1"));
-        Robot rob = robotRepository.save(new Robot("rob", "randomAI", "{level=3}"));
+        RobotPlayer rob = robotRepository.save(new RobotPlayer("rob", "randomAI", "{level=3}"));
 
         ChessGame game = chessGameService.createGame(rob.getId(), p1.getId());
         Assertions.assertThat(game.getMoves()).isNotEmpty();
@@ -103,7 +103,7 @@ public class ChessGameServiceTest {
     @Transactional
     public void testUnknownAI() {
         Player p1 = playerRepository.save(new Player("Player 1"));
-        Robot rob = robotRepository.save(new Robot("rob", "bogusAI", "{level=3}"));
+        RobotPlayer rob = robotRepository.save(new RobotPlayer("rob", "bogusAI", "{level=3}"));
 
         ChessGame game = chessGameService.createGame(rob.getId(), p1.getId());
     }

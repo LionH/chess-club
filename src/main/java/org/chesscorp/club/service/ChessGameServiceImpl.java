@@ -14,7 +14,7 @@ import org.chesscorp.club.exception.InvalidChessMoveException;
 import org.chesscorp.club.model.ChessGame;
 import org.chesscorp.club.model.ChessMove;
 import org.chesscorp.club.model.Player;
-import org.chesscorp.club.model.Robot;
+import org.chesscorp.club.model.RobotPlayer;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.ChessMoveRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
@@ -162,18 +162,18 @@ public class ChessGameServiceImpl implements ChessGameService {
     private ChessGame checkForRobotMove(ChessGame game) {
         Player nextPlayer = game.getNextPlayer();
 
-        if (nextPlayer instanceof Robot) {
-            Robot robot = (Robot) nextPlayer;
-            ChessAI ai = aiMap.get(robot.getEngine());
+        if (nextPlayer instanceof RobotPlayer) {
+            RobotPlayer robotPlayer = (RobotPlayer) nextPlayer;
+            ChessAI ai = aiMap.get(robotPlayer.getEngine());
 
             if (ai == null) {
-                throw new IllegalStateException("Unknwown AI: " + robot.getEngine() + " for robot " + robot.getId());
+                throw new IllegalStateException("Unknwown AI: " + robotPlayer.getEngine() + " for robotPlayer " + robotPlayer.getId());
             }
 
             List<String> pgnMoves = new ArrayList<>();
             game.getMoves().forEach(m -> pgnMoves.add(m.getPgn()));
             try {
-                String robotMove = ai.computeNextMove(robot.getParameters(), pgnMoves);
+                String robotMove = ai.computeNextMove(robotPlayer.getParameters(), pgnMoves);
                 if (robotMove != null) {
                     game = move(game, robotMove);
                 }

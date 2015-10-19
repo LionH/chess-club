@@ -6,23 +6,23 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 /**
- * Robot data model. A robot is a player not referenced by any account but managed by an AI engine.
+ * RobotPlayer data model. A robot is a player not referenced by any account but managed by an AI engine.
  *
  * @author Yannick Kirschhoffer <alcibiade@alcibiade.org>
  */
 @Entity
 @Proxy(lazy = false)
-public class Robot extends Player {
+public class RobotPlayer extends Player {
     @Column
     private String engine;
 
     @Column
     private String parameters;
-    
-    public Robot() {
+
+    public RobotPlayer() {
     }
 
-    public Robot(String displayName, String engine, String parameters) {
+    public RobotPlayer(String displayName, String engine, String parameters) {
         super(displayName);
         this.engine = engine;
         this.parameters = parameters;
@@ -38,6 +38,6 @@ public class Robot extends Player {
 
     @Override
     public String toString() {
-        return "Robot{" + getDisplayName() + "}";
+        return "RobotPlayer{" + getDisplayName() + "}";
     }
 }

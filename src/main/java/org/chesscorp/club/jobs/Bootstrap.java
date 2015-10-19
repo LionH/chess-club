@@ -1,10 +1,7 @@
 package org.chesscorp.club.jobs;
 
 
-import org.chesscorp.club.model.Account;
-import org.chesscorp.club.model.ChessGame;
-import org.chesscorp.club.model.Player;
-import org.chesscorp.club.model.Robot;
+import org.chesscorp.club.model.*;
 import org.chesscorp.club.persistence.AccountRepository;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
@@ -45,13 +42,13 @@ public class Bootstrap {
 
         if (playerCount == 0 && gameCount == 0 && accountCount == 0) {
             logger.info("Creating sample robots");
-            robotRepository.save(new Robot("Simple AI", "randomAI", ""));
+            robotRepository.save(new RobotPlayer("Simple AI", "randomAI", ""));
 
             logger.info("Creating sample players");
-            Player alcibiade = playerRepository.save(new Player("Alcibiade"));
-            Player john = playerRepository.save(new Player("John"));
-            Player bob = playerRepository.save(new Player("Bob"));
-            playerRepository.save(new Player("Steve"));
+            Player alcibiade = playerRepository.save(new ClubPlayer("Alcibiade"));
+            Player john = playerRepository.save(new ClubPlayer("John"));
+            Player bob = playerRepository.save(new ClubPlayer("Bob"));
+            playerRepository.save(new ClubPlayer("Steve"));
 
             logger.info("Creating sample games");
             chessGameRepository.save(new ChessGame(playerRepository.getOne(john.getId()), playerRepository.getOne(bob.getId())));

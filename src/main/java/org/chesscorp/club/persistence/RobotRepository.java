@@ -1,8 +1,8 @@
 package org.chesscorp.club.persistence;
 
-import org.chesscorp.club.model.Robot;
+import org.chesscorp.club.model.RobotPlayer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RobotRepository extends JpaRepository<Robot, Number> {
+public interface RobotRepository extends JpaRepository<RobotPlayer, Number> {
 
 }
