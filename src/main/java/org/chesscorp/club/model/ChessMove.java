@@ -19,11 +19,11 @@ public class ChessMove {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "GAME_ID")
+    @JoinColumn(name = "GAME_ID", nullable = false)
     private ChessGame game;
-
+    @Column(nullable = false)
     private String pgn;
-
+    @Column(nullable = false)
     private Date date;
 
     public ChessMove() {

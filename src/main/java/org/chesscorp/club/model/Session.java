@@ -17,8 +17,9 @@ public class Session {
 
     @Id
     private String authenticationToken;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Account account;
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationTime;
 

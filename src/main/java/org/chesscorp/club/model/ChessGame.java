@@ -18,13 +18,15 @@ public class ChessGame {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Player whitePlayer;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Player blackPlayer;
     @OneToMany(mappedBy = "game")
     private List<ChessMove> moves;
+    @Column(nullable = false)
     private Date startDate;
+    @Column(nullable = false)
     private ChessGameStatus status;
 
     public ChessGame() {

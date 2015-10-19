@@ -2,6 +2,7 @@ package org.chesscorp.club.model;
 
 import org.hibernate.annotations.Proxy;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 /**
@@ -12,7 +13,7 @@ import javax.persistence.Entity;
 @Entity
 @Proxy(lazy = false)
 public class ClubPlayer extends Player {
-
+    @Column
     private boolean active;
 
     public ClubPlayer() {

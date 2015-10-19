@@ -4,6 +4,7 @@ import org.chesscorp.club.exception.AuthenticationFailedException;
 import org.chesscorp.club.exception.NotAuthenticatedException;
 import org.chesscorp.club.exception.UserAlreadyExistsException;
 import org.chesscorp.club.model.Account;
+import org.chesscorp.club.model.ClubPlayer;
 import org.chesscorp.club.model.Player;
 import org.chesscorp.club.model.Session;
 import org.chesscorp.club.persistence.AccountRepository;
@@ -41,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new UserAlreadyExistsException();
         }
 
-        Player p = playerRepository.save(new Player(displayName));
+        Player p = playerRepository.save(new ClubPlayer(displayName));
         Account a = accountRepository.save(new Account(email, password, p));
         logger.info("Account {} created for player {}", a, p);
     }

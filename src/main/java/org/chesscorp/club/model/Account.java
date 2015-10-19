@@ -19,9 +19,9 @@ public class Account {
 
     @Id
     private String identifier;
-    @Column
+    @Column(nullable = false)
     private String password;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Player player;
 
     public Account() {
