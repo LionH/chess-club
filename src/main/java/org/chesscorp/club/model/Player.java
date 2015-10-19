@@ -12,6 +12,12 @@ import java.util.Objects;
  */
 @Entity
 @Proxy(lazy = false)
+@Table(
+        indexes = {
+                @Index(columnList = "displayName", unique = false)
+        }
+)
+
 public class Player {
 
     @Id

@@ -13,6 +13,12 @@ import java.util.*;
  */
 @Entity
 @Proxy(lazy = false)
+@Table(
+        indexes = {
+                @Index(columnList = "white_player", unique = false),
+                @Index(columnList = "black_player", unique = false)
+        }
+)
 public class ChessGame {
 
     @Id
