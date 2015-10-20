@@ -2,6 +2,8 @@ package org.chesscorp.club.service;
 
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
+import org.chesscorp.club.dto.PlayerProfile;
+import org.chesscorp.club.model.ClubPlayer;
 import org.chesscorp.club.model.Player;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.junit.Test;
@@ -37,5 +39,20 @@ public class PlayerServiceTest {
         Assertions.assertThat(playerService.search("Billy")).isEmpty();
         Assertions.assertThat(playerService.search("bri")).hasSize(1);
         Assertions.assertThat(playerService.search("ER")).hasSize(2);
+    }
+
+    @Test
+    @Transactional
+    public void testProfile() {
+        Player player1 = playerRepository.save(new ClubPlayer("Player 1"));
+        Player player2 = playerRepository.save(new ClubPlayer("Player 2"));
+        Player player3 = playerRepository.save(new ClubPlayer("Player 3"));
+
+        Assertions.assertThat(playerService.getProfile(player1.getId()))
+                .isEqualToComparingFieldByField(new PlayerProfile(player1));
+        Assertions.assertThat(playerService.getProfile(player2.getId()))
+                .isEqualToComparingFieldByField(new PlayerProfile(player2));
+        Assertions.assertThat(playerService.getProfile(player3.getId()))
+                .isEqualToComparingFieldByField(new PlayerProfile(player3));
     }
 }

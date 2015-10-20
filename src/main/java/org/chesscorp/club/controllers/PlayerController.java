@@ -1,5 +1,6 @@
 package org.chesscorp.club.controllers;
 
+import org.chesscorp.club.dto.PlayerProfile;
 import org.chesscorp.club.model.Player;
 import org.chesscorp.club.service.PlayerService;
 import org.slf4j.Logger;
@@ -31,5 +32,14 @@ public class PlayerController {
         List<Player> players = playerService.search(query);
         logger.debug("Found {} players matching {}", players.size(), query);
         return players;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/profile", method = RequestMethod.POST)
+    public PlayerProfile getProfile(
+            @RequestParam Long playerId) {
+        PlayerProfile profile = playerService.getProfile(playerId);
+        logger.debug("Found profile for player {}: {}", playerId, profile.getPlayer().getDisplayName());
+        return profile;
     }
 }

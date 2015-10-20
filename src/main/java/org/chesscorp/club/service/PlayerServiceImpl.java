@@ -1,5 +1,6 @@
 package org.chesscorp.club.service;
 
+import org.chesscorp.club.dto.PlayerProfile;
 import org.chesscorp.club.model.Player;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.slf4j.Logger;
@@ -36,4 +37,13 @@ public class PlayerServiceImpl implements PlayerService {
 
         return result;
     }
+
+    @Override
+    public PlayerProfile getProfile(Long playerId) {
+        Player player = playerRepository.getOne(playerId);
+        PlayerProfile profile = new PlayerProfile(player);
+        return profile;
+    }
+
+
 }
