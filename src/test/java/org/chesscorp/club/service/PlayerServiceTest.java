@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -49,10 +50,10 @@ public class PlayerServiceTest {
         Player player3 = playerRepository.save(new ClubPlayer("Player 3"));
 
         Assertions.assertThat(playerService.getProfile(player1.getId()))
-                .isEqualToComparingFieldByField(new PlayerProfile(player1));
+                .isEqualToComparingFieldByField(new PlayerProfile(player1, new ArrayList<>()));
         Assertions.assertThat(playerService.getProfile(player2.getId()))
-                .isEqualToComparingFieldByField(new PlayerProfile(player2));
+                .isEqualToComparingFieldByField(new PlayerProfile(player2, new ArrayList<>()));
         Assertions.assertThat(playerService.getProfile(player3.getId()))
-                .isEqualToComparingFieldByField(new PlayerProfile(player3));
+                .isEqualToComparingFieldByField(new PlayerProfile(player3, new ArrayList<>()));
     }
 }

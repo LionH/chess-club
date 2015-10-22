@@ -1,7 +1,9 @@
 package org.chesscorp.club.service;
 
 import org.chesscorp.club.dto.PlayerProfile;
+import org.chesscorp.club.model.EloRank;
 import org.chesscorp.club.model.Player;
+import org.chesscorp.club.persistence.EloRankRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,8 @@ public class PlayerServiceImpl implements PlayerService {
     @Autowired
     private PlayerRepository playerRepository;
 
+    @Autowired
+    private EloRankRepository eloRankRepository;
 
     @Override
     public List<Player> search(String query) {
@@ -41,7 +45,8 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public PlayerProfile getProfile(Long playerId) {
         Player player = playerRepository.getOne(playerId);
-        PlayerProfile profile = new PlayerProfile(player);
+        List<EloRank> history = eloRankRepository.findByPlayerId(playerId);
+        PlayerProfile profile = new PlayerProfile(player, history);
         return profile;
     }
 
