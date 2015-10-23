@@ -21,12 +21,12 @@ public class EloRank {
     private ChessGame chessGame;
 
     @Column(nullable = false)
-    private Long elo;
+    private Integer elo;
 
     public EloRank() {
     }
 
-    public EloRank(Player player, ChessGame chessGame, Long elo) {
+    public EloRank(Player player, ChessGame chessGame, Integer elo) {
         this.player = player;
         this.chessGame = chessGame;
         this.elo = elo;
@@ -44,7 +44,7 @@ public class EloRank {
         return chessGame;
     }
 
-    public Long getElo() {
+    public Integer getElo() {
         return elo;
     }
 

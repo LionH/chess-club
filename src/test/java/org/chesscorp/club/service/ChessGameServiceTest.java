@@ -1,5 +1,6 @@
 package org.chesscorp.club.service;
 
+import org.alcibiade.chess.model.ChessGameStatus;
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.model.ChessGame;
@@ -7,6 +8,7 @@ import org.chesscorp.club.model.ChessMove;
 import org.chesscorp.club.model.Player;
 import org.chesscorp.club.model.RobotPlayer;
 import org.chesscorp.club.persistence.ChessMoveRepository;
+import org.chesscorp.club.persistence.EloRankRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.chesscorp.club.persistence.RobotRepository;
 import org.junit.Test;
@@ -36,6 +38,9 @@ public class ChessGameServiceTest {
 
     @Autowired
     private RobotRepository robotRepository;
+
+    @Autowired
+    private EloRankRepository eloRankRepository;
 
     @Test
     @Transactional
@@ -113,5 +118,31 @@ public class ChessGameServiceTest {
     public void testRefuseSamePlayer() {
         Player p1 = playerRepository.save(new Player("Player 1"));
         chessGameService.createGame(p1.getId(), p1.getId());
+    }
+
+    @Test
+    @Transactional
+    public void testGameEndHooks() {
+        Player p1 = playerRepository.save(new Player("Player 1"));
+        Player p2 = playerRepository.save(new Player("Player 2"));
+
+        // 1. e4 e5 2. Qh5 Nc6 3. Bc4 Nf6 4. Qxf7#
+        ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
+        game = chessGameService.move(game, "e4");
+        game = chessGameService.move(game, "e5");
+        game = chessGameService.move(game, "Qh5");
+        game = chessGameService.move(game, "Nc6");
+        game = chessGameService.move(game, "Bc4");
+        game = chessGameService.move(game, "Nf6");
+        game = chessGameService.move(game, "Qxf7#");
+
+        Assertions.assertThat(game.getStatus()).isEqualTo(ChessGameStatus.WHITEWON);
+        // TODO: Activate that assertion
+//        Assertions.assertThat(
+//                eloRankRepository.findAll()
+//                        .stream()
+//                        .map(rank -> rank.getPlayer().getDisplayName())
+//                        .collect(Collectors.toList())
+//        ).containsExactly("Player 1", "Player 2");
     }
 }

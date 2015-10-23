@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface EloRankRepository extends JpaRepository<EloRank, Number> {
 
-    List<EloRank> findByPlayerId(Long gameId);
+    List<EloRank> findByPlayerId(Long playerId);
+    List<EloRank> findFirstByPlayerIdOrderByIdDesc(Long playerId);
 }

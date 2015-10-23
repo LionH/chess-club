@@ -93,12 +93,22 @@ public class ChessGameServiceImpl implements ChessGameService {
             ChessMove move = chessMoveRepository.save(new ChessMove(game, new Date(), canonicalPgn));
             ChessGame updatedGame = chessGameRepository.save(new ChessGame(game, move, status));
 
-            updatedGame = checkForRobotMove(updatedGame);
+            if (updatedGame.getStatus() == ChessGameStatus.OPEN) {
+                updatedGame = checkForRobotMove(updatedGame);
+            }else {
+                updatePostGame(game);
+            }
 
             return updatedGame;
         } catch (org.alcibiade.chess.model.ChessException e) {
             throw new InvalidChessMoveException(pgnMove, e);
         }
+    }
+
+    private void updatePostGame(ChessGame game) {
+
+
+//        if ( game.getStatus())
     }
 
     @Override
