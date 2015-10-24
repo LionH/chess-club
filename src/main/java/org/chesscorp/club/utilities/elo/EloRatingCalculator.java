@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EloRatingCalculator {
-
     public static final int K = 20;
+    public static final int INITIAL_RATING = 1200;
 
     public int computeRatingDelta(int playerRating, int opponentRating, double score) {
         double expected = 1. / (1 + Math.pow(10, (opponentRating - playerRating) / 400.));

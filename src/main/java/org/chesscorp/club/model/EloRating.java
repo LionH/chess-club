@@ -8,7 +8,7 @@ import javax.persistence.*;
  * @author Yannick Kirschhoffer <alcibiade@alcibiade.org>
  */
 @Entity
-public class EloRank {
+public class EloRating {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,15 +21,15 @@ public class EloRank {
     private ChessGame chessGame;
 
     @Column(nullable = false)
-    private Integer elo;
+    private Integer eloRating;
 
-    public EloRank() {
+    public EloRating() {
     }
 
-    public EloRank(Player player, ChessGame chessGame, Integer elo) {
+    public EloRating(Player player, ChessGame chessGame, Integer eloRating) {
         this.player = player;
         this.chessGame = chessGame;
-        this.elo = elo;
+        this.eloRating = eloRating;
     }
 
     public Long getId() {
@@ -44,17 +44,17 @@ public class EloRank {
         return chessGame;
     }
 
-    public Integer getElo() {
-        return elo;
+    public Integer getEloRating() {
+        return eloRating;
     }
 
     @Override
     public String toString() {
-        return "EloRank{" +
+        return "EloRating{" +
                 "id=" + id +
                 ", player=" + player +
                 ", chessGame=" + chessGame +
-                ", elo=" + elo +
+                ", eloRating=" + eloRating +
                 '}';
     }
 }

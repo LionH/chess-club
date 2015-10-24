@@ -11,14 +11,13 @@ import org.alcibiade.chess.rules.ChessHelper;
 import org.alcibiade.chess.rules.ChessRules;
 import org.chesscorp.club.ai.ChessAI;
 import org.chesscorp.club.exception.InvalidChessMoveException;
-import org.chesscorp.club.model.ChessGame;
-import org.chesscorp.club.model.ChessMove;
-import org.chesscorp.club.model.Player;
-import org.chesscorp.club.model.RobotPlayer;
+import org.chesscorp.club.model.*;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.ChessMoveRepository;
+import org.chesscorp.club.persistence.EloRatingRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.chesscorp.club.service.factories.PlayerFactory;
+import org.chesscorp.club.utilities.elo.EloRatingCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +43,8 @@ public class ChessGameServiceImpl implements ChessGameService {
     @Autowired
     private PlayerRepository playerRepository;
     @Autowired
+    private EloRatingRepository eloRatingRepository;
+    @Autowired
     private PlayerFactory playerFactory;
     @Autowired
     private ChessRules chessRules;
@@ -51,6 +52,8 @@ public class ChessGameServiceImpl implements ChessGameService {
     private PgnMarshaller pgnMarshaller;
     @Autowired
     private Map<String, ChessAI> aiMap;
+    @Autowired
+    private EloRatingCalculator eloRatingCalculator;
 
     @Override
     @Transactional
@@ -95,7 +98,7 @@ public class ChessGameServiceImpl implements ChessGameService {
 
             if (updatedGame.getStatus() == ChessGameStatus.OPEN) {
                 updatedGame = checkForRobotMove(updatedGame);
-            }else {
+            } else {
                 updatePostGame(game);
             }
 
@@ -105,10 +108,50 @@ public class ChessGameServiceImpl implements ChessGameService {
         }
     }
 
+    /**
+     * Updates performed when a game has ended.
+     *
+     * @param game the game that just ended.
+     */
     private void updatePostGame(ChessGame game) {
+        double score = Double.NaN;
 
+        switch (game.getStatus()) {
+            case BLACKWON:
+                score = 0.0;
+                break;
+            case WHITEWON:
+                score = 1.0;
+                break;
+            case PAT:
+                score = 0.5;
+                break;
+            case OPEN:
+                throw new IllegalStateException("Post game triggers can't be run on open games");
+        }
 
-//        if ( game.getStatus())
+        Player whitePlayer = game.getWhitePlayer();
+        Player blackPlayer = game.getBlackPlayer();
+
+        EloRating ratingW = eloRatingRepository.findFirstByPlayerIdOrderByIdDesc(whitePlayer.getId());
+        EloRating ratingB = eloRatingRepository.findFirstByPlayerIdOrderByIdDesc(blackPlayer.getId());
+
+        int rW = ratingW == null ? EloRatingCalculator.INITIAL_RATING : ratingW.getEloRating();
+        int rB = ratingB == null ? EloRatingCalculator.INITIAL_RATING : ratingB.getEloRating();
+
+        int eloPoints = eloRatingCalculator.computeRatingDelta(rW, rB, score);
+
+        int r2W = rW + eloPoints;
+        int r2B = rB - eloPoints;
+
+        logger.debug("Game {} ended, player {} rating {} -> {}, player {} rating {} -> {}",
+                game.getId(),
+                whitePlayer.getId(), rW, r2W,
+                blackPlayer.getId(), rB, r2B
+        );
+
+        eloRatingRepository.save(new EloRating(whitePlayer, game, r2W));
+        eloRatingRepository.save(new EloRating(blackPlayer, game, r2B));
     }
 
     @Override

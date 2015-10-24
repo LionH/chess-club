@@ -1,6 +1,6 @@
 package org.chesscorp.club.dto;
 
-import org.chesscorp.club.model.EloRank;
+import org.chesscorp.club.model.EloRating;
 import org.chesscorp.club.model.Player;
 
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.List;
  */
 public class PlayerProfile {
     private Player player;
-    private List<EloRank> eloHistory;
+    private List<EloRating> eloHistory;
 
-    public PlayerProfile(Player player, List<EloRank> eloHistory) {
+    public PlayerProfile(Player player, List<EloRating> eloHistory) {
         this.player = player;
         this.eloHistory = eloHistory;
     }
@@ -21,7 +21,7 @@ public class PlayerProfile {
         return player;
     }
 
-    public List<EloRank> getEloHistory() {
+    public List<EloRating> getEloHistory() {
         return eloHistory;
     }
 }

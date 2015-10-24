@@ -8,7 +8,7 @@ import org.chesscorp.club.model.ChessMove;
 import org.chesscorp.club.model.Player;
 import org.chesscorp.club.model.RobotPlayer;
 import org.chesscorp.club.persistence.ChessMoveRepository;
-import org.chesscorp.club.persistence.EloRankRepository;
+import org.chesscorp.club.persistence.EloRatingRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.chesscorp.club.persistence.RobotRepository;
 import org.junit.Test;
@@ -20,6 +20,8 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.stream.Collectors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -40,7 +42,7 @@ public class ChessGameServiceTest {
     private RobotRepository robotRepository;
 
     @Autowired
-    private EloRankRepository eloRankRepository;
+    private EloRatingRepository eloRatingRepository;
 
     @Test
     @Transactional
@@ -136,13 +138,21 @@ public class ChessGameServiceTest {
         game = chessGameService.move(game, "Nf6");
         game = chessGameService.move(game, "Qxf7#");
 
+        eloRatingRepository.findAll()
+                .stream()
+                .forEach(r -> logger.debug("Rating: {}", r));
+
         Assertions.assertThat(game.getStatus()).isEqualTo(ChessGameStatus.WHITEWON);
-        // TODO: Activate that assertion
-//        Assertions.assertThat(
-//                eloRankRepository.findAll()
-//                        .stream()
-//                        .map(rank -> rank.getPlayer().getDisplayName())
-//                        .collect(Collectors.toList())
-//        ).containsExactly("Player 1", "Player 2");
+
+        Assertions.assertThat(
+                eloRatingRepository.findAll()
+                        .stream()
+                        .map(rank -> rank.getPlayer().getDisplayName())
+                        .collect(Collectors.toList())
+        ).containsExactly("Player 1", "Player 2");
+
+        Assertions.assertThat(eloRatingRepository.findFirstByPlayerIdOrderByIdDesc(p1.getId()).getEloRating()).isEqualTo(1210);
+        Assertions.assertThat(eloRatingRepository.findFirstByPlayerIdOrderByIdDesc(p2.getId()).getEloRating()).isEqualTo(1190);
+
     }
 }

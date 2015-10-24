@@ -3,7 +3,7 @@ package org.chesscorp.club.persistence;
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.model.ChessGame;
-import org.chesscorp.club.model.EloRank;
+import org.chesscorp.club.model.EloRating;
 import org.chesscorp.club.model.Player;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @TransactionConfiguration(defaultRollback = true)
-public class EloRankRepositoryTest {
+public class EloRatingRepositoryTest {
 
     @Autowired
     private PlayerRepository playerRepository;
@@ -25,7 +25,7 @@ public class EloRankRepositoryTest {
     private ChessGameRepository chessGameRepository;
 
     @Autowired
-    private EloRankRepository eloRankRepository;
+    private EloRatingRepository eloRatingRepository;
 
     @Test
     @Transactional
@@ -36,13 +36,19 @@ public class EloRankRepositoryTest {
         ChessGame game1 = chessGameRepository.save(new ChessGame(p1, p2));
         ChessGame game2 = chessGameRepository.save(new ChessGame(p1, p2));
 
-        EloRank rank1 = eloRankRepository.save(new EloRank(p1, game1, 1201));
-        EloRank rank2 = eloRankRepository.save(new EloRank(p2, game1, 1199));
+        EloRating rating1 = eloRatingRepository.save(new EloRating(p1, game1, 1201));
+        EloRating rating2 = eloRatingRepository.save(new EloRating(p2, game1, 1199));
 
-        EloRank rank3 = eloRankRepository.save(new EloRank(p1, game2, 1202));
-        EloRank rank4 = eloRankRepository.save(new EloRank(p2, game2, 1198));
+        Assertions.assertThat(eloRatingRepository.findAll()).hasSize(2);
+        Assertions.assertThat(eloRatingRepository.findFirstByPlayerIdOrderByIdDesc(p1.getId()).getEloRating()).isEqualTo(1201);
+        Assertions.assertThat(eloRatingRepository.findFirstByPlayerIdOrderByIdDesc(p2.getId()).getEloRating()).isEqualTo(1199);
 
-        Assertions.assertThat(eloRankRepository.findAll()).hasSize(4);
+        EloRating rating3 = eloRatingRepository.save(new EloRating(p1, game2, 1202));
+        EloRating rating4 = eloRatingRepository.save(new EloRating(p2, game2, 1198));
+
+        Assertions.assertThat(eloRatingRepository.findAll()).hasSize(4);
+        Assertions.assertThat(eloRatingRepository.findFirstByPlayerIdOrderByIdDesc(p1.getId()).getEloRating()).isEqualTo(1202);
+        Assertions.assertThat(eloRatingRepository.findFirstByPlayerIdOrderByIdDesc(p2.getId()).getEloRating()).isEqualTo(1198);
     }
 
 }

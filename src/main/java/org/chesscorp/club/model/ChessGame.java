@@ -122,7 +122,7 @@ public class ChessGame {
                 "id='" + id + '\'' +
                 ", whitePlayer=" + whitePlayer +
                 ", blackPlayer=" + blackPlayer +
-                ", moves=" + moves +
+                ", movesCount=" + moves.size() +
                 ", startDate=" + startDate +
                 ", status=" + status +
                 '}';
