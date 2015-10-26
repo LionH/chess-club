@@ -43,7 +43,7 @@ public class ChessGameControllerTest {
     private PlayerRepository playerRepository;
 
     @Test
-    public void testActualMvcController() throws Exception {
+    public void testEmptyMvcController() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(chessGameController).build();
 
         mockMvc.perform(
@@ -57,7 +57,7 @@ public class ChessGameControllerTest {
 
     @Test
     @Transactional
-    public void testBasicGame() {
+    public void testBasicGame() throws Exception {
         authenticationService.signup("a@b.c", "pwd", "Alcibiade");
         String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
         Player alcibiade = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
@@ -99,6 +99,19 @@ public class ChessGameControllerTest {
 
         Assertions.assertThat(chessGameController.search(alcibiade.getId(), false)).isEmpty();
         Assertions.assertThat(chessGameController.search(alcibiade.getId(), null)).isEqualTo(games);
+
+        /*
+         * Search games from the controller itself.
+         */
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(chessGameController).build();
+
+        mockMvc.perform(
+                post("/api/chess/game/search").param("playerId", alcibiade.getId().toString())
+        ).andExpect(
+                status().is2xxSuccessful()
+        ).andExpect(
+                jsonPath("$", hasSize(1))
+        );
     }
 
     @Test(expected = ChessException.class)

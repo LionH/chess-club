@@ -1,5 +1,6 @@
 package org.chesscorp.club.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class ChessMove {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "GAME_ID", nullable = false)
+    @JsonIgnore
     private ChessGame game;
     @Column(nullable = false)
     private String pgn;
