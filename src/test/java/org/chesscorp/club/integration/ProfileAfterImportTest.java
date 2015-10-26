@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.dto.PlayerProfile;
 import org.chesscorp.club.jobs.PgnImportProcessor;
-import org.chesscorp.club.model.ChessGame;
 import org.chesscorp.club.model.Player;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.ChessMoveRepository;
@@ -22,7 +21,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Test the PGN import process directly. This will also implicit
@@ -65,9 +63,10 @@ public class ProfileAfterImportTest {
 
         Player player = playerRepository.findByDisplayName("De Labourdonnais, Louis").get(0);
         PlayerProfile profile = playerService.getProfile(player.getId());
-        List<ChessGame> games = chessGameService.searchGames(player.getId());
 
         Assertions.assertThat(profile).isNotNull();
-        Assertions.assertThat(games).hasSize(86);
+        Assertions.assertThat(chessGameService.searchGames(player.getId(), true)).hasSize(86);
+        Assertions.assertThat(chessGameService.searchGames(player.getId(), false)).hasSize(0);
+        Assertions.assertThat(chessGameService.searchGames(player.getId(), null)).hasSize(86);
     }
 }

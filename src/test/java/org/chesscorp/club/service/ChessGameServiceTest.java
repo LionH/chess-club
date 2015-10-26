@@ -63,10 +63,10 @@ public class ChessGameServiceTest {
         game = chessGameService.move(game, "e7e5");
         Assertions.assertThat(game.getMoves()).extracting(ChessMove::getPgn).containsExactly("e4", "e5");
 
-        Assertions.assertThat(chessGameService.searchGames(12345L)).isEmpty();
+        Assertions.assertThat(chessGameService.searchGames(12345L, null)).isEmpty();
 
-        Assertions.assertThat(chessGameService.searchGames(p1.getId())).hasSize(1).containsExactly(game);
-        Assertions.assertThat(chessGameService.searchGames(p2.getId())).hasSize(1).containsExactly(game);
+        Assertions.assertThat(chessGameService.searchGames(p1.getId(), null)).hasSize(1).containsExactly(game);
+        Assertions.assertThat(chessGameService.searchGames(p2.getId(), null)).hasSize(1).containsExactly(game);
     }
 
     @Test

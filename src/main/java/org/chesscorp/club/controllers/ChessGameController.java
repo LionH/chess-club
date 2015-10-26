@@ -37,8 +37,10 @@ public class ChessGameController {
     @Transactional
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public List<ChessGame> search(
-            @RequestParam Number playerId) {
-        List<ChessGame> games = chessGameService.searchGames(playerId);
+            @RequestParam Number playerId,
+            @RequestParam(required = false) Boolean open
+    ) {
+        List<ChessGame> games = chessGameService.searchGames(playerId, open);
         logger.debug("Found {} games for player {}", games.size(), playerId);
 
         return games;

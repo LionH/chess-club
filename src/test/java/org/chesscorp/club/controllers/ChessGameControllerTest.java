@@ -74,8 +74,11 @@ public class ChessGameControllerTest {
         ChessGame game4 = chessGameController.postMove(bobToken, game1.getId(), "e5");
         Assertions.assertThat(game4.getMoves()).extracting(ChessMove::getPgn).containsExactly("e4", "e5");
 
-        List<ChessGame> games = chessGameController.search(alcibiade.getId());
+        List<ChessGame> games = chessGameController.search(alcibiade.getId(), true);
         Assertions.assertThat(games).containsExactly(game1);
+
+        Assertions.assertThat(chessGameController.search(alcibiade.getId(), false)).isEmpty();
+        Assertions.assertThat(chessGameController.search(alcibiade.getId(), null)).isEqualTo(games);
     }
 
     @Test(expected = ChessException.class)

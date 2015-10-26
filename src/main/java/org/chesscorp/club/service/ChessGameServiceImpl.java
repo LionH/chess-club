@@ -156,9 +156,26 @@ public class ChessGameServiceImpl implements ChessGameService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ChessGame> searchGames(Number playerId) {
+    public List<ChessGame> searchGames(Number playerId, Boolean open) {
         long longValue = playerId.longValue();
-        List<ChessGame> games = chessGameRepository.findByWhitePlayerIdOrBlackPlayerId(longValue, longValue);
+        List<ChessGameStatus> status = new ArrayList<>();
+
+        if (open == null) {
+            status.add(ChessGameStatus.BLACKWON);
+            status.add(ChessGameStatus.WHITEWON);
+            status.add(ChessGameStatus.OPEN);
+            status.add(ChessGameStatus.PAT);
+        } else if (open) {
+            status.add(ChessGameStatus.OPEN);
+        } else {
+            status.add(ChessGameStatus.BLACKWON);
+            status.add(ChessGameStatus.WHITEWON);
+            status.add(ChessGameStatus.PAT);
+        }
+
+        List<ChessGame> games =
+                chessGameRepository.findByWhitePlayerIdAndStatusInOrBlackPlayerIdAndStatusIn(
+                        longValue, status, longValue, status);
         return games;
     }
 

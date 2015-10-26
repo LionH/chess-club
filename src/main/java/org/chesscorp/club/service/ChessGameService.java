@@ -14,7 +14,7 @@ public interface ChessGameService {
 
     ChessGame move(ChessGame game, String pgnMove);
 
-    List<ChessGame> searchGames(Number playerId);
+    List<ChessGame> searchGames(Number playerId, Boolean open);
 
     /**
      * Import a series of games from a PGN data stream.
