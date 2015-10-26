@@ -16,9 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -34,6 +41,19 @@ public class ChessGameControllerTest {
 
     @Autowired
     private PlayerRepository playerRepository;
+
+    @Test
+    public void testActualMvcController() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(chessGameController).build();
+
+        mockMvc.perform(
+                post("/api/chess/game/search").param("playerId", "777")
+        ).andExpect(
+                status().is2xxSuccessful()
+        ).andExpect(
+                jsonPath("$", hasSize(0))
+        );
+    }
 
     @Test
     @Transactional
