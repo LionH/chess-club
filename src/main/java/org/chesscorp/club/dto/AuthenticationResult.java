@@ -1,7 +1,7 @@
 package org.chesscorp.club.dto;
 
-import org.chesscorp.club.model.Account;
-import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.people.Account;
+import org.chesscorp.club.model.people.Player;
 
 /**
  * Returned by the server on successful authentication.

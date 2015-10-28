@@ -2,8 +2,8 @@ package org.chesscorp.club.jobs;
 
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
-import org.chesscorp.club.model.ClubPlayer;
-import org.chesscorp.club.model.RobotPlayer;
+import org.chesscorp.club.model.people.ClubPlayer;
+import org.chesscorp.club.model.people.RobotPlayer;
 import org.chesscorp.club.persistence.AccountRepository;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.PlayerRepository;

@@ -2,9 +2,9 @@ package org.chesscorp.club.persistence;
 
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
-import org.chesscorp.club.model.ChessGame;
-import org.chesscorp.club.model.EloRating;
-import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.game.ChessGame;
+import org.chesscorp.club.model.game.EloRating;
+import org.chesscorp.club.model.people.Player;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

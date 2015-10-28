@@ -1,9 +1,9 @@
 package org.chesscorp.club.controllers;
 
 import org.chesscorp.club.dto.AuthenticationResult;
-import org.chesscorp.club.model.Account;
-import org.chesscorp.club.model.Player;
-import org.chesscorp.club.model.Session;
+import org.chesscorp.club.model.people.Account;
+import org.chesscorp.club.model.people.Player;
+import org.chesscorp.club.model.people.Session;
 import org.chesscorp.club.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

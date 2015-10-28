@@ -1,6 +1,6 @@
 package org.chesscorp.club.service.factories;
 
-import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

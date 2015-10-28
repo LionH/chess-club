@@ -1,7 +1,7 @@
 package org.chesscorp.club.dto;
 
-import org.chesscorp.club.model.EloRating;
-import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.game.EloRating;
+import org.chesscorp.club.model.people.Player;
 
 import java.util.List;
 

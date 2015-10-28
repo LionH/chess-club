@@ -1,7 +1,7 @@
 package org.chesscorp.club.controllers;
 
 import org.chesscorp.club.dto.PlayerProfile;
-import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.service.PlayerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

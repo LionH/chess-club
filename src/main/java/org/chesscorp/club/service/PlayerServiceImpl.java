@@ -1,8 +1,8 @@
 package org.chesscorp.club.service;
 
 import org.chesscorp.club.dto.PlayerProfile;
-import org.chesscorp.club.model.EloRating;
-import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.game.EloRating;
+import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.persistence.EloRatingRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.slf4j.Logger;

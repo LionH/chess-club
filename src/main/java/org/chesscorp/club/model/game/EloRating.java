@@ -1,4 +1,6 @@
-package org.chesscorp.club.model;
+package org.chesscorp.club.model.game;
+
+import org.chesscorp.club.model.people.Player;
 
 import javax.persistence.*;
 

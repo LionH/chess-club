@@ -2,7 +2,7 @@ package org.chesscorp.club.controllers;
 
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
-import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,6 +1,6 @@
 package org.chesscorp.club.service.factories;
 
-import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.people.Player;
 
 /**
  * Search for players and create them dynamically if required.

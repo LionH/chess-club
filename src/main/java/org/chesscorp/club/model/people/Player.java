@@ -1,4 +1,4 @@
-package org.chesscorp.club.model;
+package org.chesscorp.club.model.people;
 
 import org.hibernate.annotations.Proxy;
 

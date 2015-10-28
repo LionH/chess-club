@@ -1,7 +1,7 @@
 package org.chesscorp.club.service;
 
 import org.chesscorp.club.dto.PlayerProfile;
-import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.people.Player;
 
 import java.util.List;
 

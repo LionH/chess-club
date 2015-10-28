@@ -1,7 +1,11 @@
 package org.chesscorp.club.jobs;
 
 
-import org.chesscorp.club.model.*;
+import org.chesscorp.club.model.game.ChessGame;
+import org.chesscorp.club.model.people.Account;
+import org.chesscorp.club.model.people.ClubPlayer;
+import org.chesscorp.club.model.people.Player;
+import org.chesscorp.club.model.people.RobotPlayer;
 import org.chesscorp.club.persistence.AccountRepository;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.PlayerRepository;

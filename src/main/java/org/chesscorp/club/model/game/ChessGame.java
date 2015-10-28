@@ -1,6 +1,7 @@
-package org.chesscorp.club.model;
+package org.chesscorp.club.model.game;
 
 import org.alcibiade.chess.model.ChessGameStatus;
+import org.chesscorp.club.model.people.Player;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;

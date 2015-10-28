@@ -1,7 +1,7 @@
 package org.chesscorp.club.persistence;
 
 import org.alcibiade.chess.model.ChessGameStatus;
-import org.chesscorp.club.model.ChessGame;
+import org.chesscorp.club.model.game.ChessGame;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Date;

@@ -1,4 +1,4 @@
-package org.chesscorp.club.model;
+package org.chesscorp.club.model.game;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Proxy;

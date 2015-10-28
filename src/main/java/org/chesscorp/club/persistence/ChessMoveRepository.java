@@ -1,6 +1,6 @@
 package org.chesscorp.club.persistence;
 
-import org.chesscorp.club.model.ChessMove;
+import org.chesscorp.club.model.game.ChessMove;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

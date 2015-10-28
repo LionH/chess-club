@@ -2,8 +2,8 @@ package org.chesscorp.club.controllers;
 
 import org.chesscorp.club.exception.ChessException;
 import org.chesscorp.club.exception.InvalidChessMoveException;
-import org.chesscorp.club.model.ChessGame;
-import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.game.ChessGame;
+import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.service.AuthenticationService;
 import org.chesscorp.club.service.ChessGameService;
 import org.slf4j.Logger;

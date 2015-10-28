@@ -1,9 +1,9 @@
 package org.chesscorp.club.service;
 
-import org.chesscorp.club.model.Session;
+import org.chesscorp.club.model.people.Session;
 
 /**
- * Created by yk on 19/07/15.
+ * Authentication related operations.
  */
 public interface AuthenticationService {
     void signup(String email, String password, String displayName);

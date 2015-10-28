@@ -5,7 +5,7 @@ import org.chesscorp.club.Application;
 import org.chesscorp.club.controllers.ChessGameController;
 import org.chesscorp.club.dto.PlayerProfile;
 import org.chesscorp.club.jobs.PgnImportProcessor;
-import org.chesscorp.club.model.Player;
+import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.ChessMoveRepository;
 import org.chesscorp.club.persistence.PlayerRepository;

@@ -1,6 +1,6 @@
 package org.chesscorp.club.service;
 
-import org.chesscorp.club.model.ChessGame;
+import org.chesscorp.club.model.game.ChessGame;
 
 import java.io.IOException;
 import java.io.InputStream;
