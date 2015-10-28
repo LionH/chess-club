@@ -14,6 +14,13 @@ public interface ChessGameService {
 
     ChessGame move(ChessGame game, String pgnMove);
 
+    /**
+     * Search for games.
+     *
+     * @param playerId identifier of a player that is search both as white or black
+     * @param open     if null, return all games, otherwise return games which are open/ended based on this flag
+     * @return all the matching games
+     */
     List<ChessGame> searchGames(Number playerId, Boolean open);
 
     /**

@@ -211,9 +211,36 @@ public class ChessGameServiceImpl implements ChessGameService {
 
             gamesCount += 1;
 
-            ChessGame chessGame = new ChessGame(playerW, playerB, new ArrayList<>(), ChessGameStatus.OPEN, gameDate);
-            pgnGameModel.getMoves().forEach(m -> chessGame.addMove(gameDate, m));
+            ChessPosition position = chessRules.getInitialPosition();
+            for (String m : pgnGameModel.getMoves()) {
+                try {
+                    position = ChessHelper.applyMoveAndSwitch(chessRules, position, pgnMarshaller.convertPgnToMove(position, m));
+                } catch (ChessException e) {
+                    throw new IllegalStateException("Error in PGN stream for move " + m, e);
+                }
+            }
 
+            ChessGameStatus status = ChessGameStatus.OPEN;
+
+            switch (pgnGame.getResult()) {
+                case "1-0":
+                    status = ChessGameStatus.WHITEWON;
+                    break;
+                case "0-1":
+                    status = ChessGameStatus.BLACKWON;
+                    break;
+                case "1/2-1/2":
+                    status = ChessGameStatus.PAT;
+                    break;
+            }
+
+            ChessGame chessGame = new ChessGame(
+                    playerW, playerB, new ArrayList<>(),
+                    gameDate, status, pgnGame.getSite(),
+                    pgnGame.getEvent(), pgnGame.getRound() == null ? null : Integer.valueOf(pgnGame.getRound())
+            );
+
+            pgnGameModel.getMoves().forEach(m -> chessGame.addMove(gameDate, m));
             chessGameRepository.save(chessGame);
             chessGame.getMoves().stream().forEach(chessMoveRepository::save);
         }

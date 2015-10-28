@@ -68,10 +68,18 @@ public class ProfileAfterImportTest {
         Player player = playerRepository.findByDisplayName("De Labourdonnais, Louis").get(0);
         PlayerProfile profile = playerService.getProfile(player.getId());
 
+        /*
+         * Search using the Game service.
+         */
+
         Assertions.assertThat(profile).isNotNull();
-        Assertions.assertThat(chessGameService.searchGames(player.getId(), true)).hasSize(86);
-        Assertions.assertThat(chessGameService.searchGames(player.getId(), false)).hasSize(0);
+        Assertions.assertThat(chessGameService.searchGames(player.getId(), true)).hasSize(0);
+        Assertions.assertThat(chessGameService.searchGames(player.getId(), false)).hasSize(86);
         Assertions.assertThat(chessGameService.searchGames(player.getId(), null)).hasSize(86);
+
+        /*
+         * Search using the controller to validate JSON serialization too.
+         */
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(chessGameController).build();
 

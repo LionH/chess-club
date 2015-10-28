@@ -35,11 +35,28 @@ public class ChessGame {
     @Column(nullable = false)
     private ChessGameStatus status;
 
+    // Extra PGN informations
+    private String site;
+    private String event;
+    private Integer round;
+
     public ChessGame() {
     }
 
     public ChessGame(Player whitePlayer, Player blackPlayer) {
         this(whitePlayer, blackPlayer, new ArrayList<>(), ChessGameStatus.OPEN, new Date());
+    }
+
+    public ChessGame(Player whitePlayer, Player blackPlayer, List<ChessMove> moves, Date startDate,
+                     ChessGameStatus status, String site, String event, Integer round) {
+        this.whitePlayer = whitePlayer;
+        this.blackPlayer = blackPlayer;
+        this.moves = moves;
+        this.startDate = startDate;
+        this.status = status;
+        this.site = site;
+        this.event = event;
+        this.round = round;
     }
 
     public ChessGame(Player whitePlayer, Player blackPlayer, List<ChessMove> moves, ChessGameStatus status, Date startDate) {
@@ -85,6 +102,18 @@ public class ChessGame {
 
     public Date getStartDate() {
         return startDate;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public String getEvent() {
+        return event;
+    }
+
+    public Integer getRound() {
+        return round;
     }
 
     public Player getNextPlayer() {
