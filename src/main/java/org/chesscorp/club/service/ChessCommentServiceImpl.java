@@ -1,5 +1,7 @@
 package org.chesscorp.club.service;
 
+import com.github.rjeschke.txtmark.Processor;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.chesscorp.club.model.comment.ChessComment;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.people.Player;
@@ -25,7 +27,13 @@ public class ChessCommentServiceImpl implements ChessCommentService {
 
     @Override
     public List<ChessComment> getCommentsByGame(Long gameId) {
-        return chessCommentRepository.findByChessGameId(gameId);
+        List<ChessComment> comments = chessCommentRepository.findByChessGameId(gameId);
+        comments.stream().forEach(c -> {
+            String escaped = StringEscapeUtils.escapeHtml4(c.getText());
+            String html = Processor.process(escaped);
+            c.setHtml(html);
+        });
+        return comments;
     }
 
     @Override
