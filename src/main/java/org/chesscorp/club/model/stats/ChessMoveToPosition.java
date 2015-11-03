@@ -14,29 +14,29 @@ public class ChessMoveToPosition {
     private Long chessMoveId;
 
     @ManyToOne
-    private ChessPosition chessPosition;
+    private ChessClubPosition chessClubPosition;
 
     public ChessMoveToPosition() {
     }
 
-    public ChessMoveToPosition(Long chessMoveId, ChessPosition chessPosition) {
+    public ChessMoveToPosition(Long chessMoveId, ChessClubPosition chessClubPosition) {
         this.chessMoveId = chessMoveId;
-        this.chessPosition = chessPosition;
+        this.chessClubPosition = chessClubPosition;
     }
 
     public Long getChessMoveId() {
         return chessMoveId;
     }
 
-    public ChessPosition getChessPosition() {
-        return chessPosition;
+    public ChessClubPosition getChessPosition() {
+        return chessClubPosition;
     }
 
     @Override
     public String toString() {
         return "ChessMoveToPosition{" +
                 "chessMoveId=" + chessMoveId +
-                ", chessPosition=" + chessPosition +
+                ", chessPosition=" + chessClubPosition +
                 '}';
     }
 }

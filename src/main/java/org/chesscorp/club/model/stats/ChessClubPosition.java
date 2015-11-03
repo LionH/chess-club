@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Chess position reference.
  */
 @Entity
-public class ChessPosition {
+public class ChessClubPosition {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -16,10 +16,10 @@ public class ChessPosition {
     private String text;
 
 
-    public ChessPosition() {
+    public ChessClubPosition() {
     }
 
-    public ChessPosition(String text) {
+    public ChessClubPosition(String text) {
         this.text = text;
     }
 
@@ -33,7 +33,7 @@ public class ChessPosition {
 
     @Override
     public String toString() {
-        return "ChessPosition{" +
+        return "ChessClubPosition{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
                 '}';

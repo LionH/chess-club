@@ -1,6 +1,6 @@
 package org.chesscorp.club.controllers;
 
-import org.chesscorp.club.exception.ChessException;
+import org.chesscorp.club.exception.ChessClubException;
 import org.chesscorp.club.exception.InvalidChessMoveException;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.people.Player;
@@ -64,7 +64,7 @@ public class ChessGameController {
         logger.debug("Game creation {} vs. {} by {} ...", whitePlayerId, blackPlayerId, player.getId());
         if (player.getId().longValue() != whitePlayerId
                 && player.getId().longValue() != blackPlayerId) {
-            throw new ChessException("Can't create a game without playing in it.");
+            throw new ChessClubException("Can't create a game without playing in it.");
         }
 
         ChessGame created = chessGameService.createGame(whitePlayerId, blackPlayerId);

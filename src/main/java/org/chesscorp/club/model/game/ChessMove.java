@@ -37,7 +37,7 @@ public class ChessMove {
         this.date = date;
     }
 
-    public Number getId() {
+    public Long getId() {
         return id;
     }
 
@@ -69,5 +69,14 @@ public class ChessMove {
         result = 31 * result + pgn.hashCode();
         result = 31 * result + date.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ChessMove{" +
+                "id=" + id +
+                ", pgn='" + pgn + '\'' +
+                ", date=" + date +
+                '}';
     }
 }

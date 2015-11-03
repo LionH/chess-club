@@ -2,7 +2,7 @@ package org.chesscorp.club.controllers;
 
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
-import org.chesscorp.club.exception.ChessException;
+import org.chesscorp.club.exception.ChessClubException;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.game.ChessMove;
 import org.chesscorp.club.model.people.Player;
@@ -114,7 +114,7 @@ public class ChessGameControllerTest {
         );
     }
 
-    @Test(expected = ChessException.class)
+    @Test(expected = ChessClubException.class)
     @Transactional
     public void testRefuseThirdPartyCreation() {
         authenticationService.signup("a@b.c", "pwd", "Alcibiade");
@@ -138,7 +138,7 @@ public class ChessGameControllerTest {
         Assertions.assertThat(game2).isEqualToComparingFieldByField(game1);
     }
 
-    @Test(expected = ChessException.class)
+    @Test(expected = ChessClubException.class)
     @Transactional
     public void testRefuseMove() {
         authenticationService.signup("a@b.c", "pwd", "Alcibiade");

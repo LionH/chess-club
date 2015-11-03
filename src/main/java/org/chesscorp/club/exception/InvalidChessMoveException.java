@@ -1,9 +1,9 @@
 package org.chesscorp.club.exception;
 
 /**
- * Created by yk on 20/07/15.
+ * Move validity issues are raised whenever a move is not possible on the current game position.
  */
-public class InvalidChessMoveException extends ChessException {
+public class InvalidChessMoveException extends ChessClubException {
     public InvalidChessMoveException(String move) {
         super("Invalid move: " + move);
     }

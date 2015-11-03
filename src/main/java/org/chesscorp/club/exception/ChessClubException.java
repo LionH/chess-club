@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Base class for chess-related functional failures.
  */
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-public class ChessException extends RuntimeException {
-    public ChessException(String message) {
+public class ChessClubException extends RuntimeException {
+    public ChessClubException(String message) {
         super(message);
     }
 
-    public ChessException(String message, Throwable cause) {
+    public ChessClubException(String message, Throwable cause) {
         super(message, cause);
     }
 }

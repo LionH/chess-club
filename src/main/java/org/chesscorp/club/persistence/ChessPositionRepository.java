@@ -1,9 +1,9 @@
 package org.chesscorp.club.persistence;
 
-import org.chesscorp.club.model.stats.ChessPosition;
+import org.chesscorp.club.model.stats.ChessClubPosition;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ChessPositionRepository extends JpaRepository<ChessPosition, String> {
+public interface ChessPositionRepository extends JpaRepository<ChessClubPosition, String> {
 
-    ChessPosition findOneByText(Long gameId);
+    ChessClubPosition findOneByText(String position);
 }
