@@ -12,7 +12,7 @@ public class ChessClubPosition {
     private Long id;
 
 
-    @Column(length = 72, unique = true)
+    @Column(length = 70, unique = true)
     private String text;
 
 
