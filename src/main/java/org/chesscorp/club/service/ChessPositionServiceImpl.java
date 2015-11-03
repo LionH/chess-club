@@ -1,6 +1,5 @@
 package org.chesscorp.club.service;
 
-import org.alcibiade.chess.model.ChessException;
 import org.alcibiade.chess.model.ChessMovePath;
 import org.alcibiade.chess.model.ChessPosition;
 import org.alcibiade.chess.persistence.PgnMarshaller;
@@ -20,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Position management implementations.
@@ -56,6 +57,8 @@ public class ChessPositionServiceImpl implements ChessPositionService {
             lastMoveId = lastProcessedMove.getChessMoveId();
         }
 
+        Map<Long, ChessPosition> positionCache = new HashMap<>();
+
         List<ChessMove> movesToProcess = chessMoveRepository.findAllByIdGreaterThan(lastMoveId);
 
         movesToProcess.stream().forEach(m -> {
@@ -63,11 +66,14 @@ public class ChessPositionServiceImpl implements ChessPositionService {
 
             ChessPosition position = chessRules.getInitialPosition();
             for (ChessMove move : game.getMoves()) {
-                try {
+                ChessPosition cachedPosition = positionCache.get(move.getId());
+
+                if (cachedPosition == null) {
                     ChessMovePath path = pgnMarshaller.convertPgnToMove(position, move.getPgn());
                     position = ChessHelper.applyMoveAndSwitch(chessRules, position, path);
-                } catch (ChessException e) {
-                    throw new IllegalStateException("Invalid move data", e);
+                    positionCache.put(move.getId(), position);
+                } else {
+                    position = cachedPosition;
                 }
 
                 if (move.getId().equals(m.getId())) {
