@@ -55,14 +55,14 @@ public class ChessPositionServiceTest {
         Assertions.assertThat(playerRepository.count()).isEqualTo(8);
         Assertions.assertThat(chessGameRepository.count()).isEqualTo(106);
         Assertions.assertThat(chessMoveRepository.count()).isEqualTo(8434L);
-        Assertions.assertThat(chessPositionRepository.count()).isEqualTo(7244L);
+        Assertions.assertThat(chessPositionRepository.count()).isEqualTo(7246L);
         Assertions.assertThat(chessMoveToPositionRepository.count()).isEqualTo(8434L);
 
         chessPositionService.updateMovePositions();
         Assertions.assertThat(playerRepository.count()).isEqualTo(8);
         Assertions.assertThat(chessGameRepository.count()).isEqualTo(106);
         Assertions.assertThat(chessMoveRepository.count()).isEqualTo(8434L);
-        Assertions.assertThat(chessPositionRepository.count()).isEqualTo(7244L);
+        Assertions.assertThat(chessPositionRepository.count()).isEqualTo(7246L);
         Assertions.assertThat(chessMoveToPositionRepository.count()).isEqualTo(8434L);
     }
 }
