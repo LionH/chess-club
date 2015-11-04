@@ -122,9 +122,10 @@ public class ChessGame {
         return whiteIsNext ? whitePlayer : blackPlayer;
     }
 
-    public void addMove(Date moveDate, String movePgn) {
+    public ChessMove addMove(Date moveDate, String movePgn) {
         ChessMove move = new ChessMove(this, moveDate, movePgn);
         this.moves.add(move);
+        return move;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.chesscorp.club.model.stats;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -13,7 +14,7 @@ public class ChessMoveToPosition {
     @Id
     private Long chessMoveId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private ChessClubPosition chessClubPosition;
 
     public ChessMoveToPosition() {
