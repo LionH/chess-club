@@ -166,5 +166,16 @@
                 </dependency>
             </dependencies>
         </profile>
+        <profile>
+            <id>postgresql</id>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <version>9.4-1205-jdbc42</version>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
 </project>
