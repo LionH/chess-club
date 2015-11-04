@@ -37,9 +37,12 @@ public class ChessGame {
     private ChessGameStatus status;
 
     // Extra PGN informations
+    @Column(nullable = true, length = 128)
     private String site;
+    @Column(nullable = true, length = 128)
     private String event;
-    private Integer round;
+    @Column(nullable = true, length = 12)
+    private String round;
 
     public ChessGame() {
     }
@@ -49,7 +52,7 @@ public class ChessGame {
     }
 
     public ChessGame(Player whitePlayer, Player blackPlayer, List<ChessMove> moves, Date startDate,
-                     ChessGameStatus status, String site, String event, Integer round) {
+                     ChessGameStatus status, String site, String event, String round) {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
         this.moves = moves;
@@ -113,7 +116,7 @@ public class ChessGame {
         return event;
     }
 
-    public Integer getRound() {
+    public String getRound() {
         return round;
     }
 

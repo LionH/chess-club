@@ -241,7 +241,7 @@ public class ChessGameServiceImpl implements ChessGameService {
             ChessGame chessGame = new ChessGame(
                     playerW, playerB, new ArrayList<>(),
                     gameDate, status, pgnGame.getSite(),
-                    pgnGame.getEvent(), pgnGame.getRound() == null ? null : Integer.valueOf(pgnGame.getRound())
+                    pgnGame.getEvent(), pgnGame.getRound()
             );
 
             pgnGameModel.getMoves().forEach(m -> chessGame.addMove(gameDate, m));
