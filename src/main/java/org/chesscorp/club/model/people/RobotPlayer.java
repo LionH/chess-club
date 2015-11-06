@@ -13,10 +13,10 @@ import javax.persistence.Entity;
 @Entity
 @Proxy(lazy = false)
 public class RobotPlayer extends Player {
-    @Column
+    @Column(length = 16)
     private String engine;
 
-    @Column
+    @Column(length = 64)
     private String parameters;
 
     public RobotPlayer() {

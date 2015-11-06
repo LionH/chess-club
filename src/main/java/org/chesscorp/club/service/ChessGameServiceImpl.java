@@ -9,7 +9,6 @@ import org.alcibiade.chess.persistence.PgnGameModel;
 import org.alcibiade.chess.persistence.PgnMarshaller;
 import org.alcibiade.chess.rules.ChessHelper;
 import org.alcibiade.chess.rules.ChessRules;
-import org.chesscorp.club.ai.ChessAI;
 import org.chesscorp.club.exception.InvalidChessMoveException;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.game.ChessMove;
@@ -33,7 +32,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -55,9 +53,9 @@ public class ChessGameServiceImpl implements ChessGameService {
     @Autowired
     private PgnMarshaller pgnMarshaller;
     @Autowired
-    private Map<String, ChessAI> aiMap;
-    @Autowired
     private EloRatingCalculator eloRatingCalculator;
+    @Autowired
+    private ChessRobotService chessRobotService;
 
     @Override
     @Transactional
@@ -265,22 +263,13 @@ public class ChessGameServiceImpl implements ChessGameService {
 
         if (nextPlayer instanceof RobotPlayer) {
             RobotPlayer robotPlayer = (RobotPlayer) nextPlayer;
-            ChessAI ai = aiMap.get(robotPlayer.getEngine());
 
-            if (ai == null) {
-                throw new IllegalStateException("Unknwown AI: " + robotPlayer.getEngine() + " for robotPlayer " + robotPlayer.getId());
-            }
+            List<String> moves = game.getMoves().stream()
+                    .map(ChessMove::getPgn)
+                    .collect(Collectors.toList());
 
-            List<String> pgnMoves = new ArrayList<>();
-            game.getMoves().forEach(m -> pgnMoves.add(m.getPgn()));
-            try {
-                String robotMove = ai.computeNextMove(robotPlayer.getParameters(), pgnMoves);
-                if (robotMove != null) {
-                    game = move(game, robotMove);
-                }
-            } catch (ChessException e) {
-                logger.warn("Inconsistent move in game " + game.getId(), e);
-            }
+            String robotMove = chessRobotService.play(robotPlayer, moves);
+            game = move(game, robotMove);
         }
 
         return game;
