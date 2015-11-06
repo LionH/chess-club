@@ -1,6 +1,7 @@
 package org.chesscorp.club.service;
 
 import org.chesscorp.club.model.game.ChessGame;
+import org.chesscorp.club.model.stats.ChessClubPosition;
 
 import java.util.List;
 
@@ -21,4 +22,12 @@ public interface ChessPositionService {
      * @return a list of game which had the same position
      */
     List<ChessGame> findRelatedGames(Number gameId);
+
+    /**
+     * Find a position in the repository or create it implicitly.
+     *
+     * @param positionText the position serialized as raw string
+     * @return a position object from the repository
+     */
+    ChessClubPosition findOrCreatePosition(String positionText);
 }

@@ -124,4 +124,16 @@ public class ChessPositionServiceImpl implements ChessPositionService {
 
         return relatedGames;
     }
+
+    @Override
+    @Transactional
+    public ChessClubPosition findOrCreatePosition(String positionText) {
+        ChessClubPosition position = chessPositionRepository.findOneByText(positionText);
+
+        if (position == null) {
+            position = chessPositionRepository.save(new ChessClubPosition(positionText));
+        }
+
+        return position;
+    }
 }

@@ -5,6 +5,7 @@ import org.chesscorp.club.Application;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.Player;
+import org.chesscorp.club.model.stats.ChessClubPosition;
 import org.chesscorp.club.persistence.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -114,6 +115,30 @@ public class ChessPositionServiceTest {
         chessMoveRepository.save(g3.addMove(new Date(), "d4"));
         chessPositionService.updateMovePositions();
         Assertions.assertThat(chessPositionService.findRelatedGames(g3.getId())).isEmpty();
+    }
+
+    @Test
+    @Transactional
+    public void testPositionFindOrCreate() {
+        String positionText1 = "bR-BQ-K-RPPP---PP--N--B-----P---q-----p----Pb----pp--n-pprn--k--r--kq-";
+        String positionText2 = "wR-BQ-RK-PPPP--PP--N--N----B-Pp--------p---p-----pp-pqpbprnb-k-nr--kq-";
+        String positionText3 = "wRNBQKB-RPPPP--PP-----N------Pp--------p---------pppp-p-prnbqkbnrKQkqg";
+
+        Assertions.assertThat(chessPositionRepository.findAll()).hasSize(0);
+        ChessClubPosition clubPosition1a = chessPositionService.findOrCreatePosition(positionText1);
+        ChessClubPosition clubPosition1b = chessPositionService.findOrCreatePosition(positionText1);
+        Assertions.assertThat(chessPositionRepository.findAll()).hasSize(1);
+        Assertions.assertThat(clubPosition1a).isEqualToComparingFieldByField(clubPosition1b);
+
+        ChessClubPosition clubPosition2 = chessPositionService.findOrCreatePosition(positionText2);
+        Assertions.assertThat(clubPosition2.getId()).isPositive();
+        Assertions.assertThat(clubPosition2.getText()).isEqualTo(positionText2);
+        Assertions.assertThat(chessPositionRepository.findAll()).hasSize(2);
+
+        ChessClubPosition clubPosition3 = chessPositionService.findOrCreatePosition(positionText3);
+        Assertions.assertThat(clubPosition3.getId()).isPositive();
+        Assertions.assertThat(clubPosition3.getText()).isEqualTo(positionText3);
+        Assertions.assertThat(chessPositionRepository.findAll()).hasSize(3);
     }
 }
 
