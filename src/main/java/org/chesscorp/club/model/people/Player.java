@@ -17,11 +17,11 @@ import java.util.Objects;
                 @Index(columnList = "displayName", unique = false)
         }
 )
-
+@SequenceGenerator(name = "PLAYER_SEQ", initialValue = 1, allocationSize = 1, sequenceName = "PLAYER_SEQ")
 public class Player {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PLAYER_SEQ")
     private Long id;
     @Column(nullable = false)
     private String displayName;

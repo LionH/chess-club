@@ -10,9 +10,10 @@ import java.util.Date;
  * Comment related to a chess game.
  */
 @Entity
+@SequenceGenerator(name = "CHESS_COMMENT_SEQ", initialValue = 1, allocationSize = 1, sequenceName = "CHESS_COMMENT_SEQ")
 public class ChessComment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CHESS_COMMENT_SEQ")
     private Long id;
 
     @ManyToOne(optional = false)

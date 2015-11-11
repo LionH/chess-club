@@ -6,9 +6,10 @@ import javax.persistence.*;
  * Chess position reference.
  */
 @Entity
+@SequenceGenerator(name = "CHESS_POSITION_SEQ", initialValue = 1, allocationSize = 1, sequenceName = "CHESS_POSITION_SEQ")
 public class ChessClubPosition {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CHESS_POSITION_SEQ")
     private Long id;
 
 

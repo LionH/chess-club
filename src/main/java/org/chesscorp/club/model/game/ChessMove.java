@@ -13,10 +13,11 @@ import java.util.Date;
  */
 @Entity
 @Proxy(lazy = false)
+@SequenceGenerator(name = "CHESS_MOVE_SEQ", initialValue = 1, allocationSize = 1, sequenceName = "CHESS_MOVE_SEQ")
 public class ChessMove {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CHESS_MOVE_SEQ")
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
