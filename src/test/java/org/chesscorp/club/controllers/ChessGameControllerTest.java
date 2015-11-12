@@ -72,6 +72,7 @@ public class ChessGameControllerTest {
          */
 
         ChessGame game1 = chessGameController.createGame(alcibiadeToken, alcibiade.getId(), bob.getId());
+        Thread.sleep(10);
         Assertions.assertThat(game1.getWhitePlayer()).isEqualToComparingFieldByField(alcibiade);
         Assertions.assertThat(game1.getBlackPlayer()).isEqualToComparingFieldByField(bob);
         Assertions.assertThat(game1.getId().longValue()).isGreaterThan(0L);
@@ -116,7 +117,7 @@ public class ChessGameControllerTest {
 
     @Test(expected = ChessClubException.class)
     @Transactional
-    public void testRefuseThirdPartyCreation() {
+    public void testRefuseThirdPartyCreation() throws InterruptedException {
         authenticationService.signup("a@b.c", "pwd", "Alcibiade");
         String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
         Player alcibiade = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
@@ -129,6 +130,7 @@ public class ChessGameControllerTest {
         String charlieToken = authenticationService.signin("c@b.c", "pwd");
 
         ChessGame game1 = chessGameController.createGame(charlieToken, alcibiade.getId(), bob.getId());
+        Thread.sleep(10);
         Assertions.assertThat(game1.getWhitePlayer()).isEqualToComparingFieldByField(alcibiade);
         Assertions.assertThat(game1.getBlackPlayer()).isEqualToComparingFieldByField(bob);
         Assertions.assertThat(game1.getId().longValue()).isGreaterThan(0L);
