@@ -13,7 +13,7 @@ public interface ChessPositionService {
     /**
      * Compute positions for new moves in the repository.
      */
-    void updateMovePositions();
+    long updateMovePositions();
 
     /**
      * Find games that are related based on the current position.

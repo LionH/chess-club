@@ -1,5 +1,6 @@
 package org.chesscorp.club.jobs;
 
+import org.chesscorp.club.monitoring.PerformanceMonitor;
 import org.chesscorp.club.service.ChessPositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -18,10 +19,15 @@ public class PositionIndexUpdateJob {
     @Autowired
     private ChessPositionService chessPositionService;
 
+    @Autowired
+    private PerformanceMonitor performanceMonitor;
+
     @Scheduled(fixedDelay = 60_000)
     @Transactional
     public void run() {
-        chessPositionService.updateMovePositions();
+        performanceMonitor.mark();
+        long moves = chessPositionService.updateMovePositions();
+        performanceMonitor.register("IndexUpdateJob", "update-positions", moves, "move");
     }
 
 }

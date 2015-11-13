@@ -49,13 +49,14 @@ public class ChessPositionServiceImpl implements ChessPositionService {
 
     @Override
     @Transactional
-    public void updateMovePositions() {
+    public long updateMovePositions() {
         logger.debug("Updating position tables");
 
         ChessMoveToPosition lastProcessedMove = chessMoveToPositionRepository.findFirstByOrderByChessMoveIdDesc();
         logger.debug("Last processed move is {}", lastProcessedMove);
 
         long lastMoveId = 0;
+        long movesProcessedCount = 0;
 
         if (lastProcessedMove != null) {
             lastMoveId = lastProcessedMove.getChessMoveId();
@@ -65,7 +66,7 @@ public class ChessPositionServiceImpl implements ChessPositionService {
 
         List<ChessMove> movesToProcess = chessMoveRepository.findAllByIdGreaterThan(lastMoveId);
 
-        movesToProcess.stream().forEach(m -> {
+        for (ChessMove m : movesToProcess) {
             ChessGame game = m.getGame();
 
             ChessPosition position = chessRules.getInitialPosition();
@@ -94,7 +95,10 @@ public class ChessPositionServiceImpl implements ChessPositionService {
             }
 
             chessMoveToPositionRepository.save(new ChessMoveToPosition(m.getId(), clubPosition));
-        });
+            movesProcessedCount += 1;
+        }
+
+        return movesProcessedCount;
     }
 
     @Override
