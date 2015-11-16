@@ -21,9 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Position management implementations.
@@ -62,24 +60,15 @@ public class ChessPositionServiceImpl implements ChessPositionService {
             lastMoveId = lastProcessedMove.getChessMoveId();
         }
 
-        Map<Long, ChessPosition> positionCache = new HashMap<>();
-
-        List<ChessMove> movesToProcess = chessMoveRepository.findAllByIdGreaterThan(lastMoveId);
+        List<ChessMove> movesToProcess = chessMoveRepository.findFirst1000ByIdGreaterThan(lastMoveId);
 
         for (ChessMove m : movesToProcess) {
             ChessGame game = m.getGame();
 
             ChessPosition position = chessRules.getInitialPosition();
             for (ChessMove move : game.getMoves()) {
-                ChessPosition cachedPosition = positionCache.get(move.getId());
-
-                if (cachedPosition == null) {
-                    ChessMovePath path = pgnMarshaller.convertPgnToMove(position, move.getPgn());
-                    position = ChessHelper.applyMoveAndSwitch(chessRules, position, path);
-                    positionCache.put(move.getId(), position);
-                } else {
-                    position = cachedPosition;
-                }
+                ChessMovePath path = pgnMarshaller.convertPgnToMove(position, move.getPgn());
+                position = ChessHelper.applyMoveAndSwitch(chessRules, position, path);
 
                 if (move.getId().equals(m.getId())) {
                     break;

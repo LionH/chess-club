@@ -16,4 +16,8 @@ public interface ChessMoveRepository extends JpaRepository<ChessMove, Number> {
      * @return all the matching moves
      */
     List<ChessMove> findAllByIdGreaterThan(Long moveId);
+
+    void deleteByIdGreaterThan(Long moveId);
+
+    List<ChessMove> findFirst1000ByIdGreaterThan(Long moveId);
 }
