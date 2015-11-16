@@ -16,6 +16,7 @@ import java.util.Objects;
 public class Session {
 
     @Id
+    @Column(length = 64)
     private String authenticationToken;
     @ManyToOne(optional = false)
     private Account account;

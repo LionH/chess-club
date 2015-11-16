@@ -24,9 +24,10 @@ public class ChessMove {
     @JoinColumn(name = "GAME_ID", nullable = false)
     @JsonIgnore
     private ChessGame game;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 12)
     private String pgn;
     @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
     public ChessMove() {

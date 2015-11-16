@@ -23,7 +23,7 @@ public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PLAYER_SEQ")
     private Long id;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 32)
     private String displayName;
 
     public Player() {

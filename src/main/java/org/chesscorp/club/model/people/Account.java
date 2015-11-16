@@ -19,7 +19,7 @@ public class Account {
 
     @Id
     private String identifier;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 32)
     private String password;
     @ManyToOne(optional = false)
     private Player player;
