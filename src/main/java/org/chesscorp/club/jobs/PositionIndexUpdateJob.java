@@ -22,7 +22,7 @@ public class PositionIndexUpdateJob {
     @Autowired
     private PerformanceMonitor performanceMonitor;
 
-    @Scheduled(fixedDelay = 60_000)
+    @Scheduled(fixedDelay = 5_000)
     @Transactional
     public void run() {
         performanceMonitor.mark();
