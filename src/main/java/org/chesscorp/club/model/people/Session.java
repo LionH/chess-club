@@ -2,8 +2,11 @@ package org.chesscorp.club.model.people;
 
 import org.hibernate.annotations.Proxy;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 /**
@@ -21,8 +24,7 @@ public class Session {
     @ManyToOne(optional = false)
     private Account account;
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date creationTime;
+    private OffsetDateTime creationTime;
 
 
     public Session() {
@@ -31,7 +33,7 @@ public class Session {
     public Session(String authenticationToken, Account account) {
         this.authenticationToken = authenticationToken;
         this.account = account;
-        this.creationTime = new Date();
+        this.creationTime = OffsetDateTime.now();
     }
 
     public String getAuthenticationToken() {
@@ -42,7 +44,7 @@ public class Session {
         return account;
     }
 
-    public Date getCreationTime() {
+    public OffsetDateTime getCreationTime() {
         return creationTime;
     }
 

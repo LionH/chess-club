@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.stream.Collectors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -55,7 +56,7 @@ public class ChessGameServiceTest {
         Assertions.assertThat(game.getWhitePlayer()).isEqualToComparingFieldByField(p1);
         Assertions.assertThat(game.getBlackPlayer()).isEqualToComparingFieldByField(p2);
         Assertions.assertThat(game.getId().longValue()).isGreaterThan(0L);
-        Assertions.assertThat(game.getStartDate()).isInThePast();
+        Assertions.assertThat(game.getStartDate()).isBeforeOrEqualTo(OffsetDateTime.now());
 
         game = chessGameService.move(game, "e2e4");
         Assertions.assertThat(game.getMoves()).extracting(ChessMove::getPgn).containsExactly("e4");

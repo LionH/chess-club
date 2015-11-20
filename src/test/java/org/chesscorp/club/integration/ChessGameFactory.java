@@ -8,8 +8,8 @@ import org.chesscorp.club.model.people.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,7 +28,7 @@ public class ChessGameFactory {
         List<String> pgnMoves = new ArrayList<>();
         for (int moveIndex = 0; moveIndex < moveCount; moveIndex++) {
             String pgnMove = randomAI.computeNextMove("", pgnMoves);
-            game.addMove(new Date(), pgnMove);
+            game.addMove(OffsetDateTime.now(), pgnMove);
         }
 
         return game;

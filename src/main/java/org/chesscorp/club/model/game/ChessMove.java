@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 /**
  * Chess game single move.
@@ -27,13 +27,12 @@ public class ChessMove {
     @Column(nullable = false, length = 12)
     private String pgn;
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private OffsetDateTime date;
 
     public ChessMove() {
     }
 
-    public ChessMove(ChessGame game, Date date, String pgn) {
+    public ChessMove(ChessGame game, OffsetDateTime date, String pgn) {
         this.game = game;
         this.pgn = pgn;
         this.date = date;
@@ -47,7 +46,7 @@ public class ChessMove {
         return pgn;
     }
 
-    public Date getDate() {
+    public OffsetDateTime getDate() {
         return date;
     }
 

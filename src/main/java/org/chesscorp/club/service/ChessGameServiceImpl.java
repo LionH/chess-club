@@ -29,8 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,7 +96,7 @@ public class ChessGameServiceImpl implements ChessGameService {
             ChessPosition updatedPosition = ChessHelper.applyMoveAndSwitch(chessRules, position, path);
             ChessGameStatus status = chessRules.getStatus(updatedPosition);
 
-            ChessMove move = chessMoveRepository.save(new ChessMove(game, new Date(), canonicalPgn));
+            ChessMove move = chessMoveRepository.save(new ChessMove(game, OffsetDateTime.now(), canonicalPgn));
             ChessGame updatedGame = chessGameRepository.save(new ChessGame(game, move, status));
 
             if (updatedGame.getStatus() == ChessGameStatus.OPEN) {
@@ -190,15 +191,16 @@ public class ChessGameServiceImpl implements ChessGameService {
         PgnGameModel pgnGameModel;
 
         while ((pgnGameModel = bookReader.readGame()) != null) {
-            final PgnGameModel pgnGame = pgnGameModel;
             Player playerW = playerFactory.findOrCreatePlayer(pgnGameModel.getWhitePlayerName());
             Player playerB = playerFactory.findOrCreatePlayer(pgnGameModel.getBlackPlayerName());
-            Date gameDate = pgnGameModel.getGameDate();
+            OffsetDateTime gameDate = OffsetDateTime.ofInstant(pgnGameModel.getGameDate().toInstant(), ZoneId.systemDefault());
+
+            final PgnGameModel pgnG = pgnGameModel;
 
             List<ChessGame> matchingGames = chessGameRepository
                     .findByWhitePlayerIdAndBlackPlayerIdAndStartDate(playerW.getId(), playerB.getId(), gameDate)
                     .stream()
-                    .filter(g -> g.getMoves().stream().map(ChessMove::getPgn).collect(Collectors.toList()).equals(pgnGame.getMoves()))
+                    .filter(g -> g.getMoves().stream().map(ChessMove::getPgn).collect(Collectors.toList()).equals(pgnG.getMoves()))
                     .collect(Collectors.toList());
 
             logger.trace("    - {}: {} vs. {}: {} games matching",
@@ -224,7 +226,7 @@ public class ChessGameServiceImpl implements ChessGameService {
 
             ChessGameStatus status = ChessGameStatus.OPEN;
 
-            switch (pgnGame.getResult()) {
+            switch (pgnGameModel.getResult()) {
                 case "1-0":
                     status = ChessGameStatus.WHITEWON;
                     break;
@@ -238,8 +240,8 @@ public class ChessGameServiceImpl implements ChessGameService {
 
             ChessGame chessGame = new ChessGame(
                     playerW, playerB, new ArrayList<>(),
-                    gameDate, status, pgnGame.getSite(),
-                    pgnGame.getEvent(), pgnGame.getRound()
+                    gameDate, status, pgnGameModel.getSite(),
+                    pgnGameModel.getEvent(), pgnGameModel.getRound()
             );
 
             pgnGameModel.getMoves().forEach(m -> chessGame.addMove(gameDate, m));

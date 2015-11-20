@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -72,11 +73,10 @@ public class ChessGameControllerTest {
          */
 
         ChessGame game1 = chessGameController.createGame(alcibiadeToken, alcibiade.getId(), bob.getId());
-        Thread.sleep(10);
         Assertions.assertThat(game1.getWhitePlayer()).isEqualToComparingFieldByField(alcibiade);
         Assertions.assertThat(game1.getBlackPlayer()).isEqualToComparingFieldByField(bob);
         Assertions.assertThat(game1.getId().longValue()).isGreaterThan(0L);
-        Assertions.assertThat(game1.getStartDate()).isInThePast();
+        Assertions.assertThat(game1.getStartDate()).isBeforeOrEqualTo(OffsetDateTime.now());
 
         /*
          * Game fetch
@@ -134,7 +134,7 @@ public class ChessGameControllerTest {
         Assertions.assertThat(game1.getWhitePlayer()).isEqualToComparingFieldByField(alcibiade);
         Assertions.assertThat(game1.getBlackPlayer()).isEqualToComparingFieldByField(bob);
         Assertions.assertThat(game1.getId().longValue()).isGreaterThan(0L);
-        Assertions.assertThat(game1.getStartDate()).isInThePast();
+        Assertions.assertThat(game1.getStartDate()).isBeforeOrEqualTo(OffsetDateTime.now());
 
         ChessGame game2 = chessGameController.getGame(game1.getId());
         Assertions.assertThat(game2).isEqualToComparingFieldByField(game1);

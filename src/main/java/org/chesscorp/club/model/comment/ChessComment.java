@@ -4,7 +4,7 @@ import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.people.Player;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 /**
  * Comment related to a chess game.
@@ -23,8 +23,7 @@ public class ChessComment {
     private ChessGame chessGame;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private OffsetDateTime date;
 
     @Column(length = 4096, nullable = false)
     private String text;
@@ -35,7 +34,7 @@ public class ChessComment {
     public ChessComment() {
     }
 
-    public ChessComment(Player author, ChessGame chessGame, Date date, String text) {
+    public ChessComment(Player author, ChessGame chessGame, OffsetDateTime date, String text) {
         this.author = author;
         this.chessGame = chessGame;
         this.date = date;
@@ -54,7 +53,7 @@ public class ChessComment {
         return chessGame;
     }
 
-    public Date getDate() {
+    public OffsetDateTime getDate() {
         return date;
     }
 

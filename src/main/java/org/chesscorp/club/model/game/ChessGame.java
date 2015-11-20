@@ -5,7 +5,11 @@ import org.chesscorp.club.model.people.Player;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
-import java.util.*;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Chess game data model.
@@ -33,7 +37,7 @@ public class ChessGame {
     @OneToMany(mappedBy = "game")
     private List<ChessMove> moves;
     @Column(nullable = false)
-    private Date startDate;
+    private OffsetDateTime startDate;
     @Column(nullable = false)
     private ChessGameStatus status;
 
@@ -49,10 +53,10 @@ public class ChessGame {
     }
 
     public ChessGame(Player whitePlayer, Player blackPlayer) {
-        this(whitePlayer, blackPlayer, new ArrayList<>(), ChessGameStatus.OPEN, new Date());
+        this(whitePlayer, blackPlayer, new ArrayList<>(), ChessGameStatus.OPEN, OffsetDateTime.now());
     }
 
-    public ChessGame(Player whitePlayer, Player blackPlayer, List<ChessMove> moves, Date startDate,
+    public ChessGame(Player whitePlayer, Player blackPlayer, List<ChessMove> moves, OffsetDateTime startDate,
                      ChessGameStatus status, String site, String event, String round) {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
@@ -64,7 +68,7 @@ public class ChessGame {
         this.round = round;
     }
 
-    public ChessGame(Player whitePlayer, Player blackPlayer, List<ChessMove> moves, ChessGameStatus status, Date startDate) {
+    public ChessGame(Player whitePlayer, Player blackPlayer, List<ChessMove> moves, ChessGameStatus status, OffsetDateTime startDate) {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
         this.moves = moves;
@@ -105,7 +109,7 @@ public class ChessGame {
         return status;
     }
 
-    public Date getStartDate() {
+    public OffsetDateTime getStartDate() {
         return startDate;
     }
 
@@ -126,7 +130,7 @@ public class ChessGame {
         return whiteIsNext ? whitePlayer : blackPlayer;
     }
 
-    public ChessMove addMove(Date moveDate, String movePgn) {
+    public ChessMove addMove(OffsetDateTime moveDate, String movePgn) {
         ChessMove move = new ChessMove(this, moveDate, movePgn);
         this.moves.add(move);
         return move;

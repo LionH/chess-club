@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Component
@@ -39,6 +39,6 @@ public class ChessCommentServiceImpl implements ChessCommentService {
     @Override
     public void postComment(Player player, Long gameId, String text) {
         ChessGame game = chessGameRepository.getOne(gameId);
-        chessCommentRepository.save(new ChessComment(player, game, new Date(), text));
+        chessCommentRepository.save(new ChessComment(player, game, OffsetDateTime.now(), text));
     }
 }

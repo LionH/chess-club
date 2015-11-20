@@ -18,7 +18,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -89,8 +89,8 @@ public class ChessPositionServiceTest {
 
         ChessGame g1 = new ChessGame(p1, p2);
         chessGameRepository.save(g1);
-        chessMoveRepository.save(g1.addMove(new Date(), "e4"));
-        chessMoveRepository.save(g1.addMove(new Date(), "e5"));
+        chessMoveRepository.save(g1.addMove(OffsetDateTime.now(), "e4"));
+        chessMoveRepository.save(g1.addMove(OffsetDateTime.now(), "e5"));
         chessPositionService.updateMovePositions();
 
         Assertions.assertThat(chessPositionService.findRelatedGames(g1.getId())).isEmpty();
@@ -104,7 +104,7 @@ public class ChessPositionServiceTest {
         chessPositionService.updateMovePositions();
         Assertions.assertThat(chessPositionService.findRelatedGames(g2.getId())).isEmpty();
 
-        chessMoveRepository.save(g2.addMove(new Date(), "e4"));
+        chessMoveRepository.save(g2.addMove(OffsetDateTime.now(), "e4"));
         chessPositionService.updateMovePositions();
 
         Assertions.assertThat(chessPositionService.findRelatedGames(g2.getId())).containsExactly(g1);
@@ -117,7 +117,7 @@ public class ChessPositionServiceTest {
         chessPositionService.updateMovePositions();
         Assertions.assertThat(chessPositionService.findRelatedGames(g3.getId())).isEmpty();
 
-        chessMoveRepository.save(g3.addMove(new Date(), "d4"));
+        chessMoveRepository.save(g3.addMove(OffsetDateTime.now(), "d4"));
         chessPositionService.updateMovePositions();
         Assertions.assertThat(chessPositionService.findRelatedGames(g3.getId())).isEmpty();
     }
