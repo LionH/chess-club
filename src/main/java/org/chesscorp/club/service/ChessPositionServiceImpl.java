@@ -1,5 +1,6 @@
 package org.chesscorp.club.service;
 
+import org.alcibiade.chess.model.ChessException;
 import org.alcibiade.chess.model.ChessMovePath;
 import org.alcibiade.chess.model.ChessPosition;
 import org.alcibiade.chess.persistence.PgnMarshaller;
@@ -65,26 +66,30 @@ public class ChessPositionServiceImpl implements ChessPositionService {
         for (ChessMove m : movesToProcess) {
             ChessGame game = m.getGame();
 
-            ChessPosition position = chessRules.getInitialPosition();
-            for (ChessMove move : game.getMoves()) {
-                ChessMovePath path = pgnMarshaller.convertPgnToMove(position, move.getPgn());
-                position = ChessHelper.applyMoveAndSwitch(chessRules, position, path);
+            try {
+                ChessPosition position = chessRules.getInitialPosition();
+                for (ChessMove move : game.getMoves()) {
+                    ChessMovePath path = pgnMarshaller.convertPgnToMove(position, move.getPgn());
+                    position = ChessHelper.applyMoveAndSwitch(chessRules, position, path);
 
-                if (move.getId().equals(m.getId())) {
-                    break;
+                    if (move.getId().equals(m.getId())) {
+                        break;
+                    }
                 }
+
+                String positionText = positionMarshaller.convertPositionToString(position);
+                logger.trace("Processing move {} - {}", m.getId(), positionText);
+
+                ChessClubPosition clubPosition = chessPositionRepository.findOneByText(positionText);
+                if (clubPosition == null) {
+                    clubPosition = chessPositionRepository.save(new ChessClubPosition(positionText));
+                }
+
+                chessMoveToPositionRepository.save(new ChessMoveToPosition(m.getId(), clubPosition));
+                movesProcessedCount += 1;
+            } catch (ChessException chessEx) {
+                throw new IllegalStateException("Failed to parse game " + game.getId(), chessEx);
             }
-
-            String positionText = positionMarshaller.convertPositionToString(position);
-            logger.trace("Processing move {} - {}", m.getId(), positionText);
-
-            ChessClubPosition clubPosition = chessPositionRepository.findOneByText(positionText);
-            if (clubPosition == null) {
-                clubPosition = chessPositionRepository.save(new ChessClubPosition(positionText));
-            }
-
-            chessMoveToPositionRepository.save(new ChessMoveToPosition(m.getId(), clubPosition));
-            movesProcessedCount += 1;
         }
 
         return movesProcessedCount;
