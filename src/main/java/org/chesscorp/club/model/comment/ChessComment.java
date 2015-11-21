@@ -10,10 +10,10 @@ import java.time.OffsetDateTime;
  * Comment related to a chess game.
  */
 @Entity
-@SequenceGenerator(name = "CHESS_COMMENT_SEQ", initialValue = 1, allocationSize = 1, sequenceName = "CHESS_COMMENT_SEQ")
+@SequenceGenerator(name = "chesscomment_seq", initialValue = 1, allocationSize = 1, sequenceName = "chesscomment_seq")
 public class ChessComment {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CHESS_COMMENT_SEQ")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chesscomment_seq")
     private Long id;
 
     @ManyToOne(optional = false)

@@ -10,11 +10,11 @@ import javax.persistence.*;
  * @author Yannick Kirschhoffer <alcibiade@alcibiade.org>
  */
 @Entity
-@SequenceGenerator(name = "ELO_RATING_SEQ", initialValue = 1, allocationSize = 1, sequenceName = "ELO_RATING_SEQ")
+@SequenceGenerator(name = "elorating_seq", initialValue = 1, allocationSize = 1, sequenceName = "elorating_seq")
 public class EloRating {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ELO_RATING_SEQ")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "elorating_seq")
     private Long id;
 
     @ManyToOne(optional = false)

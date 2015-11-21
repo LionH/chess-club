@@ -24,11 +24,11 @@ import java.util.Objects;
                 @Index(columnList = "blackplayer_id", unique = false)
         }
 )
-@SequenceGenerator(name = "CHESS_GAME_SEQ", initialValue = 1, allocationSize = 1, sequenceName = "CHESS_GAME_SEQ")
+@SequenceGenerator(name = "chessgame_seq", initialValue = 1, allocationSize = 1, sequenceName = "chessgame_seq")
 public class ChessGame {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CHESS_GAME_SEQ")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chessgame_seq")
     private Long id;
     @ManyToOne(optional = false)
     private Player whitePlayer;

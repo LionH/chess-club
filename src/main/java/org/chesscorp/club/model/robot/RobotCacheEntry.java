@@ -9,11 +9,11 @@ import javax.persistence.*;
  * Chess position reference.
  */
 @Entity
-@Table(name = "ROBOT_CACHE")
-@SequenceGenerator(name = "ROBOT_CACHE_SEQ", initialValue = 1, allocationSize = 1, sequenceName = "ROBOT_CACHE_SEQ")
+@Table(name = "robotcache")
+@SequenceGenerator(name = "robotcache_seq", initialValue = 1, allocationSize = 1, sequenceName = "robotcache_seq")
 public class RobotCacheEntry {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ROBOT_CACHE_SEQ")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "robotcache_seq")
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
