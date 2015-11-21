@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Update posititions repository.
@@ -23,7 +23,7 @@ public class PositionIndexUpdateJob {
     private PerformanceMonitor performanceMonitor;
 
     @Scheduled(fixedDelay = 5_000)
-    @Transactional
+    @Transactional(propagation = Propagation.NEVER)
     public void run() {
         performanceMonitor.mark();
         long moves = chessPositionService.updateMovePositions();

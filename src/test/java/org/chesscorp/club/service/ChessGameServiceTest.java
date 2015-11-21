@@ -17,8 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@TransactionConfiguration(defaultRollback = true)
+@Rollback
 public class ChessGameServiceTest {
     private Logger logger = LoggerFactory.getLogger(ChessGameServiceTest.class);
 

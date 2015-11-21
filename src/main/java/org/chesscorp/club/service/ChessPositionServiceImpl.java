@@ -19,12 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Position management implementations.
@@ -49,7 +49,7 @@ public class ChessPositionServiceImpl implements ChessPositionService {
     private PositionMarshaller positionMarshaller;
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.NEVER)
     public long updateMovePositions() {
         logger.debug("Updating position tables");
 
@@ -62,9 +62,7 @@ public class ChessPositionServiceImpl implements ChessPositionService {
             lastMoveId = lastProcessedMove.getChessMoveId();
         }
 
-        Stream<ChessMove> movesToProcess = chessMoveRepository.findFirst1000ByIdGreaterThan(lastMoveId);
-
-        long movesProcessedCount = movesToProcess.map(m -> {
+        long movesProcessedCount = chessMoveRepository.findAllByIdGreaterThan(lastMoveId).map(m -> {
             ChessGame game = m.getGame();
 
             try {
@@ -83,10 +81,10 @@ public class ChessPositionServiceImpl implements ChessPositionService {
 
                 ChessClubPosition clubPosition = chessPositionRepository.findOneByText(positionText);
                 if (clubPosition == null) {
-                    clubPosition = chessPositionRepository.save(new ChessClubPosition(positionText));
+                    clubPosition = chessPositionRepository.saveAndFlush(new ChessClubPosition(positionText));
                 }
 
-                chessMoveToPositionRepository.save(new ChessMoveToPosition(m.getId(), clubPosition));
+                chessMoveToPositionRepository.saveAndFlush(new ChessMoveToPosition(m.getId(), clubPosition));
                 return m;
             } catch (ChessException chessEx) {
                 throw new IllegalStateException("Failed to parse game " + game.getId(), chessEx);

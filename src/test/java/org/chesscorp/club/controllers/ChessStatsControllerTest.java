@@ -9,10 +9,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@TransactionConfiguration(defaultRollback = true)
+@DirtiesContext
 public class ChessStatsControllerTest {
     @Autowired
     private ChessStatsController chessStatsController;
@@ -34,7 +35,7 @@ public class ChessStatsControllerTest {
     private ChessPositionService chessPositionService;
 
     @Test
-    @Transactional
+    @Transactional(propagation = Propagation.NEVER)
     public void testRelatedGame() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(chessStatsController).build();
 

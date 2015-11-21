@@ -12,17 +12,18 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.time.OffsetDateTime;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@TransactionConfiguration(defaultRollback = true)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ChessPositionServiceTest {
     @Autowired
     private PlayerRepository playerRepository;
@@ -46,7 +47,7 @@ public class ChessPositionServiceTest {
     private ChessGameService chessGameService;
 
     @Test
-    @Transactional
+    @Transactional(propagation = Propagation.NEVER)
     public void testIndexImportedGames() throws IOException {
         ClassPathResource cpr = new ClassPathResource("samples-pgn/McDonnell.pgn");
 
@@ -78,7 +79,7 @@ public class ChessPositionServiceTest {
     }
 
     @Test
-    @Transactional
+    @Transactional(propagation = Propagation.NEVER)
     public void testRelatedGames() throws Exception {
         Assertions.assertThat(chessPositionService.findRelatedGames(666L)).isEmpty();
 
