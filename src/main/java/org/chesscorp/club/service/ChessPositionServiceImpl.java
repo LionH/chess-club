@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Position management implementations.
@@ -55,15 +57,14 @@ public class ChessPositionServiceImpl implements ChessPositionService {
         logger.debug("Last processed move is {}", lastProcessedMove);
 
         long lastMoveId = 0;
-        long movesProcessedCount = 0;
 
         if (lastProcessedMove != null) {
             lastMoveId = lastProcessedMove.getChessMoveId();
         }
 
-        List<ChessMove> movesToProcess = chessMoveRepository.findFirst1000ByIdGreaterThan(lastMoveId);
+        Stream<ChessMove> movesToProcess = chessMoveRepository.findFirst1000ByIdGreaterThan(lastMoveId);
 
-        for (ChessMove m : movesToProcess) {
+        long movesProcessedCount = movesToProcess.map(m -> {
             ChessGame game = m.getGame();
 
             try {
@@ -86,11 +87,11 @@ public class ChessPositionServiceImpl implements ChessPositionService {
                 }
 
                 chessMoveToPositionRepository.save(new ChessMoveToPosition(m.getId(), clubPosition));
-                movesProcessedCount += 1;
+                return m;
             } catch (ChessException chessEx) {
                 throw new IllegalStateException("Failed to parse game " + game.getId(), chessEx);
             }
-        }
+        }).collect(Collectors.counting());
 
         return movesProcessedCount;
     }
