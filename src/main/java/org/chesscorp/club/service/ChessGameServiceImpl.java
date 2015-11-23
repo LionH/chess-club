@@ -24,6 +24,7 @@ import org.chesscorp.club.utilities.elo.EloRatingCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +58,8 @@ public class ChessGameServiceImpl implements ChessGameService {
     private EloRatingCalculator eloRatingCalculator;
     @Autowired
     private ChessRobotService chessRobotService;
+    @Autowired
+    private JmsTemplate jmsTemplate;
 
     @Override
     @Transactional
@@ -105,10 +108,23 @@ public class ChessGameServiceImpl implements ChessGameService {
                 updatePostGame(game);
             }
 
+            notifyGameUpdated(game);
+
             return updatedGame;
         } catch (org.alcibiade.chess.model.ChessException e) {
             throw new InvalidChessMoveException(pgnMove, e);
         }
+    }
+
+    /**
+     * Notify game update on messaging bus.
+     *
+     * @param game a game that has been updated
+     */
+    private void notifyGameUpdated(ChessGame game) {
+        jmsTemplate.send("chess-game-update", session -> {
+            return session.createTextMessage(game.getId().toString());
+        });
     }
 
     /**
@@ -247,6 +263,7 @@ public class ChessGameServiceImpl implements ChessGameService {
             pgnGameModel.getMoves().forEach(m -> chessGame.addMove(gameDate, m));
             chessGameRepository.save(chessGame);
             chessGame.getMoves().stream().forEach(chessMoveRepository::save);
+            notifyGameUpdated(chessGame);
         }
 
         logger.debug("Imported {} games", gamesCount);
