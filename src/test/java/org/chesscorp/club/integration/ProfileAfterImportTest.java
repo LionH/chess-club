@@ -61,7 +61,7 @@ public class ProfileAfterImportTest {
         pgnImportProcessor.process(new ClassPathResource("samples-pgn/McDonnell.pgn").getFile());
         pgnImportProcessor.process(new ClassPathResource("samples-pgn/DeLaBourdonnais.pgn").getFile());
 
-        Assertions.assertThat(playerRepository.count()).isEqualTo(19);
+        Assertions.assertThat(playerRepository.count()).isEqualTo(18);
         Assertions.assertThat(chessGameRepository.count()).isEqualTo(122);
         Assertions.assertThat(chessMoveRepository.count()).isEqualTo(9381L);
 
@@ -74,8 +74,8 @@ public class ProfileAfterImportTest {
 
         Assertions.assertThat(profile).isNotNull();
         Assertions.assertThat(chessGameService.searchGames(player.getId(), true)).hasSize(0);
-        Assertions.assertThat(chessGameService.searchGames(player.getId(), false)).hasSize(86);
-        Assertions.assertThat(chessGameService.searchGames(player.getId(), null)).hasSize(86);
+        Assertions.assertThat(chessGameService.searchGames(player.getId(), false)).hasSize(101);
+        Assertions.assertThat(chessGameService.searchGames(player.getId(), null)).hasSize(101);
 
         /*
          * Search using the controller to validate JSON serialization too.
@@ -88,7 +88,7 @@ public class ProfileAfterImportTest {
         ).andExpect(
                 status().is2xxSuccessful()
         ).andExpect(
-                jsonPath("$", hasSize(86))
+                jsonPath("$", hasSize(101))
         );
     }
 }

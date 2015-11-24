@@ -207,8 +207,8 @@ public class ChessGameServiceImpl implements ChessGameService {
         PgnGameModel pgnGameModel;
 
         while ((pgnGameModel = bookReader.readGame()) != null) {
-            Player playerW = playerFactory.findOrCreatePlayer(pgnGameModel.getWhitePlayerName());
-            Player playerB = playerFactory.findOrCreatePlayer(pgnGameModel.getBlackPlayerName());
+            Player playerW = playerFactory.findOrCreateExternalPlayer(pgnGameModel.getWhitePlayerName());
+            Player playerB = playerFactory.findOrCreateExternalPlayer(pgnGameModel.getBlackPlayerName());
             OffsetDateTime gameDate = OffsetDateTime.ofInstant(pgnGameModel.getGameDate().toInstant(), ZoneId.systemDefault());
 
             final PgnGameModel pgnG = pgnGameModel;

@@ -64,7 +64,7 @@ public class PgnImportProcessorTest {
         File pgnFile = cpr.getFile();
         pgnImportProcessor.process(pgnFile);
 
-        Assertions.assertThat(playerRepository.count()).isEqualTo(15);
+        Assertions.assertThat(playerRepository.count()).isEqualTo(14);
         Assertions.assertThat(chessGameRepository.count()).isEqualTo(101);
         Assertions.assertThat(chessMoveRepository.count()).isEqualTo(8204L);
     }
@@ -79,7 +79,7 @@ public class PgnImportProcessorTest {
         pgnImportProcessor.process(new ClassPathResource("samples-pgn/McDonnell.pgn").getFile());
         pgnImportProcessor.process(new ClassPathResource("samples-pgn/DeLaBourdonnais.pgn").getFile());
 
-        Assertions.assertThat(playerRepository.count()).isEqualTo(19);
+        Assertions.assertThat(playerRepository.count()).isEqualTo(18);
         Assertions.assertThat(chessGameRepository.count()).isEqualTo(122);
         Assertions.assertThat(chessMoveRepository.count()).isEqualTo(9381L);
     }
