@@ -4,6 +4,7 @@ import org.chesscorp.club.monitoring.PerformanceMonitor;
 import org.chesscorp.club.service.ChessPositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ public class PositionIndexUpdateJob {
     @Autowired
     private PerformanceMonitor performanceMonitor;
 
-    // @Scheduled(fixedDelay = 5_000)
+    @Scheduled(fixedDelay = 5_000)
     @Transactional(propagation = Propagation.NEVER)
     public void run() {
         performanceMonitor.mark();
