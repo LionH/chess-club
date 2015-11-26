@@ -3,6 +3,7 @@ package org.chesscorp.club.service;
 import org.alcibiade.chess.model.ChessGameStatus;
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
+import org.chesscorp.club.exception.InvalidChessMoveException;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.game.ChessMove;
 import org.chesscorp.club.model.people.Player;
@@ -125,7 +126,7 @@ public class ChessGameServiceTest {
 
     @Test
     @Transactional
-    public void testGameEndHooks() {
+    public void testGameEndHooksWhiteWon() {
         Player p1 = playerRepository.save(new Player("Player 1"));
         Player p2 = playerRepository.save(new Player("Player 2"));
 
@@ -154,6 +155,24 @@ public class ChessGameServiceTest {
 
         Assertions.assertThat(eloRatingRepository.findFirstByPlayerIdOrderByIdDesc(p1.getId()).getEloRating()).isEqualTo(1210);
         Assertions.assertThat(eloRatingRepository.findFirstByPlayerIdOrderByIdDesc(p2.getId()).getEloRating()).isEqualTo(1190);
+    }
 
+    @Test(expected = InvalidChessMoveException.class)
+    @Transactional
+    public void testBogusMove() {
+        Player p1 = playerRepository.save(new Player("Player 1"));
+        Player p2 = playerRepository.save(new Player("Player 2"));
+        ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
+        game = chessGameService.move(game, "e4");
+        game = chessGameService.move(game, "exxx");
+    }
+
+    @Test(expected = InvalidChessMoveException.class)
+    @Transactional
+    public void testIllegalMove() {
+        Player p1 = playerRepository.save(new Player("Player 1"));
+        Player p2 = playerRepository.save(new Player("Player 2"));
+        ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
+        game = chessGameService.move(game, "e5");
     }
 }
