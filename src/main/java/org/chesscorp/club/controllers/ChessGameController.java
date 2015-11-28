@@ -76,7 +76,7 @@ public class ChessGameController {
     @Transactional
     @RequestMapping(value = "/{gameId}", method = RequestMethod.GET)
     public ChessGame getGame(@PathVariable Number gameId) {
-        ChessGame game = chessGameService.getGame(gameId);
+        ChessGame game = chessGameService.getGame(gameId.longValue());
         logger.info("Game fetched: {}", game);
 
         return game;

@@ -8,6 +8,7 @@ import org.chesscorp.club.model.game.ChessMove;
 import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.chesscorp.club.service.AuthenticationService;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -112,6 +114,18 @@ public class ChessGameControllerTest {
                 status().is2xxSuccessful()
         ).andExpect(
                 jsonPath("$", hasSize(1))
+        );
+
+        /*
+         * Load games by id from the controller itself.
+         */
+
+        mockMvc.perform(
+                get("/api/chess/game/" + game1.getId())
+        ).andExpect(
+                status().is2xxSuccessful()
+        ).andExpect(
+                jsonPath("$.status", Matchers.is("OPEN"))
         );
     }
 
