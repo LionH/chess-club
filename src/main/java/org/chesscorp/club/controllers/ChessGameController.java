@@ -89,7 +89,7 @@ public class ChessGameController {
             @PathVariable Number gameId,
             @RequestParam String move) {
         Player player = authenticationService.getSession(authenticationToken).getAccount().getPlayer();
-        ChessGame game = chessGameService.getGame(gameId);
+        ChessGame game = chessGameService.getGame(gameId.longValue());
 
         Player nextPlayer = game.getNextPlayer();
 

@@ -14,6 +14,10 @@ class GlobalControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public void handleException(Exception e) {
-        logger.warn(e.getLocalizedMessage());
+        if (logger.isDebugEnabled()) {
+            logger.warn(e.getLocalizedMessage(), e);
+        } else {
+            logger.warn(e.getLocalizedMessage());
+        }
     }
 }

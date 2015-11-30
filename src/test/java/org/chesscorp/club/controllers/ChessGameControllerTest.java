@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -126,6 +127,39 @@ public class ChessGameControllerTest {
                 status().is2xxSuccessful()
         ).andExpect(
                 jsonPath("$.status", Matchers.is("OPEN"))
+        ).andExpect(
+                jsonPath("$.moves", hasSize(2))
+        );
+
+        /*
+         * Post a move.
+         */
+
+        mockMvc.perform(
+                post("/api/chess/game/" + game1.getId())
+                        .cookie(new Cookie(AuthenticationController.AUTHENTICATION_TOKEN, bobToken))
+                        .param("move", "d4")
+        ).andExpect(
+                status().is5xxServerError()
+        );
+
+        mockMvc.perform(
+                post("/api/chess/game/" + game1.getId())
+                        .param("move", "d4")
+        ).andExpect(
+                status().is4xxClientError()
+        );
+
+        mockMvc.perform(
+                post("/api/chess/game/" + game1.getId())
+                        .cookie(new Cookie(AuthenticationController.AUTHENTICATION_TOKEN, alcibiadeToken))
+                        .param("move", "d4")
+        ).andExpect(
+                status().is2xxSuccessful()
+        ).andExpect(
+                jsonPath("$.status", Matchers.is("OPEN"))
+        ).andExpect(
+                jsonPath("$.moves", hasSize(3))
         );
     }
 
