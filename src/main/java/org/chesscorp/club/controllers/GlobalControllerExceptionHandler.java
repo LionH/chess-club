@@ -14,6 +14,6 @@ class GlobalControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public void handleException(Exception e) {
-        logger.info(e.getLocalizedMessage());
+        logger.warn(e.getLocalizedMessage());
     }
 }
