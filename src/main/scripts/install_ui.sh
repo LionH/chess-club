@@ -1,6 +1,8 @@
 #!/bin/bash
 
-UI_URL=https://github.com/ChessCorp/chess-club-ui/releases/download/0.0.4/chess-club-ui-0.0.4.zip
+UI_REVISION=0.1.0
+
+UI_URL=https://github.com/ChessCorp/chess-club-ui/releases/download/${UI_REVISION}/chess-club-ui-${UI_REVISION}.zip
 
 echo "
   ___           _        _ _ _               _   _ ___
