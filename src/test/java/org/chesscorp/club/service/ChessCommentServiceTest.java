@@ -3,6 +3,7 @@ package org.chesscorp.club.service;
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.model.game.ChessGame;
+import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
@@ -32,8 +33,8 @@ public class ChessCommentServiceTest {
     @Test
     @Transactional
     public void testCommentPublication() {
-        Player p1 = playerRepository.save(new Player("Player 1"));
-        Player p2 = playerRepository.save(new Player("Player 2"));
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
         ChessGame game = chessGameRepository.save(new ChessGame(p1, p2));
 
         Assertions.assertThat(chessCommentService.getCommentsByGame(game.getId())).isEmpty();

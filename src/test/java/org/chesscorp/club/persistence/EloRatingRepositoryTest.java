@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.game.EloRating;
+import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.Player;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,8 +31,8 @@ public class EloRatingRepositoryTest {
     @Test
     @Transactional
     public void testRegistration() {
-        Player p1 = playerRepository.save(new Player("Player 1"));
-        Player p2 = playerRepository.save(new Player("Player 2"));
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
 
         ChessGame game1 = chessGameRepository.save(new ChessGame(p1, p2));
         ChessGame game2 = chessGameRepository.save(new ChessGame(p1, p2));

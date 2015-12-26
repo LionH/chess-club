@@ -6,6 +6,7 @@ import org.chesscorp.club.Application;
 import org.chesscorp.club.exception.InvalidChessMoveException;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.game.ChessMove;
+import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.model.people.RobotPlayer;
 import org.chesscorp.club.persistence.ChessMoveRepository;
@@ -49,8 +50,8 @@ public class ChessGameServiceTest {
     @Test
     @Transactional
     public void testGameOperations() throws InterruptedException {
-        Player p1 = playerRepository.save(new Player("Player 1"));
-        Player p2 = playerRepository.save(new Player("Player 2"));
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
 
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
         Thread.sleep(10);
@@ -74,8 +75,8 @@ public class ChessGameServiceTest {
     @Test
     @Transactional
     public void testSaveAndReload() throws InterruptedException {
-        Player p1 = playerRepository.save(new Player("Player 1"));
-        Player p2 = playerRepository.save(new Player("Player 2"));
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
 
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
         game = chessGameService.move(game, "e2e4");
@@ -89,7 +90,7 @@ public class ChessGameServiceTest {
     @Test
     @Transactional
     public void testRobotAsBlack() {
-        Player p1 = playerRepository.save(new Player("Player 1"));
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
         RobotPlayer rob = robotRepository.save(new RobotPlayer("rob", "randomAI", ""));
 
         ChessGame game = chessGameService.createGame(p1.getId(), rob.getId());
@@ -101,7 +102,7 @@ public class ChessGameServiceTest {
     @Test
     @Transactional
     public void testRobotAsWhite() {
-        Player p1 = playerRepository.save(new Player("Player 1"));
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
         RobotPlayer rob = robotRepository.save(new RobotPlayer("rob", "randomAI", "{level=3}"));
 
         ChessGame game = chessGameService.createGame(rob.getId(), p1.getId());
@@ -111,7 +112,7 @@ public class ChessGameServiceTest {
     @Test(expected = RuntimeException.class)
     @Transactional
     public void testUnknownAI() {
-        Player p1 = playerRepository.save(new Player("Player 1"));
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
         RobotPlayer rob = robotRepository.save(new RobotPlayer("rob", "bogusAI", "{level=3}"));
 
         ChessGame game = chessGameService.createGame(rob.getId(), p1.getId());
@@ -120,15 +121,15 @@ public class ChessGameServiceTest {
     @Test(expected = IllegalStateException.class)
     @Transactional
     public void testRefuseSamePlayer() {
-        Player p1 = playerRepository.save(new Player("Player 1"));
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
         chessGameService.createGame(p1.getId(), p1.getId());
     }
 
     @Test
     @Transactional
     public void testGameEndHooksWhiteWon() {
-        Player p1 = playerRepository.save(new Player("Player 1"));
-        Player p2 = playerRepository.save(new Player("Player 2"));
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
 
         // 1. e4 e5 2. Qh5 Nc6 3. Bc4 Nf6 4. Qxf7#
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
@@ -160,8 +161,8 @@ public class ChessGameServiceTest {
     @Test(expected = InvalidChessMoveException.class)
     @Transactional
     public void testBogusMove() {
-        Player p1 = playerRepository.save(new Player("Player 1"));
-        Player p2 = playerRepository.save(new Player("Player 2"));
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
         game = chessGameService.move(game, "e4");
         game = chessGameService.move(game, "exxx");
@@ -170,8 +171,8 @@ public class ChessGameServiceTest {
     @Test(expected = InvalidChessMoveException.class)
     @Transactional
     public void testIllegalMove() {
-        Player p1 = playerRepository.save(new Player("Player 1"));
-        Player p2 = playerRepository.save(new Player("Player 2"));
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
         game = chessGameService.move(game, "e5");
     }

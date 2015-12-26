@@ -4,7 +4,9 @@ import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.dto.PlayerProfile;
 import org.chesscorp.club.model.people.ClubPlayer;
+import org.chesscorp.club.model.people.ExternalPlayer;
 import org.chesscorp.club.model.people.Player;
+import org.chesscorp.club.model.people.RobotPlayer;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,16 +26,17 @@ public class PlayerServiceTest {
     @Autowired
     private PlayerRepository playerRepository;
 
+
     @Autowired
     private PlayerService playerService;
 
     @Test
     @Transactional
     public void testSearchSuccess() {
-        playerRepository.save(new Player("Freddie Mercury"));
-        playerRepository.save(new Player("Brian May"));
-        playerRepository.save(new Player("John Deacon"));
-        playerRepository.save(new Player("Roger Taylor"));
+        playerRepository.save(new ExternalPlayer("Freddie Mercury", "freddie"));
+        playerRepository.save(new ExternalPlayer("Brian May", "brian"));
+        playerRepository.save(new ExternalPlayer("John Deacon", "john"));
+        playerRepository.save(new ExternalPlayer("Roger Taylor", "roger"));
 
 
         Assertions.assertThat(playerService.search("")).hasSize(4);
@@ -55,5 +58,32 @@ public class PlayerServiceTest {
                 .isEqualToComparingFieldByField(new PlayerProfile(player2, new ArrayList<>()));
         Assertions.assertThat(playerService.getProfile(player3.getId()))
                 .isEqualToComparingFieldByField(new PlayerProfile(player3, new ArrayList<>()));
+    }
+
+    @Test
+    @Transactional
+    public void testSearchAI() {
+        playerRepository.save(new ExternalPlayer("External player", "ext"));
+        playerRepository.save(new ClubPlayer("Player 1"));
+        playerRepository.save(new ClubPlayer("Player 2"));
+        playerRepository.save(new ClubPlayer("Player 3"));
+        playerRepository.save(new RobotPlayer("GnuChess lvl 1", "gnuchess", "1"));
+        playerRepository.save(new RobotPlayer("GnuChess lvl 2", "gnuchess", "2"));
+
+        Assertions.assertThat(playerService.searchAI()).hasSize(2);
+    }
+
+    @Test
+    @Transactional
+    public void testSearchOpponents() {
+        playerRepository.save(new ExternalPlayer("External player", "ext"));
+        Player player1 = playerRepository.save(new ClubPlayer("Player 1"));
+        playerRepository.save(new ClubPlayer("Player 2"));
+        playerRepository.save(new ClubPlayer("Player 3"));
+        playerRepository.save(new RobotPlayer("GnuChess lvl 1", "gnuchess", "1"));
+        playerRepository.save(new RobotPlayer("GnuChess lvl 2", "gnuchess", "2"));
+
+        Assertions.assertThat(playerService.searchOpponents(player1.getId())).hasSize(2)
+                .extracting("id").doesNotContain(player1.getId());
     }
 }

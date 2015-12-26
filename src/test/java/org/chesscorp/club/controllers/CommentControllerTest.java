@@ -2,6 +2,7 @@ package org.chesscorp.club.controllers;
 
 import org.chesscorp.club.Application;
 import org.chesscorp.club.model.game.ChessGame;
+import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
@@ -50,7 +51,7 @@ public class CommentControllerTest {
         String authenticationToken = authenticationService.signin("email@domain.com", "pwd");
 
         Player p1 = playerRepository.findByDisplayName("Player 1").get(0);
-        Player p2 = playerRepository.save(new Player("Player 2"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
         ChessGame game = chessGameRepository.save(new ChessGame(p1, p2));
 
 
@@ -107,7 +108,7 @@ public class CommentControllerTest {
         String authenticationToken = authenticationService.signin("email@domain.com", "pwd");
 
         Player p1 = playerRepository.findByDisplayName("Player 1").get(0);
-        Player p2 = playerRepository.save(new Player("Player 2"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
         ChessGame game = chessGameRepository.save(new ChessGame(p1, p2));
 
 

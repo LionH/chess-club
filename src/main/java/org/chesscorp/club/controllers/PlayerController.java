@@ -1,17 +1,19 @@
 package org.chesscorp.club.controllers;
 
 import org.chesscorp.club.dto.PlayerProfile;
+import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.Player;
+import org.chesscorp.club.model.people.RobotPlayer;
 import org.chesscorp.club.service.PlayerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -25,7 +27,7 @@ public class PlayerController {
     @Autowired
     private PlayerService playerService;
 
-    @Transactional
+    @Transactional(readOnly = true)
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public List<Player> search(
             @RequestParam String query) {
@@ -34,7 +36,23 @@ public class PlayerController {
         return players;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
+    @RequestMapping(value = "/search-ai", method = RequestMethod.GET)
+    public List<RobotPlayer> searchAI() {
+        List<RobotPlayer> players = playerService.searchAI();
+        logger.debug("Found {} AI players", players.size());
+        return players;
+    }
+
+    @Transactional(readOnly = true)
+    @RequestMapping(value = "/search-opponents", method = RequestMethod.GET)
+    public List<ClubPlayer> searchOpponents(@RequestParam Long playerId) {
+        List<ClubPlayer> players = playerService.searchOpponents(playerId);
+        logger.debug("Found {} opponent players", players.size());
+        return players;
+    }
+
+    @Transactional(readOnly = true)
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
     public PlayerProfile getProfile(
             @RequestParam Long playerId) {

@@ -18,7 +18,7 @@ import java.util.Objects;
         }
 )
 @SequenceGenerator(name = "player_seq", initialValue = 1, allocationSize = 1, sequenceName = "player_seq")
-public class Player {
+public abstract class Player {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "player_seq")
