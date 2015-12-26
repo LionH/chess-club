@@ -1,6 +1,8 @@
 #!/bin/bash
 
-UI_REVISION=0.1.0
+set -e -x
+
+UI_REVISION=0.2.0
 
 UI_URL=https://github.com/ChessCorp/chess-club-ui/releases/download/${UI_REVISION}/chess-club-ui-${UI_REVISION}.zip
 
