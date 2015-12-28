@@ -13,9 +13,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@TransactionConfiguration(defaultRollback = false)
+@Rollback(value = false)
 @ActiveProfiles(profiles = "bootstrap")
 public class BootstrapTest {
 
@@ -57,7 +57,7 @@ public class BootstrapTest {
         Assertions.assertThat(playerRepository.findAll()).hasSize(5)
                 .hasAtLeastOneElementOfType(RobotPlayer.class)
                 .hasAtLeastOneElementOfType(ClubPlayer.class);
-        Assertions.assertThat(accountRepository.findAll()).hasSize(2);
+        Assertions.assertThat(accountRepository.findAll()).hasSize(4);
         Assertions.assertThat(robotRepository.findAll()).hasSize(1);
         Assertions.assertThat(chessGameRepository.findAll()).hasSize(2);
     }

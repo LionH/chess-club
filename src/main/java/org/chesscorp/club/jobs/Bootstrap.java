@@ -52,7 +52,7 @@ public class Bootstrap {
             Player alcibiade = playerRepository.save(new ClubPlayer("Alcibiade"));
             Player john = playerRepository.save(new ClubPlayer("John"));
             Player bob = playerRepository.save(new ClubPlayer("Bob"));
-            playerRepository.save(new ClubPlayer("Steve"));
+            Player steve = playerRepository.save(new ClubPlayer("Steve"));
 
             logger.info("Creating sample games");
             chessGameRepository.save(new ChessGame(playerRepository.getOne(john.getId()), playerRepository.getOne(bob.getId())));
@@ -60,7 +60,9 @@ public class Bootstrap {
 
             logger.info("Creating sample accounts");
             accountRepository.save(new Account("alcibiade", "toto", alcibiade));
-            accountRepository.save(new Account("john", "toto", john));
+            accountRepository.save(new Account("john", "john", john));
+            accountRepository.save(new Account("bob", "bob", bob));
+            accountRepository.save(new Account("steve", "steve", steve));
         }
     }
 }
