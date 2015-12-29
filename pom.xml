@@ -189,9 +189,9 @@
                             <target>
                                 <delete dir="src/main/webapp/"/>
                                 <get src="https://github.com/ChessCorp/chess-club-ui/releases/download/0.3.0/chess-club-ui-0.3.0.zip"
-                                     dest="target/ui.zip"/>
-                                <unzip src="target/ui.zip"
-                                       dest="src/main/webapp"/>
+                                     dest="target/ui.zip"
+                                     skipexisting="true"/>
+                                <unzip src="target/ui.zip" dest="src/main/webapp"/>
                             </target>
                         </configuration>
                         <goals>
