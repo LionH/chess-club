@@ -7,12 +7,14 @@ import org.alcibiade.chess.persistence.PositionMarshallerImpl;
 import org.alcibiade.chess.rules.ChessRules;
 import org.alcibiade.chess.rules.ChessRulesImpl;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * Chess related components initialization.
  */
 @Configuration
+@ComponentScan("org.alcibiade.chess.engine")
 public class ChessConfig {
 
     @Bean
@@ -32,4 +34,9 @@ public class ChessConfig {
         PositionMarshaller marshaller = new PositionMarshallerImpl();
         return marshaller;
     }
+
+//    @Bean
+//    public GnuChessEngineImpl getGnuChessEngine() {
+//        return new GnuChessEngineImpl();
+//    }
 }
