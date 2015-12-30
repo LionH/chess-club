@@ -1,6 +1,11 @@
 language: java
 jdk:
 - oraclejdk8
+before_install:
+- sudo apt-get update -qq
+- sudo apt-get install -y gnuchess phalanx
+- sudo ln -sf /usr/games/gnuchess /usr/bin/gnuchess
+- sudo ln -sf /usr/games/phalanx /usr/bin/phalanx
 after_success:
 - mkdir deploy
 - mv target/chess-club-${TRAVIS_TAG}.jar deploy/
