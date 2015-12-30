@@ -1,8 +1,6 @@
 language: java
 jdk:
 - oraclejdk8
-before_install:
-- src/main/scripts/install_ui.sh
 after_success:
 - mkdir deploy
 - mv target/chess-club-${TRAVIS_TAG}.jar deploy/
