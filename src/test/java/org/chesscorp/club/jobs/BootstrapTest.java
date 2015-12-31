@@ -54,11 +54,11 @@ public class BootstrapTest {
     @Test
     @Transactional
     public void testSampleData() {
-        Assertions.assertThat(playerRepository.findAll()).hasSize(5)
+        Assertions.assertThat(playerRepository.findAll()).hasSize(19)
                 .hasAtLeastOneElementOfType(RobotPlayer.class)
                 .hasAtLeastOneElementOfType(ClubPlayer.class);
         Assertions.assertThat(accountRepository.findAll()).hasSize(4);
-        Assertions.assertThat(robotRepository.findAll()).hasSize(1);
+        Assertions.assertThat(robotRepository.findAll()).hasSize(15);
         Assertions.assertThat(chessGameRepository.findAll()).hasSize(2);
     }
 }

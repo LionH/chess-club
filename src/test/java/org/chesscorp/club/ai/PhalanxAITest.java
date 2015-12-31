@@ -21,9 +21,9 @@ import java.util.Set;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @Rollback
-public class GnuChessAITest {
+public class PhalanxAITest {
 
-    private Logger logger = LoggerFactory.getLogger(GnuChessAITest.class);
+    private Logger logger = LoggerFactory.getLogger(PhalanxAITest.class);
 
     @Autowired
     private ChessRules chessRules;
@@ -32,14 +32,14 @@ public class GnuChessAITest {
     private PgnMarshaller pgnMarshaller;
 
     @Autowired
-    private GnuChessAI gnuChessAI;
+    private PhalanxAI phalanxAI;
 
     @Test
     public void testAI() {
         ChessPosition initialPosition = chessRules.getInitialPosition();
         Set<ChessMovePath> availableMoves = chessRules.getAvailableMoves(initialPosition);
 
-        String firstMovePgn = gnuChessAI.computeNextMove("3", new ArrayList<>());
+        String firstMovePgn = phalanxAI.computeNextMove("3", new ArrayList<>());
 
         logger.debug("First AI move is {}", firstMovePgn);
 

@@ -48,6 +48,11 @@ public class Bootstrap {
             logger.info("Creating sample robots");
             robotRepository.save(new RobotPlayer("Simple AI", "randomAI", ""));
 
+            for (int l = 1; l < 8; l++) {
+                robotRepository.save(new RobotPlayer("GnuChess Level " + l, "gnuchessAI", Integer.toString(l)));
+                robotRepository.save(new RobotPlayer("Phalanx Level " + l, "phalanxAI", Integer.toString(l)));
+            }
+
             logger.info("Creating sample players");
             Player alcibiade = playerRepository.save(new ClubPlayer("Alcibiade"));
             Player john = playerRepository.save(new ClubPlayer("John"));
