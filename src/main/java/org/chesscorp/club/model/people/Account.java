@@ -19,6 +19,8 @@ public class Account {
 
     @Id
     private String identifier;
+    @Column(length = 32)
+    private String salt;
     @Column(nullable = false, length = 32)
     private String password;
     @ManyToOne(optional = false)
@@ -27,8 +29,9 @@ public class Account {
     public Account() {
     }
 
-    public Account(String identifier, String password, Player player) {
+    public Account(String identifier, String salt, String password, Player player) {
         this.identifier = identifier;
+        this.salt = salt;
         this.password = password;
         this.player = player;
     }
@@ -37,8 +40,20 @@ public class Account {
         return identifier;
     }
 
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Player getPlayer() {

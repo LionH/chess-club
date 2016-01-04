@@ -10,6 +10,7 @@ import org.chesscorp.club.persistence.AccountRepository;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.chesscorp.club.persistence.RobotRepository;
+import org.chesscorp.club.utilities.hash.HashManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class Bootstrap {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private HashManager hashManager;
 
     @PostConstruct
     public void populate() {
@@ -64,10 +68,11 @@ public class Bootstrap {
             chessGameRepository.save(new ChessGame(playerRepository.getOne(alcibiade.getId()), playerRepository.getOne(bob.getId())));
 
             logger.info("Creating sample accounts");
-            accountRepository.save(new Account("alcibiade", "toto", alcibiade));
-            accountRepository.save(new Account("john", "john", john));
-            accountRepository.save(new Account("bob", "bob", bob));
-            accountRepository.save(new Account("steve", "steve", steve));
+            String salt = hashManager.createSalt();
+            accountRepository.save(new Account("alcibiade", salt, hashManager.hash(salt, "toto"), alcibiade));
+            accountRepository.save(new Account("john", salt, hashManager.hash(salt, "john"), john));
+            accountRepository.save(new Account("bob", salt, hashManager.hash(salt, "bob"), bob));
+            accountRepository.save(new Account("steve", salt, hashManager.hash(salt, "steve"), steve));
         }
     }
 }

@@ -10,6 +10,7 @@ import org.chesscorp.club.model.people.Session;
 import org.chesscorp.club.persistence.AccountRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.chesscorp.club.persistence.SessionRepository;
+import org.chesscorp.club.utilities.hash.HashManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.UUID;
 
 /**
@@ -35,6 +37,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private SessionRepository sessionRepository;
 
+    @Autowired
+    private HashManager hashManager;
+
+    @PostConstruct
+    private void hashClearTextPasswords() {
+        accountRepository.readAllBySaltNotNull().forEach(account -> {
+            String salt = hashManager.createSalt();
+            String password = account.getPassword();
+
+            String passwordHash = hashManager.hash(salt, password);
+
+            account.setSalt(salt);
+            account.setPassword(passwordHash);
+            accountRepository.save(account);
+        });
+    }
+
     @Override
     @Transactional
     public void signup(String email, String password, String displayName) {
@@ -42,8 +61,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new UserAlreadyExistsException();
         }
 
+        String salt = hashManager.createSalt();
+        String passwordHash = hashManager.hash(salt, password);
+
         Player p = playerRepository.save(new ClubPlayer(displayName));
-        Account a = accountRepository.save(new Account(email, password, p));
+        Account a = accountRepository.save(new Account(email, salt, passwordHash, p));
         logger.info("Account {} created for player {}", a, p);
     }
 
@@ -62,7 +84,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new AuthenticationFailedException("No account for '" + email + "'");
         }
 
-        if (!account.getPassword().equals(password)) {
+        String passwordHash = hashManager.hash(account.getSalt(), password);
+
+        if (!account.getPassword().equals(passwordHash)) {
             throw new AuthenticationFailedException("");
         }
 
