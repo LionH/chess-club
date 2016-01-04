@@ -42,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @PostConstruct
     private void hashClearTextPasswords() {
-        accountRepository.readAllBySaltNotNull().forEach(account -> {
+        accountRepository.readAllBySaltNull().forEach(account -> {
             String salt = hashManager.createSalt();
             String password = account.getPassword();
 

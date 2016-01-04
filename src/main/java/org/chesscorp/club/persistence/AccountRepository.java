@@ -7,5 +7,5 @@ import java.util.stream.Stream;
 
 public interface AccountRepository extends JpaRepository<Account, String> {
 
-    Stream<Account> readAllBySaltNotNull();
+    Stream<Account> readAllBySaltNull();
 }
