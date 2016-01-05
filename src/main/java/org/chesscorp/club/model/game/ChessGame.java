@@ -35,6 +35,7 @@ public class ChessGame {
     @ManyToOne(optional = false)
     private Player blackPlayer;
     @OneToMany(mappedBy = "game")
+    @OrderBy("id ASC")
     private List<ChessMove> moves;
     @Column(nullable = false)
     private OffsetDateTime startDate;
