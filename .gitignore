@@ -1,5 +1,5 @@
 /target/
 *.iml
 /.idea/
-/src/main/webapp
+/src/main/webapp/
 /import/
