@@ -3,6 +3,7 @@ package org.chesscorp.club.service;
 import org.alcibiade.chess.model.ChessMovePath;
 import org.alcibiade.chess.model.ChessPosition;
 import org.alcibiade.chess.persistence.PgnMarshaller;
+import org.alcibiade.chess.rules.ChessHelper;
 import org.alcibiade.chess.rules.ChessRules;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.game.ChessMove;
@@ -109,6 +110,8 @@ public class BootStrapServiceImpl implements BootstrapService {
                     chessMoveRepository.save(move);
                     logger.warn("Game {}, move {} updated to {}", g.getId(), originalPgn, canonicalPgn);
                 }
+
+                position = ChessHelper.applyMoveAndSwitch(chessRules, position, movePath);
             }
         });
     }

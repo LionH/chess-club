@@ -63,12 +63,15 @@ public class BootstrapServiceTest {
         ChessGame game = new ChessGame(p1, p2);
 
         ChessMove move1 = game.addMove(OffsetDateTime.now(), "Pe2e4");
+        ChessMove move2 = game.addMove(OffsetDateTime.now(), "Pd7d5");
         chessGameRepository.save(game);
         chessMoveRepository.save(move1);
+        chessMoveRepository.save(move2);
 
         bootstrapService.fixPgnNotationInGames();
 
         ChessGame fixedGame = chessGameRepository.getOne(game.getId());
         Assertions.assertThat(fixedGame.getMoves().get(0).getPgn()).isEqualTo("e4");
+        Assertions.assertThat(fixedGame.getMoves().get(1).getPgn()).isEqualTo("d5");
     }
 }
