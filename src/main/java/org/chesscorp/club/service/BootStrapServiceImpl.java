@@ -1,14 +1,16 @@
 package org.chesscorp.club.service;
 
+import org.alcibiade.chess.model.ChessMovePath;
+import org.alcibiade.chess.model.ChessPosition;
+import org.alcibiade.chess.persistence.PgnMarshaller;
+import org.alcibiade.chess.rules.ChessRules;
 import org.chesscorp.club.model.game.ChessGame;
+import org.chesscorp.club.model.game.ChessMove;
 import org.chesscorp.club.model.people.Account;
 import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.model.people.RobotPlayer;
-import org.chesscorp.club.persistence.AccountRepository;
-import org.chesscorp.club.persistence.ChessGameRepository;
-import org.chesscorp.club.persistence.PlayerRepository;
-import org.chesscorp.club.persistence.RobotRepository;
+import org.chesscorp.club.persistence.*;
 import org.chesscorp.club.utilities.hash.HashManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +36,19 @@ public class BootStrapServiceImpl implements BootstrapService {
     private ChessGameRepository chessGameRepository;
 
     @Autowired
+    private ChessMoveRepository chessMoveRepository;
+
+    @Autowired
     private AccountRepository accountRepository;
 
     @Autowired
     private HashManager hashManager;
+
+    @Autowired
+    private ChessRules chessRules;
+
+    @Autowired
+    private PgnMarshaller pgnMarshaller;
 
     @Override
     @Transactional
@@ -74,5 +85,31 @@ public class BootStrapServiceImpl implements BootstrapService {
             accountRepository.save(new Account("bob", salt, hashManager.hash(salt, "bob"), bob));
             accountRepository.save(new Account("steve", salt, hashManager.hash(salt, "steve"), steve));
         }
+    }
+
+    @Override
+    @Transactional
+    public void fixPgnNotationInGames() {
+        chessGameRepository.findAll().stream().forEach(g -> {
+            ChessPosition position = chessRules.getInitialPosition();
+
+            for (ChessMove move : g.getMoves()) {
+                logger.debug("Checking pgn validity for game {}: {} vs {}",
+                        g.getId(),
+                        g.getWhitePlayer().getDisplayName(),
+                        g.getBlackPlayer().getDisplayName());
+
+                String originalPgn = move.getPgn();
+                ChessMovePath movePath = pgnMarshaller.convertPgnToMove(position, originalPgn);
+
+                String canonicalPgn = pgnMarshaller.convertMoveToPgn(position, movePath);
+
+                if (!canonicalPgn.equals(originalPgn)) {
+                    move.setPgn(canonicalPgn);
+                    chessMoveRepository.save(move);
+                    logger.warn("Game {}, move {} updated to {}", g.getId(), originalPgn, canonicalPgn);
+                }
+            }
+        });
     }
 }

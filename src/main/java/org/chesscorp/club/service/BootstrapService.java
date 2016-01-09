@@ -6,4 +6,6 @@ package org.chesscorp.club.service;
 public interface BootstrapService {
 
     void populate();
+
+    void fixPgnNotationInGames();
 }

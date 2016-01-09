@@ -46,6 +46,10 @@ public class ChessMove {
         return pgn;
     }
 
+    public void setPgn(String pgn) {
+        this.pgn = pgn;
+    }
+
     public OffsetDateTime getDate() {
         return date;
     }

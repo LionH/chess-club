@@ -18,5 +18,6 @@ public class Bootstrap {
     @PostConstruct
     public void init() {
         bootstrapService.populate();
+        bootstrapService.fixPgnNotationInGames();
     }
 }
