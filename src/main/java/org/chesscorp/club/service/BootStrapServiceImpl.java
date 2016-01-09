@@ -1,0 +1,78 @@
+package org.chesscorp.club.service;
+
+import org.chesscorp.club.model.game.ChessGame;
+import org.chesscorp.club.model.people.Account;
+import org.chesscorp.club.model.people.ClubPlayer;
+import org.chesscorp.club.model.people.Player;
+import org.chesscorp.club.model.people.RobotPlayer;
+import org.chesscorp.club.persistence.AccountRepository;
+import org.chesscorp.club.persistence.ChessGameRepository;
+import org.chesscorp.club.persistence.PlayerRepository;
+import org.chesscorp.club.persistence.RobotRepository;
+import org.chesscorp.club.utilities.hash.HashManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * Initialization operations.
+ */
+@Component
+public class BootStrapServiceImpl implements BootstrapService {
+
+    private Logger logger = LoggerFactory.getLogger(BootStrapServiceImpl.class);
+
+    @Autowired
+    private PlayerRepository playerRepository;
+
+    @Autowired
+    private RobotRepository robotRepository;
+
+    @Autowired
+    private ChessGameRepository chessGameRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private HashManager hashManager;
+
+    @Override
+    @Transactional
+    public void populate() {
+        long playerCount = playerRepository.count();
+        long gameCount = chessGameRepository.count();
+        long accountCount = accountRepository.count();
+
+        logger.info("Found {} accounts, {} players, {} games", accountCount, playerCount, gameCount);
+
+        if (playerCount == 0 && gameCount == 0 && accountCount == 0) {
+            logger.info("Creating sample robots");
+            robotRepository.save(new RobotPlayer("Simple AI", "randomAI", ""));
+
+            for (int l = 1; l < 8; l++) {
+                robotRepository.save(new RobotPlayer("GnuChess Level " + l, "gnuchessAI", Integer.toString(l)));
+                robotRepository.save(new RobotPlayer("Phalanx Level " + l, "phalanxAI", Integer.toString(l)));
+            }
+
+            logger.info("Creating sample players");
+            Player alcibiade = playerRepository.save(new ClubPlayer("Alcibiade"));
+            Player john = playerRepository.save(new ClubPlayer("John"));
+            Player bob = playerRepository.save(new ClubPlayer("Bob"));
+            Player steve = playerRepository.save(new ClubPlayer("Steve"));
+
+            logger.info("Creating sample games");
+            chessGameRepository.save(new ChessGame(playerRepository.getOne(john.getId()), playerRepository.getOne(bob.getId())));
+            chessGameRepository.save(new ChessGame(playerRepository.getOne(alcibiade.getId()), playerRepository.getOne(bob.getId())));
+
+            logger.info("Creating sample accounts");
+            String salt = hashManager.createSalt();
+            accountRepository.save(new Account("alcibiade", salt, hashManager.hash(salt, "toto"), alcibiade));
+            accountRepository.save(new Account("john", salt, hashManager.hash(salt, "john"), john));
+            accountRepository.save(new Account("bob", salt, hashManager.hash(salt, "bob"), bob));
+            accountRepository.save(new Account("steve", salt, hashManager.hash(salt, "steve"), steve));
+        }
+    }
+}
