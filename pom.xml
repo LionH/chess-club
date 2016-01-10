@@ -5,7 +5,7 @@
 
     <groupId>org.chesscorp</groupId>
     <artifactId>chess-club</artifactId>
-    <version>0.4.4</version>
+    <version>0.5.0</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -21,7 +21,7 @@
     </scm>
 
     <properties>
-        <chess-club-ui-version>0.4.0</chess-club-ui-version>
+        <chess-club-ui-version>0.5.1</chess-club-ui-version>
         <chess-rules-version>1.4.2</chess-rules-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
