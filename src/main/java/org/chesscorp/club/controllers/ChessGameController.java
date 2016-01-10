@@ -102,4 +102,20 @@ public class ChessGameController {
 
         return game;
     }
+
+    @Transactional
+    @RequestMapping(value = "/{gameId}/resign", method = RequestMethod.POST)
+    public ChessGame postMove(
+            @CookieValue(value = AuthenticationController.AUTHENTICATION_TOKEN) String authenticationToken,
+            @PathVariable Number gameId) {
+        Player player = authenticationService.getSession(authenticationToken).getAccount().getPlayer();
+        ChessGame game = chessGameService.getGame(gameId.longValue());
+
+        game = chessGameService.resign(game, player);
+        logger.info("Player {} resigned game {}", player, game);
+
+        return game;
+    }
+
+
 }

@@ -1,9 +1,6 @@
 package org.chesscorp.club.service;
 
-import org.alcibiade.chess.model.ChessException;
-import org.alcibiade.chess.model.ChessGameStatus;
-import org.alcibiade.chess.model.ChessMovePath;
-import org.alcibiade.chess.model.ChessPosition;
+import org.alcibiade.chess.model.*;
 import org.alcibiade.chess.persistence.PgnBookReader;
 import org.alcibiade.chess.persistence.PgnGameModel;
 import org.alcibiade.chess.persistence.PgnMarshaller;
@@ -269,6 +266,45 @@ public class ChessGameServiceImpl implements ChessGameService {
         logger.debug("Imported {} games", gamesCount);
 
         return gamesCount;
+    }
+
+    @Override
+    @Transactional
+    public ChessGame resign(ChessGame game, Player player) {
+        ChessSide resigningSide = null;
+
+        if (player.getId().equals(game.getWhitePlayer().getId())) {
+            resigningSide = ChessSide.WHITE;
+        }
+
+        if (player.getId().equals(game.getBlackPlayer().getId())) {
+            resigningSide = ChessSide.BLACK;
+        }
+
+        if (resigningSide == null) {
+            throw new IllegalArgumentException(
+                    "Resigning player " + player.getId() + " is not playing in game " + game.getId());
+        }
+
+        if (game.getMoves().size() < 2) {
+            chessGameRepository.delete(game);
+        } else {
+            switch (resigningSide) {
+                case WHITE:
+                    game.setStatus(ChessGameStatus.BLACKWON);
+                    break;
+
+                case BLACK:
+                    game.setStatus(ChessGameStatus.WHITEWON);
+                    break;
+            }
+
+            updatePostGame(game);
+
+            chessGameRepository.save(game);
+        }
+
+        return game;
     }
 
     /**

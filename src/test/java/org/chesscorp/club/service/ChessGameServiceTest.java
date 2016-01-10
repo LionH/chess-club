@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -175,5 +176,67 @@ public class ChessGameServiceTest {
         Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
         game = chessGameService.move(game, "e5");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @Transactional
+    public void testResignationByNonPlayer() {
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
+        Player p3 = playerRepository.save(new ClubPlayer("Player 3"));
+
+        ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
+        game = chessGameService.move(game, "e4");
+
+        chessGameService.resign(game, p3);
+    }
+
+    @Test(expected = JpaObjectRetrievalFailureException.class)
+    @Transactional
+    public void testResignationBeforeMoves() {
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
+
+        ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
+        game = chessGameService.move(game, "e4");
+
+        chessGameService.resign(game, p2);
+
+        // Fetching the game fails as it has been deleted
+        chessGameService.getGame(game.getId());
+    }
+
+    @Test
+    @Transactional
+    public void testWhiteResignationAfterMoves() {
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
+
+        ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
+        game = chessGameService.move(game, "e4");
+        game = chessGameService.move(game, "e5");
+        game = chessGameService.resign(game, p1);
+
+        Assertions.assertThat(game.getStatus()).isEqualTo(ChessGameStatus.BLACKWON);
+
+        // Fetching the game will succeed
+        Assertions.assertThat(chessGameService.getGame(game.getId())).isNotNull();
+    }
+
+    @Test
+    @Transactional
+    public void testBlackResignationAfterMoves() {
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
+
+        ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
+        game = chessGameService.move(game, "e4");
+        game = chessGameService.move(game, "e5");
+        game = chessGameService.resign(game, p2);
+
+        Assertions.assertThat(game.getStatus()).isEqualTo(ChessGameStatus.WHITEWON);
+
+        // Fetching the game will succeed
+        Assertions.assertThat(chessGameService.getGame(game.getId())).isNotNull();
     }
 }

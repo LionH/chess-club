@@ -110,6 +110,10 @@ public class ChessGame {
         return status;
     }
 
+    public void setStatus(ChessGameStatus status) {
+        this.status = status;
+    }
+
     public OffsetDateTime getStartDate() {
         return startDate;
     }
