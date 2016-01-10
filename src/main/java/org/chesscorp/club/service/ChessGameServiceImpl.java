@@ -286,23 +286,22 @@ public class ChessGameServiceImpl implements ChessGameService {
                     "Resigning player " + player.getId() + " is not playing in game " + game.getId());
         }
 
-        if (game.getMoves().size() < 2) {
-            chessGameRepository.delete(game);
-        } else {
-            switch (resigningSide) {
-                case WHITE:
-                    game.setStatus(ChessGameStatus.BLACKWON);
-                    break;
 
-                case BLACK:
-                    game.setStatus(ChessGameStatus.WHITEWON);
-                    break;
-            }
+        switch (resigningSide) {
+            case WHITE:
+                game.setStatus(ChessGameStatus.BLACKWON);
+                break;
 
-            updatePostGame(game);
-
-            chessGameRepository.save(game);
+            case BLACK:
+                game.setStatus(ChessGameStatus.WHITEWON);
+                break;
         }
+
+        if (game.getMoves().size() >= 2) {
+            updatePostGame(game);
+        }
+
+        chessGameRepository.save(game);
 
         return game;
     }

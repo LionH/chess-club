@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -191,7 +190,7 @@ public class ChessGameServiceTest {
         chessGameService.resign(game, p3);
     }
 
-    @Test(expected = JpaObjectRetrievalFailureException.class)
+    @Test
     @Transactional
     public void testResignationBeforeMoves() {
         Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
@@ -200,10 +199,10 @@ public class ChessGameServiceTest {
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
         game = chessGameService.move(game, "e4");
 
+        long ratings = eloRatingRepository.count();
         chessGameService.resign(game, p2);
-
-        // Fetching the game fails as it has been deleted
         chessGameService.getGame(game.getId());
+        Assertions.assertThat(eloRatingRepository.count()).isEqualTo(ratings);
     }
 
     @Test
@@ -212,12 +211,15 @@ public class ChessGameServiceTest {
         Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
         Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
 
+        long ratings = eloRatingRepository.count();
+
         ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
         game = chessGameService.move(game, "e4");
         game = chessGameService.move(game, "e5");
         game = chessGameService.resign(game, p1);
 
         Assertions.assertThat(game.getStatus()).isEqualTo(ChessGameStatus.BLACKWON);
+        Assertions.assertThat(eloRatingRepository.count()).isEqualTo(ratings + 2);
 
         // Fetching the game will succeed
         Assertions.assertThat(chessGameService.getGame(game.getId())).isNotNull();
