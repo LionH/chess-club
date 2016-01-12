@@ -40,7 +40,7 @@ public class ChessOpeningsServiceTest {
 
         List<ChessOpeningDescription> openings = chessOpeningsService.getOpenings(moves);
         Assertions.assertThat(openings).isNotEmpty();
-        Assertions.assertThat(openings.get(0).getVariants()).hasSize(8);
+        Assertions.assertThat(openings.get(0).getVariants()).hasSize(18);
     }
 
     @Test
@@ -52,6 +52,6 @@ public class ChessOpeningsServiceTest {
 
         List<ChessOpeningDescription> openings = chessOpeningsService.getOpenings(moves);
         Assertions.assertThat(openings).isNotEmpty();
-        Assertions.assertThat(openings.get(0).getVariants()).hasSize(8);
+        Assertions.assertThat(openings.get(0).getVariants()).hasSize(12);
     }
 }
