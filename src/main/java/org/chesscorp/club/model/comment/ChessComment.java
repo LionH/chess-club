@@ -28,9 +28,6 @@ public class ChessComment {
     @Column(length = 4096, nullable = false)
     private String text;
 
-    @Transient
-    private String html;
-
     public ChessComment() {
     }
 
@@ -59,14 +56,6 @@ public class ChessComment {
 
     public String getText() {
         return text;
-    }
-
-    public String getHtml() {
-        return html;
-    }
-
-    public void setHtml(String html) {
-        this.html = html;
     }
 
     @Override

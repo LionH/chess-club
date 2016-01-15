@@ -54,7 +54,6 @@ public class CommentControllerTest {
         Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
         ChessGame game = chessGameRepository.save(new ChessGame(p1, p2));
 
-
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(commentController).build();
 
         // Read an empty set of messages
@@ -97,6 +96,10 @@ public class CommentControllerTest {
                 status().is2xxSuccessful()
         ).andExpect(
                 jsonPath("$", hasSize(1))
+        ).andExpect(
+                jsonPath("$[0].text", Matchers.not(Matchers.isEmptyOrNullString()))
+        ).andExpect(
+                jsonPath("$[0]", Matchers.not(Matchers.hasKey("html")))
         );
     }
 
@@ -110,7 +113,6 @@ public class CommentControllerTest {
         Player p1 = playerRepository.findByDisplayName("Player 1").get(0);
         Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
         ChessGame game = chessGameRepository.save(new ChessGame(p1, p2));
-
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(commentController).build();
 
@@ -132,8 +134,6 @@ public class CommentControllerTest {
                 status().is2xxSuccessful()
         ).andExpect(
                 jsonPath("$[0].text", Matchers.is("Hello world<br /> &nbsp; !"))
-        ).andExpect(
-                jsonPath("$[0].html", Matchers.is("<p>Hello world&lt;br /&gt; &amp;nbsp; !</p>\n"))
         );
     }
 }
