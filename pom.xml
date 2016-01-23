@@ -7,6 +7,8 @@
     <artifactId>chess-club</artifactId>
     <version>0.6.1</version>
 
+    <description>An online Chess Club where users can play against other player and AIs</description>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -188,7 +190,8 @@
                     <execution>
                         <phase>validate</phase>
                         <configuration>
-                            <target>
+                            <target unless="skipChessUIDownload">
+                                <echo>This is ${project.description}</echo>
                                 <delete dir="src/main/webapp/"/>
                                 <get src="https://github.com/ChessCorp/chess-club-ui/releases/download/${chess-club-ui-version}/chess-club-ui-${chess-club-ui-version}.zip"
                                      dest="target/chess-club-ui-${chess-club-ui-version}.zip"
