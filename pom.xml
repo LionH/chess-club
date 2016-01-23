@@ -191,7 +191,7 @@
                         <phase>validate</phase>
                         <configuration>
                             <target unless="skipChessUIDownload">
-                                <echo>This is ${project.description}</echo>
+                                <echo>Downloading chess user interface version ${chess-club-ui-version}</echo>
                                 <delete dir="src/main/webapp/"/>
                                 <get src="https://github.com/ChessCorp/chess-club-ui/releases/download/${chess-club-ui-version}/chess-club-ui-${chess-club-ui-version}.zip"
                                      dest="target/chess-club-ui-${chess-club-ui-version}.zip"
