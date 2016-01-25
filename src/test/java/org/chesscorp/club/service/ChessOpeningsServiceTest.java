@@ -54,4 +54,17 @@ public class ChessOpeningsServiceTest {
         Assertions.assertThat(openings).isNotEmpty();
         Assertions.assertThat(openings.get(0).getVariants()).hasSize(12);
     }
+
+    @Test
+    @Transactional
+    public void testPositionMatching() {
+        ArrayList<String> moves = new ArrayList<>();
+        moves.add("e4");
+        moves.add("Nc6");
+        moves.add("d4");
+        moves.add("Nf6");
+
+        List<ChessOpeningDescription> openings = chessOpeningsService.getOpenings(moves);
+        Assertions.assertThat(openings).isEmpty();
+    }
 }

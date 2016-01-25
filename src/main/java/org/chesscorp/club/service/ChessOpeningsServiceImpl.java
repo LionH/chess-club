@@ -1,19 +1,24 @@
 package org.chesscorp.club.service;
 
+import org.alcibiade.chess.model.ChessMovePath;
+import org.alcibiade.chess.model.ChessPosition;
+import org.alcibiade.chess.model.PgnMoveException;
 import org.alcibiade.chess.persistence.PgnBookReader;
 import org.alcibiade.chess.persistence.PgnGameModel;
+import org.alcibiade.chess.persistence.PgnMarshaller;
+import org.alcibiade.chess.persistence.PositionMarshaller;
+import org.alcibiade.chess.rules.ChessHelper;
+import org.alcibiade.chess.rules.ChessRules;
 import org.chesscorp.club.dto.ChessOpeningDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Openings search.
@@ -25,8 +30,21 @@ public class ChessOpeningsServiceImpl implements ChessOpeningsService {
 
     private OpeningNode openingNodes = new OpeningNode();
 
+    private Map<String, OpeningNode> positionIndex;
+
+    @Autowired
+    private ChessRules chessRules;
+
+    @Autowired
+    private PgnMarshaller pgnMarshaller;
+
+    @Autowired
+    private PositionMarshaller positionMarshaller;
+
     @PostConstruct
     public void init() throws IOException {
+        positionIndex = new HashMap<>();
+
         InputStream stream = this.getClass().getResourceAsStream("ChessOpenings.pgn");
         PgnBookReader bookReader = new PgnBookReader(stream);
         PgnGameModel gameModel;
@@ -39,17 +57,30 @@ public class ChessOpeningsServiceImpl implements ChessOpeningsService {
             if (!extension.equals("?")) {
                 openingName += " - " + extension;
             }
-            OpeningNode node = openingNodes;
 
-            for (String move : gameModel.getMoves()) {
-                if (node.getNextMoves().containsKey(move)) {
-                    node = node.getNextMoves().get(move);
-                } else {
-                    OpeningNode newNode = new OpeningNode();
-                    node.getNextMoves().put(move, newNode);
-                    node = newNode;
+            OpeningNode node = openingNodes;
+            ChessPosition position = chessRules.getInitialPosition();
+
+            try {
+                for (String move : gameModel.getMoves()) {
+                    ChessMovePath movePath = pgnMarshaller.convertPgnToMove(position, move);
+                    position = ChessHelper.applyMoveAndSwitch(chessRules, position, movePath);
+                    String positionText = positionMarshaller.convertPositionToString(position);
+
+                    if (node.getNextMoves().containsKey(move)) {
+                        node = node.getNextMoves().get(move);
+                        positionIndex.put(positionText, node);
+                    } else {
+                        OpeningNode newNode = new OpeningNode();
+                        node.getNextMoves().put(move, newNode);
+                        node = newNode;
+                        positionIndex.put(positionText, node);
+                    }
                 }
+            } catch (PgnMoveException e) {
+                logger.warn("Could not load opening game " + gameModel, e);
             }
+
 
             logger.debug("Opening {} registered as {}", openingName, gameModel.getMoves());
 
@@ -64,18 +95,18 @@ public class ChessOpeningsServiceImpl implements ChessOpeningsService {
     @Override
     public List<ChessOpeningDescription> getOpenings(List<String> moves) {
         List<ChessOpeningDescription> openings = new ArrayList<>();
+        ChessPosition position = chessRules.getInitialPosition();
 
         OpeningNode node = openingNodes;
 
         for (String move : moves) {
-            node = node.getNextMoves().get(move);
-
-            logger.debug("Move {} matches {}", move, node);
-
-            if (node == null) {
-                break;
-            }
+            ChessMovePath movePath = pgnMarshaller.convertPgnToMove(position, move);
+            position = ChessHelper.applyMoveAndSwitch(chessRules, position, movePath);
         }
+
+        String positionText = positionMarshaller.convertPositionToString(position);
+
+        node = positionIndex.get(positionText);
 
         if (node != null && node != openingNodes) {
             openings.add(new ChessOpeningDescription(node.getName(), node.getNextMoves().keySet()));
