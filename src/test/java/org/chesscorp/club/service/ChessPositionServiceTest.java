@@ -51,7 +51,7 @@ public class ChessPositionServiceTest {
     public void testIndexImportedGames() throws IOException {
         ClassPathResource cpr = new ClassPathResource("samples-pgn/McDonnell.pgn");
 
-        chessGameService.batchImport(cpr.getInputStream());
+        chessGameService.batchImport("", cpr.getInputStream());
         Assertions.assertThat(playerRepository.count()).isEqualTo(8);
         Assertions.assertThat(chessGameRepository.count()).isEqualTo(106);
         Assertions.assertThat(chessMoveRepository.count()).isEqualTo(8434L);

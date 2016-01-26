@@ -21,7 +21,7 @@
         <!--</encoder>-->
     <!--</appender>-->
 
-    <logger name="org.chesscorp" level="DEBUG"/>
+    <logger name="org.chesscorp" level="INFO"/>
     <logger name="org.ehcache" level="WARN"/>
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

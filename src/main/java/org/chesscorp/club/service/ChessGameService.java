@@ -27,11 +27,12 @@ public interface ChessGameService {
     /**
      * Import a series of games from a PGN data stream.
      *
+     * @param fileName name of the original file, only for informational purposes
      * @param pgnStream the PGN stream which can contain either a single of multiple game files
      * @return the number of imported games
      * @throws IOException whenever stream reading fails
      */
-    long batchImport(InputStream pgnStream) throws IOException;
+    long batchImport(String fileName, InputStream pgnStream) throws IOException;
 
     /**
      * Resign on an existing game. It is accounted as a loss if a complete turn has been played.

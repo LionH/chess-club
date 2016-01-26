@@ -197,7 +197,7 @@ public class ChessGameServiceImpl implements ChessGameService {
 
     @Override
     @Transactional
-    public long batchImport(InputStream pgnStream) throws IOException {
+    public long batchImport(String fileName, InputStream pgnStream) throws IOException {
         logger.debug("Importing games as batch");
         PgnBookReader bookReader = new PgnBookReader(pgnStream);
         long gamesCount = 0;
@@ -261,6 +261,12 @@ public class ChessGameServiceImpl implements ChessGameService {
             chessGameRepository.save(chessGame);
             chessGame.getMoves().stream().forEach(chessMoveRepository::save);
             notifyGameUpdated(chessGame);
+
+            logger.info("{} game {}: {} vs {}",
+                    fileName,
+                    gamesCount,
+                    pgnGameModel.getWhitePlayerName(),
+                    pgnGameModel.getBlackPlayerName());
         }
 
         logger.debug("Imported {} games", gamesCount);
