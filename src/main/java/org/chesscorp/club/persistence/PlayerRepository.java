@@ -10,5 +10,5 @@ public interface PlayerRepository extends JpaRepository<Player, Number> {
 
     List<Player> findByDisplayName(String displayName);
 
-    List<ExternalPlayer> findByNormalizedName(String displayName);
+    ExternalPlayer findOneByNormalizedName(String normalizedName);
 }
