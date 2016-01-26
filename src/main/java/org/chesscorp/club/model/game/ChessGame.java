@@ -20,8 +20,7 @@ import java.util.Objects;
 @Proxy(lazy = false)
 @Table(
         indexes = {
-                @Index(columnList = "whiteplayer_id", unique = false),
-                @Index(columnList = "blackplayer_id", unique = false)
+                @Index(columnList = "whiteplayer_id,blackplayer_id", unique = false)
         }
 )
 @SequenceGenerator(name = "chessgame_seq", initialValue = 1, allocationSize = 1, sequenceName = "chessgame_seq")

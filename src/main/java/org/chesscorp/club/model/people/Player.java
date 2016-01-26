@@ -14,7 +14,8 @@ import java.util.Objects;
 @Proxy(lazy = false)
 @Table(
         indexes = {
-                @Index(columnList = "displayName", unique = false)
+                @Index(columnList = "displayName", unique = false),
+                @Index(columnList = "normalizedName", unique = false)
         }
 )
 @SequenceGenerator(name = "player_seq", initialValue = 1, allocationSize = 1, sequenceName = "player_seq")
