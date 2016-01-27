@@ -1,7 +1,6 @@
 package org.chesscorp.club.service;
 
 import org.alcibiade.chess.model.*;
-import org.alcibiade.chess.persistence.PgnBookReader;
 import org.alcibiade.chess.persistence.PgnGameModel;
 import org.alcibiade.chess.persistence.PgnMarshaller;
 import org.alcibiade.chess.rules.ChessHelper;
@@ -25,8 +24,6 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -197,81 +194,64 @@ public class ChessGameServiceImpl implements ChessGameService {
 
     @Override
     @Transactional
-    public long batchImport(String fileName, InputStream pgnStream) throws IOException {
-        logger.debug("Importing games as batch");
-        PgnBookReader bookReader = new PgnBookReader(pgnStream);
-        long gamesCount = 0;
-        PgnGameModel pgnGameModel;
+    public long batchImport(PgnGameModel pgnGameModel) {
+        Player playerW = playerFactory.findOrCreateExternalPlayer(pgnGameModel.getWhitePlayerName());
+        Player playerB = playerFactory.findOrCreateExternalPlayer(pgnGameModel.getBlackPlayerName());
+        OffsetDateTime gameDate = OffsetDateTime.ofInstant(pgnGameModel.getGameDate().toInstant(), ZoneId.systemDefault());
 
-        while ((pgnGameModel = bookReader.readGame()) != null) {
-            Player playerW = playerFactory.findOrCreateExternalPlayer(pgnGameModel.getWhitePlayerName());
-            Player playerB = playerFactory.findOrCreateExternalPlayer(pgnGameModel.getBlackPlayerName());
-            OffsetDateTime gameDate = OffsetDateTime.ofInstant(pgnGameModel.getGameDate().toInstant(), ZoneId.systemDefault());
+        final PgnGameModel pgnG = pgnGameModel;
 
-            final PgnGameModel pgnG = pgnGameModel;
+        List<ChessGame> matchingGames = chessGameRepository
+                .findByWhitePlayerIdAndBlackPlayerIdAndStartDate(playerW.getId(), playerB.getId(), gameDate)
+                .stream()
+                .filter(g -> g.getMoves().stream().map(ChessMove::getPgn).collect(Collectors.toList()).equals(pgnG.getMoves()))
+                .collect(Collectors.toList());
 
-            List<ChessGame> matchingGames = chessGameRepository
-                    .findByWhitePlayerIdAndBlackPlayerIdAndStartDate(playerW.getId(), playerB.getId(), gameDate)
-                    .stream()
-                    .filter(g -> g.getMoves().stream().map(ChessMove::getPgn).collect(Collectors.toList()).equals(pgnG.getMoves()))
-                    .collect(Collectors.toList());
+        logger.trace("    - {}: {} vs. {}: {} games matching",
+                pgnGameModel.getGameDate(),
+                pgnGameModel.getWhitePlayerName(),
+                pgnGameModel.getBlackPlayerName(),
+                matchingGames.size());
 
-            logger.trace("    - {}: {} vs. {}: {} games matching",
-                    pgnGameModel.getGameDate(),
-                    pgnGameModel.getWhitePlayerName(),
-                    pgnGameModel.getBlackPlayerName(),
-                    matchingGames.size());
-
-            if (!matchingGames.isEmpty()) {
-                continue;
-            }
-
-            gamesCount += 1;
-
-            ChessPosition position = chessRules.getInitialPosition();
-            for (String m : pgnGameModel.getMoves()) {
-                try {
-                    position = ChessHelper.applyMoveAndSwitch(chessRules, position, pgnMarshaller.convertPgnToMove(position, m));
-                } catch (ChessException e) {
-                    throw new IllegalStateException("Error in PGN stream for move " + m, e);
-                }
-            }
-
-            ChessGameStatus status = ChessGameStatus.OPEN;
-
-            switch (pgnGameModel.getResult()) {
-                case "1-0":
-                    status = ChessGameStatus.WHITEWON;
-                    break;
-                case "0-1":
-                    status = ChessGameStatus.BLACKWON;
-                    break;
-                case "1/2-1/2":
-                    status = ChessGameStatus.PAT;
-                    break;
-            }
-
-            ChessGame chessGame = new ChessGame(
-                    playerW, playerB, new ArrayList<>(),
-                    gameDate, status, pgnGameModel.getSite(),
-                    pgnGameModel.getEvent(), pgnGameModel.getRound()
-            );
-
-            pgnGameModel.getMoves().forEach(m -> chessGame.addMove(gameDate, m));
-            chessGameRepository.save(chessGame);
-            chessGame.getMoves().stream().forEach(chessMoveRepository::save);
-            notifyGameUpdated(chessGame);
-
-            logger.info("{} game {}: {} vs {}",
-                    fileName,
-                    gamesCount,
-                    pgnGameModel.getWhitePlayerName(),
-                    pgnGameModel.getBlackPlayerName());
+        if (!matchingGames.isEmpty()) {
+            return 0;
         }
 
-        logger.debug("Imported {} games", gamesCount);
+        ChessPosition position = chessRules.getInitialPosition();
+        for (String m : pgnGameModel.getMoves()) {
+            try {
+                position = ChessHelper.applyMoveAndSwitch(chessRules, position, pgnMarshaller.convertPgnToMove(position, m));
+            } catch (ChessException e) {
+                throw new IllegalStateException("Error in PGN stream for move " + m, e);
+            }
+        }
 
-        return gamesCount;
+        ChessGameStatus status = ChessGameStatus.OPEN;
+
+        switch (pgnGameModel.getResult()) {
+            case "1-0":
+                status = ChessGameStatus.WHITEWON;
+                break;
+            case "0-1":
+                status = ChessGameStatus.BLACKWON;
+                break;
+            case "1/2-1/2":
+                status = ChessGameStatus.PAT;
+                break;
+        }
+
+        ChessGame chessGame = new ChessGame(
+                playerW, playerB, new ArrayList<>(),
+                gameDate, status, pgnGameModel.getSite(),
+                pgnGameModel.getEvent(), pgnGameModel.getRound()
+        );
+
+        pgnGameModel.getMoves().forEach(m -> chessGame.addMove(gameDate, m));
+        chessGameRepository.save(chessGame);
+        chessGame.getMoves().stream().forEach(chessMoveRepository::save);
+        notifyGameUpdated(chessGame);
+
+        return 1;
     }
 
     @Override

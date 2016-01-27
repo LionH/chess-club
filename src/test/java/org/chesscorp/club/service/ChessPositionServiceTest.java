@@ -2,6 +2,7 @@ package org.chesscorp.club.service;
 
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
+import org.chesscorp.club.jobs.PgnImportProcessor;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.Player;
@@ -46,12 +47,15 @@ public class ChessPositionServiceTest {
     @Autowired
     private ChessGameService chessGameService;
 
+    @Autowired
+    private PgnImportProcessor pgnImportProcessor;
+
     @Test
-    @Transactional(propagation = Propagation.NEVER)
+    @Transactional
     public void testIndexImportedGames() throws IOException {
         ClassPathResource cpr = new ClassPathResource("samples-pgn/McDonnell.pgn");
 
-        chessGameService.batchImport("", cpr.getInputStream());
+        pgnImportProcessor.process(cpr.getFile());
         Assertions.assertThat(playerRepository.count()).isEqualTo(8);
         Assertions.assertThat(chessGameRepository.count()).isEqualTo(106);
         Assertions.assertThat(chessMoveRepository.count()).isEqualTo(8434L);

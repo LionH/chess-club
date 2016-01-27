@@ -1,10 +1,9 @@
 package org.chesscorp.club.service;
 
+import org.alcibiade.chess.persistence.PgnGameModel;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.people.Player;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 public interface ChessGameService {
@@ -25,14 +24,12 @@ public interface ChessGameService {
     List<ChessGame> searchGames(Number playerId, Boolean open);
 
     /**
-     * Import a series of games from a PGN data stream.
+     * Import a single game from a PGN data stream.
      *
-     * @param fileName name of the original file, only for informational purposes
-     * @param pgnStream the PGN stream which can contain either a single of multiple game files
+     * @param pgnGameModel the PGN game model
      * @return the number of imported games
-     * @throws IOException whenever stream reading fails
      */
-    long batchImport(String fileName, InputStream pgnStream) throws IOException;
+    long batchImport(PgnGameModel pgnGameModel);
 
     /**
      * Resign on an existing game. It is accounted as a loss if a complete turn has been played.

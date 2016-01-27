@@ -54,7 +54,7 @@ public class ChessPositionServiceImpl implements ChessPositionService {
     private PositionMarshaller positionMarshaller;
 
     @Override
-    @Transactional(propagation = Propagation.NEVER)
+    @Transactional(propagation = Propagation.SUPPORTS)
     public long updateMovePositions() {
         logger.debug("Updating position tables");
 

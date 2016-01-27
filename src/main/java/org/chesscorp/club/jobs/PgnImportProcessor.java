@@ -1,5 +1,7 @@
 package org.chesscorp.club.jobs;
 
+import org.alcibiade.chess.persistence.PgnBookReader;
+import org.alcibiade.chess.persistence.PgnGameModel;
 import org.chesscorp.club.monitoring.PerformanceMonitor;
 import org.chesscorp.club.service.ChessGameService;
 import org.slf4j.Logger;
@@ -7,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -29,12 +32,28 @@ public class PgnImportProcessor {
     @Autowired
     private PerformanceMonitor performanceMonitor;
 
+    @ServiceActivator
     public File process(File file) {
         logger.info("Importing games from " + file);
 
-        try (InputStream stream = new FileInputStream(file)) {
+        try (InputStream pgnStream = new FileInputStream(file)) {
             performanceMonitor.mark();
-            long importCount = chessGameService.batchImport(file.getName(), stream);
+
+            long importCount = 0;
+            PgnBookReader bookReader = new PgnBookReader(pgnStream);
+            PgnGameModel pgnGameModel;
+
+            while ((pgnGameModel = bookReader.readGame()) != null) {
+                importCount += chessGameService.batchImport(pgnGameModel);
+
+                logger.info("{} game {}: {} vs {}",
+                        file.getName(),
+                        importCount,
+                        pgnGameModel.getWhitePlayerName(),
+                        pgnGameModel.getBlackPlayerName());
+
+            }
+
             performanceMonitor.register("PgnImportProcessor", "import", importCount, "game");
             logger.info("Imported {} game(s) from {}", importCount, file);
         } catch (IOException e) {
