@@ -6,25 +6,22 @@
         </encoder>
     </appender>
 
-    <!--<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-        <!--<file>chess-club.log</file>-->
-        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
-            <!--&lt;!&ndash; daily rollover &ndash;&gt;-->
-            <!--<fileNamePattern>chess-club.%d{yyyy-MM-dd}.log</fileNamePattern>-->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>chess-club.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>chess-club.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>5</maxHistory>
+        </rollingPolicy>
 
-            <!--&lt;!&ndash; keep 5 days' worth of history &ndash;&gt;-->
-            <!--<maxHistory>5</maxHistory>-->
-        <!--</rollingPolicy>-->
-
-        <!--<encoder>-->
-            <!--<pattern>%d [%-22thread] %-5level %-18logger{0} - %msg%n</pattern>-->
-        <!--</encoder>-->
-    <!--</appender>-->
+        <encoder>
+            <pattern>%d [%-22thread] %-5level %-18logger{0} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
     <logger name="org.chesscorp" level="INFO"/>
     <logger name="org.ehcache" level="WARN"/>
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
-        <!--<appender-ref ref="FILE"/>-->
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>
