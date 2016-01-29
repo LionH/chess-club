@@ -27,9 +27,9 @@ public interface ChessGameService {
      * Import a single game from a PGN data stream.
      *
      * @param pgnGameModel the PGN game model
-     * @return the number of imported games
+     * @return the game model if the game is new and has just been imported, null if the game was already present.
      */
-    long batchImport(PgnGameModel pgnGameModel);
+    ChessGame batchImport(PgnGameModel pgnGameModel);
 
     /**
      * Resign on an existing game. It is accounted as a loss if a complete turn has been played.

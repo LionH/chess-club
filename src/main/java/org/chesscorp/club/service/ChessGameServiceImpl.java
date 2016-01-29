@@ -194,7 +194,7 @@ public class ChessGameServiceImpl implements ChessGameService {
 
     @Override
     @Transactional
-    public long batchImport(PgnGameModel pgnGameModel) {
+    public ChessGame batchImport(PgnGameModel pgnGameModel) {
         Player playerW = playerFactory.findOrCreateExternalPlayer(pgnGameModel.getWhitePlayerName());
         Player playerB = playerFactory.findOrCreateExternalPlayer(pgnGameModel.getBlackPlayerName());
         OffsetDateTime gameDate = OffsetDateTime.ofInstant(pgnGameModel.getGameDate().toInstant(), ZoneId.systemDefault());
@@ -214,7 +214,7 @@ public class ChessGameServiceImpl implements ChessGameService {
                 matchingGames.size());
 
         if (!matchingGames.isEmpty()) {
-            return 0;
+            return null;
         }
 
         ChessPosition position = chessRules.getInitialPosition();
@@ -247,11 +247,10 @@ public class ChessGameServiceImpl implements ChessGameService {
         );
 
         pgnGameModel.getMoves().forEach(m -> chessGame.addMove(gameDate, m));
-        chessGameRepository.save(chessGame);
+        ChessGame result = chessGameRepository.save(chessGame);
         chessGame.getMoves().stream().forEach(chessMoveRepository::save);
-        notifyGameUpdated(chessGame);
 
-        return 1;
+        return result;
     }
 
     @Override

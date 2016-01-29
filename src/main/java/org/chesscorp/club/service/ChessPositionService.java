@@ -12,8 +12,18 @@ public interface ChessPositionService {
 
     /**
      * Compute positions for new moves in the repository.
+     *
+     * @return number of moves updated
      */
     long updateMovePositions();
+
+    /**
+     * Compute positions for a given game.
+     *
+     * @param gameId identifier of a newly imported game.
+     * @return number of moves updated
+     */
+    long updateGamePositions(Number gameId);
 
     /**
      * Find games that are related based on the current position.

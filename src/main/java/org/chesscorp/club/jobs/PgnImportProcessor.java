@@ -2,8 +2,10 @@ package org.chesscorp.club.jobs;
 
 import org.alcibiade.chess.persistence.PgnBookReader;
 import org.alcibiade.chess.persistence.PgnGameModel;
+import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.monitoring.PerformanceMonitor;
 import org.chesscorp.club.service.ChessGameService;
+import org.chesscorp.club.service.ChessPositionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class PgnImportProcessor {
     private ChessGameService chessGameService;
 
     @Autowired
+    private ChessPositionService chessPositionService;
+
+    @Autowired
     private PerformanceMonitor performanceMonitor;
 
     @ServiceActivator
@@ -44,7 +49,11 @@ public class PgnImportProcessor {
             PgnGameModel pgnGameModel;
 
             while ((pgnGameModel = bookReader.readGame()) != null) {
-                importCount += chessGameService.batchImport(pgnGameModel);
+                ChessGame importedGame = chessGameService.batchImport(pgnGameModel);
+                if (importedGame != null) {
+                    importCount += 1;
+                    chessPositionService.updateGamePositions(importedGame.getId());
+                }
 
                 logger.info("{} game {}: {} vs {}",
                         file.getName(),

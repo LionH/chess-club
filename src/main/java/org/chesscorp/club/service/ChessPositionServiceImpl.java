@@ -116,6 +116,39 @@ public class ChessPositionServiceImpl implements ChessPositionService {
     }
 
     @Override
+    @Transactional
+    public long updateGamePositions(Number gameId) {
+        logger.debug("Updating position for game {}", gameId);
+
+        ChessGame game = chessGameRepository.getOne(gameId);
+
+        try {
+            long updates = 0;
+            ChessPosition position = chessRules.getInitialPosition();
+            for (ChessMove move : game.getMoves()) {
+                ChessMovePath path = pgnMarshaller.convertPgnToMove(position, move.getPgn());
+                position = ChessHelper.applyMoveAndSwitch(chessRules, position, path);
+
+                ChessMoveToPosition moveToPosition = chessMoveToPositionRepository.findOne(move.getId());
+                if (moveToPosition == null) {
+                    String positionText = positionMarshaller.convertPositionToString(position);
+                    ChessClubPosition clubPosition = chessPositionRepository.findOneByText(positionText);
+                    if (clubPosition == null) {
+                        clubPosition = chessPositionRepository.saveAndFlush(new ChessClubPosition(positionText));
+                    }
+
+                    chessMoveToPositionRepository.saveAndFlush(new ChessMoveToPosition(move.getId(), clubPosition));
+                    updates += 1;
+                }
+            }
+
+            return updates;
+        } catch (ChessException chessEx) {
+            throw new IllegalStateException("Failed to parse game " + game.getId(), chessEx);
+        }
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<ChessGame> findRelatedGames(Number gameId) {
         ChessGame game = chessGameRepository.findOne(gameId.longValue());
