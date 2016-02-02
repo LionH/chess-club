@@ -59,18 +59,6 @@ public class ChessPositionServiceTest {
         Assertions.assertThat(playerRepository.count()).isEqualTo(8);
         Assertions.assertThat(chessGameRepository.count()).isEqualTo(106);
         Assertions.assertThat(chessMoveRepository.count()).isEqualTo(8434L);
-        Assertions.assertThat(chessPositionRepository.count()).isEqualTo(0L);
-        Assertions.assertThat(chessMoveToPositionRepository.count()).isEqualTo(0L);
-
-        long p;
-
-        do {
-            p = chessPositionService.updateMovePositions();
-        } while (p > 0);
-
-        Assertions.assertThat(playerRepository.count()).isEqualTo(8);
-        Assertions.assertThat(chessGameRepository.count()).isEqualTo(106);
-        Assertions.assertThat(chessMoveRepository.count()).isEqualTo(8434L);
         Assertions.assertThat(chessPositionRepository.count()).isEqualTo(7246L);
         Assertions.assertThat(chessMoveToPositionRepository.count()).isEqualTo(8434L);
 
