@@ -23,6 +23,12 @@ public class PlayerFactoryImpl implements PlayerFactory {
     @Override
     @Transactional
     public ExternalPlayer findOrCreateExternalPlayer(String displayName) {
+        int columnIndex = displayName.indexOf(':');
+
+        if (columnIndex > 0) {
+            displayName = displayName.substring(0, columnIndex);
+        }
+
         String normalizedName = textNormalizer.normalize(displayName);
         ExternalPlayer player = playerRepository.findOneByNormalizedName(normalizedName);
 

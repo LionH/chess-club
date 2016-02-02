@@ -83,4 +83,18 @@ public class PgnImportProcessorTest {
         Assertions.assertThat(chessGameRepository.count()).isEqualTo(122);
         Assertions.assertThat(chessMoveRepository.count()).isEqualTo(9381L);
     }
+
+    @Test
+    @Transactional
+    public void testLongNamesCase() throws IOException {
+        PgnImportProcessor pgnImportProcessor = pgnImportProcessorObjectFactory.getObject();
+        Assertions.assertThat(playerRepository.findAll()).isEmpty();
+        Assertions.assertThat(chessGameRepository.findAll()).isEmpty();
+
+        pgnImportProcessor.process(new ClassPathResource("samples-pgn/case-longnames.pgn").getFile());
+
+        Assertions.assertThat(playerRepository.count()).isEqualTo(2);
+        Assertions.assertThat(chessGameRepository.count()).isEqualTo(1);
+        Assertions.assertThat(chessMoveRepository.count()).isEqualTo(157L);
+    }
 }
