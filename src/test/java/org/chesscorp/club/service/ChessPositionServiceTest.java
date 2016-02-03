@@ -45,9 +45,6 @@ public class ChessPositionServiceTest {
     private ChessMoveToPositionRepository chessMoveToPositionRepository;
 
     @Autowired
-    private ChessGameService chessGameService;
-
-    @Autowired
     private PgnImportProcessor pgnImportProcessor;
 
     @Test
