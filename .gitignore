@@ -1,5 +1,6 @@
 /target/
 *.iml
+/.vagrant/
 /.idea/
 /src/main/webapp/
 /import/
