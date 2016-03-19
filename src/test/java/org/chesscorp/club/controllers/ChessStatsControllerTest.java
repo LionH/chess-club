@@ -4,7 +4,6 @@ import org.chesscorp.club.Application;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.service.AuthenticationService;
-import org.chesscorp.club.service.ChessPositionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,6 @@ public class ChessStatsControllerTest {
     private ChessGameController chessGameController;
     @Autowired
     private AuthenticationService authenticationService;
-    @Autowired
-    private ChessPositionService chessPositionService;
 
     @Test
     @Transactional(propagation = Propagation.NEVER)
@@ -51,7 +48,7 @@ public class ChessStatsControllerTest {
         chessGameController.postMove(alcibiadeToken, game1.getId(), "e4");
         chessGameController.postMove(bobToken, game1.getId(), "e5");
 
-        chessPositionService.updateMovePositions();
+        Thread.sleep(500);
 
         mockMvc.perform(
                 get("/api/chess/stats/related/" + game1.getId())
