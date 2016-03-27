@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Test robot cache repository access methods.
@@ -40,6 +41,7 @@ public class RobotCacheRepositoryTest {
     private PositionMarshaller positionMarshaller;
 
     @Test
+    @Transactional
     public void testRepositoryStorage() {
         Assertions.assertThat(robotCacheRepository.findAll()).hasSize(0);
 

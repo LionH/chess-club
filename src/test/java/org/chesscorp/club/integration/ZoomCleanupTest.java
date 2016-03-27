@@ -25,7 +25,7 @@ public class ZoomCleanupTest {
 
     @Test
     @Transactional
-    public void testSearchSuccess() {
+    public void testDataCleanupSuccessful() {
         Assertions.assertThat(playerRepository.count()).isZero();
         Assertions.assertThat(chessGameRepository.count()).isZero();
     }
