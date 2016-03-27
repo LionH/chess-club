@@ -3,6 +3,7 @@ package org.chesscorp.club.controllers;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.people.Player;
+import org.chesscorp.club.persistence.ChessPositionRepository;
 import org.chesscorp.club.service.AuthenticationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +31,8 @@ public class ChessStatsControllerTest {
     private ChessGameController chessGameController;
     @Autowired
     private AuthenticationService authenticationService;
+    @Autowired
+    private ChessPositionRepository positionRepository;
 
     @Test
     @Transactional(propagation = Propagation.NEVER)
@@ -48,7 +51,9 @@ public class ChessStatsControllerTest {
         chessGameController.postMove(alcibiadeToken, game1.getId(), "e4");
         chessGameController.postMove(bobToken, game1.getId(), "e5");
 
-        Thread.sleep(500);
+        while (positionRepository.count() < 2) {
+            Thread.sleep(100);
+        }
 
         mockMvc.perform(
                 get("/api/chess/stats/related/" + game1.getId())
