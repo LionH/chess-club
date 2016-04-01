@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 @Component
 public class ChessPositionServiceImpl implements ChessPositionService {
     private static final List<ChessGame> EMPTY_GAMES_LIST = new ArrayList<>();
-    private static final int MAX_CACHE_ENTRIES = 100;
     private Logger logger = LoggerFactory.getLogger(ChessPositionServiceImpl.class);
     @Autowired
     private ChessPositionRepository chessPositionRepository;
