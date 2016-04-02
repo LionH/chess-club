@@ -3,6 +3,7 @@ package org.chesscorp.club.model.game;
 import org.alcibiade.chess.model.ChessGameStatus;
 import org.chesscorp.club.model.people.Player;
 import org.hibernate.annotations.Proxy;
+import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
@@ -33,7 +34,7 @@ public class ChessGame {
     private Player whitePlayer;
     @ManyToOne(optional = false)
     private Player blackPlayer;
-    @OneToMany(mappedBy = "game")
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     @OrderBy("id ASC")
     private List<ChessMove> moves;
     @Column(nullable = false)
