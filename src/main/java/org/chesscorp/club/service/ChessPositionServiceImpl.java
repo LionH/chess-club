@@ -160,17 +160,16 @@ public class ChessPositionServiceImpl implements ChessPositionService {
             return EMPTY_GAMES_LIST;
         }
 
-        List<ChessGame> relatedGames = new ArrayList<>();
         ChessMove lastMove = moves.get(moves.size() - 1);
         ChessMoveToPosition moveToPosition = chessMoveToPositionRepository.getOne(lastMove.getId());
         ChessClubPosition position = moveToPosition.getChessPosition();
 
-        chessMoveToPositionRepository
+        List<ChessGame> relatedGames = chessMoveToPositionRepository
                 .findFirst10ByChessClubPositionId(position.getId()).stream()
                 .map(mtp -> chessMoveRepository.getOne(mtp.getChessMoveId()))
                 .filter(move -> !move.getGame().getId().equals(game.getId()))
                 .map(ChessMove::getGame)
-                .forEach(relatedGames::add);
+                .collect(Collectors.toList());
 
         return relatedGames;
     }
