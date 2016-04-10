@@ -36,7 +36,7 @@ public class ClubPlayer extends Player {
     public String toString() {
         return "ClubPlayer{" +
                 "displayName=" + getDisplayName() +
-                "active=" + active +
+                ", active=" + active +
                 '}';
     }
 }
