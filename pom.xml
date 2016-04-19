@@ -23,7 +23,7 @@
     </scm>
 
     <properties>
-        <chess-club-ui-version>0.7.0</chess-club-ui-version>
+        <chess-club-ui-version>0.7.1</chess-club-ui-version>
         <chess-rules-version>1.4.3</chess-rules-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
