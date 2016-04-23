@@ -1,4 +1,4 @@
-FROM ubuntu:15.10
+FROM ubuntu:16.04
 
 RUN apt-get update
 RUN apt-get install -y nmon htop openjdk-8-jdk maven phalanx gnuchess
