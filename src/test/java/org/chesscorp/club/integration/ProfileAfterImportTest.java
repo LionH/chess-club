@@ -55,6 +55,7 @@ public class ProfileAfterImportTest {
     @Transactional
     public void testImportedProfile() throws Exception {
         PgnImportProcessor pgnImportProcessor = pgnImportProcessorObjectFactory.getObject();
+        pgnImportProcessor.setUpdatePositionRepository(false);
         Assertions.assertThat(playerRepository.findAll()).isEmpty();
         Assertions.assertThat(chessGameRepository.findAll()).isEmpty();
 

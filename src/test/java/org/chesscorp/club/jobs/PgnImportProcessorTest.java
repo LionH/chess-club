@@ -41,6 +41,7 @@ public class PgnImportProcessorTest {
     @Transactional
     public void testImportMcDonnell() throws IOException {
         PgnImportProcessor pgnImportProcessor = pgnImportProcessorObjectFactory.getObject();
+        pgnImportProcessor.setUpdatePositionRepository(false);
         Assertions.assertThat(playerRepository.findAll()).isEmpty();
         Assertions.assertThat(chessGameRepository.findAll()).isEmpty();
 
@@ -57,6 +58,7 @@ public class PgnImportProcessorTest {
     @Transactional
     public void testImportDeLaBourdonnais() throws IOException {
         PgnImportProcessor pgnImportProcessor = pgnImportProcessorObjectFactory.getObject();
+        pgnImportProcessor.setUpdatePositionRepository(false);
         Assertions.assertThat(playerRepository.findAll()).isEmpty();
         Assertions.assertThat(chessGameRepository.findAll()).isEmpty();
 
@@ -73,6 +75,7 @@ public class PgnImportProcessorTest {
     @Transactional
     public void testDualImport() throws IOException {
         PgnImportProcessor pgnImportProcessor = pgnImportProcessorObjectFactory.getObject();
+        pgnImportProcessor.setUpdatePositionRepository(false);
         Assertions.assertThat(playerRepository.findAll()).isEmpty();
         Assertions.assertThat(chessGameRepository.findAll()).isEmpty();
 
@@ -88,6 +91,7 @@ public class PgnImportProcessorTest {
     @Transactional
     public void testLongNamesCase() throws IOException {
         PgnImportProcessor pgnImportProcessor = pgnImportProcessorObjectFactory.getObject();
+        pgnImportProcessor.setUpdatePositionRepository(false);
         Assertions.assertThat(playerRepository.findAll()).isEmpty();
         Assertions.assertThat(chessGameRepository.findAll()).isEmpty();
 

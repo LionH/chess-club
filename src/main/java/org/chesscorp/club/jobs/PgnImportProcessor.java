@@ -37,6 +37,12 @@ public class PgnImportProcessor {
     @Autowired
     private PerformanceMonitor performanceMonitor;
 
+    private boolean updatePositionRepository = true;
+
+    public void setUpdatePositionRepository(boolean updatePositionRepository) {
+        this.updatePositionRepository = updatePositionRepository;
+    }
+
     @ServiceActivator
     public File process(File file) {
         logger.info("Importing games from " + file);
@@ -52,7 +58,9 @@ public class PgnImportProcessor {
                 ChessGame importedGame = chessGameService.batchImport(pgnGameModel);
                 if (importedGame != null) {
                     importCount += 1;
-                    chessPositionService.updateGamePositions(importedGame.getId());
+                    if (updatePositionRepository) {
+                        chessPositionService.updateGamePositions(importedGame.getId());
+                    }
                 }
 
                 logger.info("{} game {}: {} vs {}",
