@@ -9,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -53,9 +50,9 @@ public class PlayerController {
     }
 
     @Transactional(readOnly = true)
-    @RequestMapping(value = "/profile", method = RequestMethod.POST)
+    @RequestMapping(value = "/profile/{playerId}", method = RequestMethod.GET)
     public PlayerProfile getProfile(
-            @RequestParam Long playerId) {
+            @PathVariable Long playerId) {
         PlayerProfile profile = playerService.getProfile(playerId);
         logger.debug("Found profile for player {}: {}", playerId, profile.getPlayer().getDisplayName());
         return profile;

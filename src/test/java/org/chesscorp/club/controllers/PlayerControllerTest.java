@@ -3,6 +3,7 @@ package org.chesscorp.club.controllers;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.ExternalPlayer;
+import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.model.people.RobotPlayer;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.hamcrest.Matchers;
@@ -85,6 +86,26 @@ public class PlayerControllerTest {
                 jsonPath("$", hasSize(1))
         ).andExpect(
                 jsonPath("$[0].displayName", Matchers.is("GnuChess"))
+        );
+    }
+
+    @Test
+    @Transactional
+    public void testProfile() throws Exception {
+        playerRepository.save(new ExternalPlayer("Freddie Mercury", "freddie"));
+        Player brian = playerRepository.save(new ClubPlayer("Brian May"));
+        playerRepository.save(new RobotPlayer("GnuChess", "gnuchess", "1"));
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(playerController).build();
+
+        mockMvc.perform(
+                get("/api/player/profile/" + brian.getId())
+        ).andExpect(
+                status().is2xxSuccessful()
+        ).andExpect(
+                jsonPath("$.player.displayName", Matchers.is("Brian May"))
+        ).andExpect(
+                jsonPath("$.eloHistory", hasSize(0))
         );
     }
 }
