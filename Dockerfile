@@ -13,4 +13,5 @@ VOLUME /data
 
 CMD java -Dspring.datasource.url=jdbc:h2:file:/data/chess1	\
 	 -Dspring.jpa.database=H2				\
+	 -Dspring.jpa.hibernate.ddl-auto=update			\
 	 -jar /usr/local/chesscorp/*.jar
