@@ -9,5 +9,8 @@ RUN ln -s /usr/games/phalanx /usr/bin/phalanx
 COPY target/*.jar /usr/local/chesscorp/
 
 EXPOSE 8080
+VOLUME /data
 
-CMD java -jar /usr/local/chesscorp/*.jar
+CMD java -Dspring.datasource.url=jdbc:h2:file:/data/chess1	\
+	 -Dspring.jpa.database=H2				\
+	 -jar /usr/local/chesscorp/*.jar
