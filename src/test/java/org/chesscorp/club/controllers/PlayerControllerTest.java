@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.transaction.Transactional;
 
+import java.util.stream.IntStream;
+
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -66,6 +68,31 @@ public class PlayerControllerTest {
                 status().is2xxSuccessful()
         ).andExpect(
                 jsonPath("$", hasSize(2))
+        );
+    }
+
+    @Test
+    @Transactional
+    public void testSearchLimit() throws Exception {
+        IntStream.range(0, 100).forEach(i -> playerRepository.save(new ExternalPlayer("Player number " + i, "player" + i)));
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(playerController).build();
+
+        mockMvc.perform(
+                post("/api/player/search").param("query", "play")
+        ).andExpect(
+                status().is2xxSuccessful()
+        ).andExpect(
+                jsonPath("$", hasSize(100))
+        );
+
+
+        mockMvc.perform(
+                post("/api/player/search").param("query", "play").param("limit", "20")
+        ).andExpect(
+                status().is2xxSuccessful()
+        ).andExpect(
+                jsonPath("$", hasSize(20))
         );
     }
 

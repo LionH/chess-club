@@ -21,6 +21,15 @@ public interface PlayerService {
     List<Player> search(String query);
 
     /**
+     * Search for player(s) by fuzzy query.
+     *
+     * @param query a query based on user input
+     * @param limit an optional limit on the number of results
+     * @return a list of player matches.
+     */
+    List<Player> search(String query, Integer limit);
+
+    /**
      * Get data to fill the player profile page.
      *
      * @param playerId a player ID

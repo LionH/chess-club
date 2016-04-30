@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class PlayerServiceImpl implements PlayerService {
@@ -38,19 +39,28 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     @Transactional(readOnly = true)
     public List<Player> search(String query) {
+        return this.search(query, null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Player> search(String query, Integer limit) {
         String processedQuery = query.toLowerCase();
         List<Player> result = new ArrayList<>();
 
         /*
          * Yes, this is a quite lame approach, and let's find some time for an index-based approach soon !
          */
-        for (Player player : playerRepository.findAll()) {
-            String displayName = player.getDisplayName().toLowerCase();
+        Stream<Player> playerStream = playerRepository.streamAllPlayers();
 
-            if (displayName.contains(processedQuery)) {
+        playerStream.filter(player -> {
+            String displayName = player.getDisplayName().toLowerCase();
+            return displayName.contains(processedQuery);
+        }).forEach(player -> {
+            if (limit == null || result.size() < limit) {
                 result.add(player);
             }
-        }
+        });
 
         return result;
     }

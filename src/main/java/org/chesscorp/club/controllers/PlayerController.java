@@ -27,8 +27,9 @@ public class PlayerController {
     @Transactional(readOnly = true)
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public List<Player> search(
-            @RequestParam String query) {
-        List<Player> players = playerService.search(query);
+            @RequestParam String query,
+            @RequestParam(required = false) Integer limit) {
+        List<Player> players = playerService.search(query, limit);
         logger.debug("Found {} players matching {}", players.size(), query);
         return players;
     }
