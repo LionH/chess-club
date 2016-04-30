@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.OffsetDateTime;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("UnusedAssignment")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @Rollback
@@ -240,5 +241,25 @@ public class ChessGameServiceTest {
 
         // Fetching the game will succeed
         Assertions.assertThat(chessGameService.getGame(game.getId())).isNotNull();
+    }
+
+    @Test(expected = InvalidChessMoveException.class)
+    @Transactional
+    public void testMoveAfterResignation() {
+        Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
+        Player p2 = playerRepository.save(new ClubPlayer("Player 2"));
+
+        ChessGame game = chessGameService.createGame(p1.getId(), p2.getId());
+        game = chessGameService.move(game, "e4");
+        game = chessGameService.move(game, "e5");
+        game = chessGameService.resign(game, p2);
+
+        Assertions.assertThat(game.getStatus()).isEqualTo(ChessGameStatus.WHITEWON);
+
+        // Fetching the game will succeed
+        Assertions.assertThat(chessGameService.getGame(game.getId())).isNotNull();
+
+        // Moving again should fail
+        game = chessGameService.move(game, "d4");
     }
 }

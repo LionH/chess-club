@@ -80,6 +80,11 @@ public class ChessGameServiceImpl implements ChessGameService {
     @Override
     @Transactional
     public ChessGame move(ChessGame game, String pgnMove) {
+        if (game.getStatus() != ChessGameStatus.OPEN) {
+            throw new InvalidChessMoveException("Move " + pgnMove + " rejected as game "
+                    + game.getId() + " is in status " + game.getStatus());
+        }
+
         try {
             ChessPosition position = chessRules.getInitialPosition();
 
