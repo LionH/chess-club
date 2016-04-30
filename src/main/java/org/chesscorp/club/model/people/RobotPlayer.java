@@ -4,6 +4,7 @@ import org.hibernate.annotations.Proxy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.time.OffsetDateTime;
 
 /**
  * RobotPlayer data model. A robot is a player not referenced by any account but managed by an AI engine.
@@ -12,7 +13,7 @@ import javax.persistence.Entity;
  */
 @Entity
 @Proxy(lazy = false)
-public class RobotPlayer extends Player {
+public class RobotPlayer extends RegisteredPlayer {
     @Column(length = 16)
     private String engine;
 
@@ -23,7 +24,7 @@ public class RobotPlayer extends Player {
     }
 
     public RobotPlayer(String displayName, String engine, String parameters) {
-        super(displayName);
+        super(displayName, OffsetDateTime.now());
         this.engine = engine;
         this.parameters = parameters;
     }

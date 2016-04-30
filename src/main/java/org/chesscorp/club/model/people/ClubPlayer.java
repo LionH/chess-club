@@ -4,6 +4,7 @@ import org.hibernate.annotations.Proxy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.time.OffsetDateTime;
 
 /**
  * A local club human player.
@@ -12,7 +13,7 @@ import javax.persistence.Entity;
  */
 @Entity
 @Proxy(lazy = false)
-public class ClubPlayer extends Player {
+public class ClubPlayer extends RegisteredPlayer {
     @Column
     private boolean active;
 
@@ -24,7 +25,7 @@ public class ClubPlayer extends Player {
     }
 
     public ClubPlayer(String displayName, boolean active) {
-        super(displayName);
+        super(displayName, OffsetDateTime.now());
         this.active = active;
     }
 
