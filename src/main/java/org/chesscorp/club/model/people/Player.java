@@ -19,7 +19,7 @@ import java.util.Objects;
         }
 )
 @SequenceGenerator(name = "player_seq", initialValue = 1, allocationSize = 1, sequenceName = "player_seq")
-public abstract class Player {
+public abstract class Player implements Comparable<Player> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "player_seq")
@@ -59,6 +59,11 @@ public abstract class Player {
         }
         final Player other = (Player) obj;
         return Objects.equals(this.id, other.id);
+    }
+
+    @Override
+    public int compareTo(Player o) {
+        return getDisplayName().compareTo(o.getDisplayName());
     }
 
     @Override

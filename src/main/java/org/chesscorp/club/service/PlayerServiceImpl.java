@@ -1,22 +1,21 @@
 package org.chesscorp.club.service;
 
+import com.google.common.collect.Lists;
+import org.alcibiade.chess.model.ChessGameStatus;
 import org.chesscorp.club.dto.PlayerProfile;
+import org.chesscorp.club.dto.PvpStatus;
 import org.chesscorp.club.model.game.EloRating;
 import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.model.people.RobotPlayer;
-import org.chesscorp.club.persistence.ClubPlayerRepository;
-import org.chesscorp.club.persistence.EloRatingRepository;
-import org.chesscorp.club.persistence.PlayerRepository;
-import org.chesscorp.club.persistence.RobotRepository;
+import org.chesscorp.club.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,6 +31,9 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Autowired
     private ClubPlayerRepository clubPlayerRepository;
+
+    @Autowired
+    private ChessGameRepository chessGameRepository;
 
     @Autowired
     private EloRatingRepository eloRatingRepository;
@@ -70,7 +72,48 @@ public class PlayerServiceImpl implements PlayerService {
     public PlayerProfile getProfile(Long playerId) {
         Player player = playerRepository.getOne(playerId);
         List<EloRating> history = eloRatingRepository.findByPlayerId(playerId);
-        PlayerProfile profile = new PlayerProfile(player, history);
+        SortedMap<Player, PvpStatus> pvpStatistics = new TreeMap<>();
+
+        List<ChessGameStatus> closedStatus = Lists.newArrayList(
+                ChessGameStatus.BLACKWON,
+                ChessGameStatus.WHITEWON,
+                ChessGameStatus.PAT
+        );
+
+        chessGameRepository.findByWhitePlayerIdAndStatusInOrBlackPlayerIdAndStatusIn(
+                playerId, closedStatus, playerId, closedStatus
+        ).forEach(game -> {
+                    Player opponent = (game.getWhitePlayer().equals(player)) ? game.getBlackPlayer() : game.getBlackPlayer();
+                    PvpStatus statistics = pvpStatistics.get(opponent);
+
+                    if (statistics == null) {
+                        statistics = new PvpStatus();
+                        pvpStatistics.put(opponent, statistics);
+                    }
+
+                    switch (game.getStatus()) {
+                        case WHITEWON:
+                            if (player.equals(game.getWhitePlayer())) {
+                                statistics.setWins(statistics.getWins() + 1);
+                            } else {
+                                statistics.setLosses(statistics.getLosses() + 1);
+                            }
+                            break;
+                        case BLACKWON:
+                            if (player.equals(game.getBlackPlayer())) {
+                                statistics.setWins(statistics.getWins() + 1);
+                            } else {
+                                statistics.setLosses(statistics.getLosses() + 1);
+                            }
+                            break;
+                        case PAT:
+                            statistics.setDraws(statistics.getDraws() + 1);
+                            break;
+                    }
+                }
+        );
+
+        PlayerProfile profile = new PlayerProfile(player, history, pvpStatistics);
         return profile;
     }
 

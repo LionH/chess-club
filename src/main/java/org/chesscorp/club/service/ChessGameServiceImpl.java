@@ -193,7 +193,7 @@ public class ChessGameServiceImpl implements ChessGameService {
 
         List<ChessGame> games =
                 chessGameRepository.findByWhitePlayerIdAndStatusInOrBlackPlayerIdAndStatusIn(
-                        longValue, status, longValue, status);
+                        longValue, status, longValue, status).collect(Collectors.toList());
         return games;
     }
 
@@ -208,7 +208,6 @@ public class ChessGameServiceImpl implements ChessGameService {
 
         List<ChessGame> matchingGames = chessGameRepository
                 .findByWhitePlayerIdAndBlackPlayerIdAndStartDate(playerW.getId(), playerB.getId(), gameDate)
-                .stream()
                 .filter(g -> g.getMoves().stream().map(ChessMove::getPgn).collect(Collectors.toList()).equals(pgnG.getMoves()))
                 .collect(Collectors.toList());
 

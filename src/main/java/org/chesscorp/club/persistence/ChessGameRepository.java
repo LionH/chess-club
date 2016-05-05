@@ -6,11 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 public interface ChessGameRepository extends JpaRepository<ChessGame, Number> {
 
-    List<ChessGame> findByWhitePlayerIdAndStatusInOrBlackPlayerIdAndStatusIn(
-            Number whitePlayerId, List<ChessGameStatus> whiteStatus, Number blackPlayerId, List<ChessGameStatus> blackStatus);
+    Stream<ChessGame> findByWhitePlayerIdAndStatusInOrBlackPlayerIdAndStatusIn(
+            Number whitePlayerId, List<ChessGameStatus> whiteStatus, Number blackPlayerId, List<ChessGameStatus> status);
 
-    List<ChessGame> findByWhitePlayerIdAndBlackPlayerIdAndStartDate(Number whitePlayerId, Number blackPlayerId, OffsetDateTime startDate);
+    Stream<ChessGame> findByWhitePlayerIdAndBlackPlayerIdAndStartDate(Number whitePlayerId, Number blackPlayerId, OffsetDateTime startDate);
+
 }
