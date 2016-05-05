@@ -34,6 +34,15 @@ public class AuthenticationControllerTest {
 
     @Test
     @Transactional
+    public void testChangePassword() {
+        authenticationController.signup("a@b.c", "Password1", "A");
+        AuthenticationResult authenticationResult = authenticationController.signin("a@b.c", "Password1");
+        authenticationController.updatePassword(authenticationResult.getToken(), "Password1", "Password2");
+        authenticationController.signin("a@b.c", "Password2");
+    }
+
+    @Test
+    @Transactional
     public void testSignUpAndSignOut() {
         AuthenticationResult auth = authenticationController.signup("a@b.c", "Password1", "A");
         authenticationController.signout(auth.getToken());

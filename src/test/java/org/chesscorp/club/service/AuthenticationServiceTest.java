@@ -1,6 +1,8 @@
 package org.chesscorp.club.service;
 
+import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
+import org.chesscorp.club.exception.AuthenticationFailedException;
 import org.chesscorp.club.exception.NotAuthenticatedException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,4 +34,21 @@ public class AuthenticationServiceTest {
         authenticationService.getSession(token);
     }
 
+    @Test
+    @Transactional
+    public void testPasswordUpdate() {
+        authenticationService.signup("alcibiade@alcibiade.org", "password", "Alcibiade");
+        authenticationService.signin("alcibiade@alcibiade.org", "password");
+
+        authenticationService.updatePassword("alcibiade@alcibiade.org", "password", "anotherPassword");
+
+        try {
+            authenticationService.signin("alcibiade@alcibiade.org", "password");
+            Assertions.fail("Authentication should have failed with the original password");
+        } catch (AuthenticationFailedException e) {
+            // We expect to have this exception raised.
+        }
+
+        authenticationService.signin("alcibiade@alcibiade.org", "anotherPassword");
+    }
 }

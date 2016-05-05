@@ -72,27 +72,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     @Transactional
     public String signin(String email, String password) {
-        Account account;
-
-        try {
-            account = accountRepository.getOne(email);
-        } catch (JpaObjectRetrievalFailureException e) {
-            account = null;
-        }
-
-        if (account == null) {
-            throw new AuthenticationFailedException("No account for '" + email + "'");
-        }
-
-        String passwordHash = hashManager.hash(account.getSalt(), password);
-
-        if (!account.getPassword().equals(passwordHash)) {
-            throw new AuthenticationFailedException("");
-        }
+        Account account = getAccount(email, password);
 
         String token = UUID.randomUUID().toString();
         sessionRepository.save(new Session(token, account));
+
         return token;
+    }
+
+    @Override
+    @Transactional
+    public void updatePassword(String email, String previousPassword, String newPassword) {
+        Account account = getAccount(email, previousPassword);
+
+        String salt = hashManager.createSalt();
+        String passwordHash = hashManager.hash(salt, newPassword);
+
+        account.setSalt(salt);
+        account.setPassword(passwordHash);
+
+        accountRepository.saveAndFlush(account);
     }
 
     @Override
@@ -110,5 +109,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public void revoke(String token) {
         sessionRepository.delete(token);
+    }
+
+    private Account getAccount(String email, String password) {
+        Account account = accountRepository.findOne(email);
+
+        if (account == null) {
+            throw new AuthenticationFailedException("No account for '" + email + "'");
+        }
+
+        String passwordHash = hashManager.hash(account.getSalt(), password);
+
+        if (!account.getPassword().equals(passwordHash)) {
+            throw new AuthenticationFailedException("Invalid password");
+        }
+
+        return account;
     }
 }

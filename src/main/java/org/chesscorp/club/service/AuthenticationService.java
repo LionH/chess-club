@@ -10,6 +10,8 @@ public interface AuthenticationService {
 
     String signin(String email, String password);
 
+    void updatePassword(String email, String previousPassword, String newPassword);
+
     Session getSession(String token);
 
     void revoke(String token);

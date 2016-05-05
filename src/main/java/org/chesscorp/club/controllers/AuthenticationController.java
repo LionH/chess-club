@@ -57,6 +57,20 @@ public class AuthenticationController {
         return new AuthenticationResult(token, account, player);
     }
 
+    @Transactional
+    @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
+    public void updatePassword(
+            @CookieValue(value = AUTHENTICATION_TOKEN) String token,
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword) {
+        Session session = authenticationService.getSession(token);
+        Account account = session.getAccount();
+
+        logger.debug("Updating password for account {}", account.getIdentifier());
+
+        authenticationService.updatePassword(account.getIdentifier(), currentPassword, newPassword);
+    }
+
     @RequestMapping(value = "/getCredentials", method = RequestMethod.POST)
     public AuthenticationResult getCredentials(@CookieValue(value = AUTHENTICATION_TOKEN, required = false) String token) {
         AuthenticationResult authenticationResult = new AuthenticationResult();
