@@ -1,12 +1,15 @@
 package org.chesscorp.club.service;
 
+import org.alcibiade.chess.model.ChessGameStatus;
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.dto.PlayerProfile;
+import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.ExternalPlayer;
 import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.model.people.RobotPlayer;
+import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +19,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.transaction.Transactional;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,6 +31,8 @@ public class PlayerServiceTest {
     @Autowired
     private PlayerRepository playerRepository;
 
+    @Autowired
+    private ChessGameRepository chessGameRepository;
 
     @Autowired
     private PlayerService playerService;
@@ -54,11 +60,18 @@ public class PlayerServiceTest {
         Player player3 = playerRepository.save(new ClubPlayer("Player 3"));
 
         Assertions.assertThat(playerService.getProfile(player1.getId()))
-                .isEqualToComparingFieldByField(new PlayerProfile(player1, new ArrayList<>(), new HashMap<>()));
+                .isEqualToComparingFieldByField(new PlayerProfile(player1, new ArrayList<>(), new ArrayList<>()));
         Assertions.assertThat(playerService.getProfile(player2.getId()))
-                .isEqualToComparingFieldByField(new PlayerProfile(player2, new ArrayList<>(), new HashMap<>()));
+                .isEqualToComparingFieldByField(new PlayerProfile(player2, new ArrayList<>(), new ArrayList<>()));
         Assertions.assertThat(playerService.getProfile(player3.getId()))
-                .isEqualToComparingFieldByField(new PlayerProfile(player3, new ArrayList<>(), new HashMap<>()));
+                .isEqualToComparingFieldByField(new PlayerProfile(player3, new ArrayList<>(), new ArrayList<>()));
+
+        chessGameRepository.save(new ChessGame(player1, player2, new ArrayList<>(), ChessGameStatus.BLACKWON, OffsetDateTime.now()));
+        chessGameRepository.save(new ChessGame(player2, player1, new ArrayList<>(), ChessGameStatus.BLACKWON, OffsetDateTime.now()));
+
+        Assertions.assertThat(playerService.getProfile(player1.getId()).getPvpStatistics()).hasSize(1);
+        Assertions.assertThat(playerService.getProfile(player2.getId()).getPvpStatistics()).hasSize(1);
+        Assertions.assertThat(playerService.getProfile(player3.getId()).getPvpStatistics()).hasSize(0);
     }
 
     @Test

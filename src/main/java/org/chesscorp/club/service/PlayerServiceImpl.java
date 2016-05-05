@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.alcibiade.chess.model.ChessGameStatus;
 import org.chesscorp.club.dto.PlayerProfile;
 import org.chesscorp.club.dto.PvpStatus;
+import org.chesscorp.club.dto.PvpStatusItem;
 import org.chesscorp.club.model.game.EloRating;
 import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.Player;
@@ -72,7 +73,7 @@ public class PlayerServiceImpl implements PlayerService {
     public PlayerProfile getProfile(Long playerId) {
         Player player = playerRepository.getOne(playerId);
         List<EloRating> history = eloRatingRepository.findByPlayerId(playerId);
-        SortedMap<Player, PvpStatus> pvpStatistics = new TreeMap<>();
+        Map<Player, PvpStatus> pvpStatistics = new HashMap<>();
 
         List<ChessGameStatus> closedStatus = Lists.newArrayList(
                 ChessGameStatus.BLACKWON,
@@ -83,7 +84,7 @@ public class PlayerServiceImpl implements PlayerService {
         chessGameRepository.findByWhitePlayerIdAndStatusInOrBlackPlayerIdAndStatusIn(
                 playerId, closedStatus, playerId, closedStatus
         ).forEach(game -> {
-                    Player opponent = (game.getWhitePlayer().equals(player)) ? game.getBlackPlayer() : game.getBlackPlayer();
+                    Player opponent = (game.getWhitePlayer().equals(player)) ? game.getBlackPlayer() : game.getWhitePlayer();
                     PvpStatus statistics = pvpStatistics.get(opponent);
 
                     if (statistics == null) {
@@ -113,7 +114,11 @@ public class PlayerServiceImpl implements PlayerService {
                 }
         );
 
-        PlayerProfile profile = new PlayerProfile(player, history, pvpStatistics);
+        List<PvpStatusItem> items = pvpStatistics.keySet().stream()
+                .map(opponent -> new PvpStatusItem(opponent, pvpStatistics.get(opponent)))
+                .collect(Collectors.toList());
+
+        PlayerProfile profile = new PlayerProfile(player, history, items);
         return profile;
     }
 

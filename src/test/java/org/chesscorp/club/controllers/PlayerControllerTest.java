@@ -1,10 +1,14 @@
 package org.chesscorp.club.controllers;
 
+import org.alcibiade.chess.model.ChessGameStatus;
 import org.chesscorp.club.Application;
+import org.chesscorp.club.model.game.ChessGame;
+import org.chesscorp.club.model.game.ChessMove;
 import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.ExternalPlayer;
 import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.model.people.RobotPlayer;
+import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -18,6 +22,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.transaction.Transactional;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -35,6 +41,9 @@ public class PlayerControllerTest {
 
     @Autowired
     private PlayerRepository playerRepository;
+
+    @Autowired
+    private ChessGameRepository chessGameRepository;
 
     @Test
     @Transactional
@@ -119,9 +128,12 @@ public class PlayerControllerTest {
     @Test
     @Transactional
     public void testProfile() throws Exception {
-        playerRepository.save(new ExternalPlayer("Freddie Mercury", "freddie"));
+        Player freddie = playerRepository.save(new ExternalPlayer("Freddie Mercury", "freddie"));
         Player brian = playerRepository.save(new ClubPlayer("Brian May"));
         playerRepository.save(new RobotPlayer("GnuChess", "gnuchess", "1"));
+
+        chessGameRepository.save(new ChessGame(brian, freddie, new ArrayList<>(), ChessGameStatus.BLACKWON, OffsetDateTime.now()));
+        chessGameRepository.save(new ChessGame(freddie, brian, new ArrayList<>(), ChessGameStatus.BLACKWON, OffsetDateTime.now()));
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(playerController).build();
 
@@ -131,6 +143,8 @@ public class PlayerControllerTest {
                 status().is2xxSuccessful()
         ).andExpect(
                 jsonPath("$.player.displayName", Matchers.is("Brian May"))
+        ).andExpect(
+                jsonPath("$.pvpStatistics", hasSize(1))
         ).andExpect(
                 jsonPath("$.eloHistory", hasSize(0))
         );
