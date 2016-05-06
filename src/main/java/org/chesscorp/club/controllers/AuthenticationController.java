@@ -71,7 +71,7 @@ public class AuthenticationController {
         authenticationService.updatePassword(account.getIdentifier(), currentPassword, newPassword);
     }
 
-    @RequestMapping(value = "/getCredentials", method = RequestMethod.POST)
+    @RequestMapping(value = "/getCredentials", method = RequestMethod.GET)
     public AuthenticationResult getCredentials(@CookieValue(value = AUTHENTICATION_TOKEN, required = false) String token) {
         AuthenticationResult authenticationResult = new AuthenticationResult();
 
