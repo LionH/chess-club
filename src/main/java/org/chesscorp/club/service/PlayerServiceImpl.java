@@ -118,6 +118,8 @@ public class PlayerServiceImpl implements PlayerService {
                 .map(opponent -> new PvpStatusItem(opponent, pvpStatistics.get(opponent)))
                 .collect(Collectors.toList());
 
+        Collections.sort(items);
+
         PlayerProfile profile = new PlayerProfile(player, history, items);
         return profile;
     }

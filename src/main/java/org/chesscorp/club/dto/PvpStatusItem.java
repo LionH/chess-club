@@ -24,12 +24,24 @@ public class PvpStatusItem implements Comparable<PvpStatusItem> {
 
     @Override
     public int compareTo(PvpStatusItem o) {
-        int result = getPvpStatus().getWins() - o.getPvpStatus().getWins();
+        int result = -(getPvpStatus().getWins() - o.getPvpStatus().getWins());
+
+        if (result == 0) {
+            result = getPvpStatus().getLosses() - o.getPvpStatus().getLosses();
+        }
 
         if (result == 0) {
             result = getOpponent().compareTo(o.getOpponent());
         }
 
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "PvpStatusItem{" +
+                "opponent=" + opponent +
+                ", pvpStatus=" + pvpStatus +
+                '}';
     }
 }
