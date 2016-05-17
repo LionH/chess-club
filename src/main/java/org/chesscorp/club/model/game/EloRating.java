@@ -11,7 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @SequenceGenerator(name = "elorating_seq", initialValue = 1, allocationSize = 1, sequenceName = "elorating_seq")
-public class EloRating {
+public class EloRating implements Comparable<EloRating> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "elorating_seq")
@@ -59,5 +59,10 @@ public class EloRating {
                 ", chessGame=" + chessGame +
                 ", eloRating=" + eloRating +
                 '}';
+    }
+
+    @Override
+    public int compareTo(EloRating o) {
+        return id.compareTo(o.id);
     }
 }

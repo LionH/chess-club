@@ -72,7 +72,7 @@ public class PlayerServiceImpl implements PlayerService {
     @Transactional(readOnly = true)
     public PlayerProfile getProfile(Long playerId) {
         Player player = playerRepository.getOne(playerId);
-        List<EloRating> history = eloRatingRepository.findByPlayerId(playerId);
+        List<EloRating> history = eloRatingRepository.findByPlayerIdOrderById(playerId);
         Map<Player, PvpStatus> pvpStatistics = new HashMap<>();
 
         List<ChessGameStatus> closedStatus = Lists.newArrayList(

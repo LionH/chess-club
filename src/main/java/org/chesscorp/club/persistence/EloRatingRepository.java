@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface EloRatingRepository extends JpaRepository<EloRating, Number> {
 
-    List<EloRating> findByPlayerId(Long playerId);
-
     EloRating findFirstByPlayerIdOrderByIdDesc(Long playerId);
+
+    List<EloRating> findByPlayerIdOrderById(Long playerId);
 }
