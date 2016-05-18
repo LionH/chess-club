@@ -9,5 +9,5 @@ public interface EloRatingRepository extends JpaRepository<EloRating, Number> {
 
     EloRating findFirstByPlayerIdOrderByIdDesc(Long playerId);
 
-    List<EloRating> findByPlayerIdOrderById(Long playerId);
+    List<EloRating> findByPlayerIdOrderByScoreDateAsc(Long playerId);
 }
