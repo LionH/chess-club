@@ -16,21 +16,32 @@ import java.time.OffsetDateTime;
 public class ClubPlayer extends RegisteredPlayer {
     @Column
     private boolean active;
+    @Column(length = 64)
+    private String avatarHash;
 
     public ClubPlayer() {
     }
 
     public ClubPlayer(String displayName) {
-        this(displayName, true);
+        this(displayName, null);
     }
 
-    public ClubPlayer(String displayName, boolean active) {
+    public ClubPlayer(String displayName, String avatarHash) {
+        this(displayName, avatarHash, true);
+    }
+
+    public ClubPlayer(String displayName, String avatarHash, boolean active) {
         super(displayName, OffsetDateTime.now());
         this.active = active;
+        this.avatarHash = avatarHash;
     }
 
     public boolean isActive() {
         return active;
+    }
+
+    public String getAvatarHash() {
+        return avatarHash;
     }
 
     @Override

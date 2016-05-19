@@ -18,8 +18,9 @@ import java.util.Objects;
 public class Account {
 
     @Id
+    @Column(length = 128)
     private String identifier;
-    @Column(length = 32)
+    @Column(nullable = false, length = 32)
     private String salt;
     @Column(nullable = false, length = 32)
     private String password;

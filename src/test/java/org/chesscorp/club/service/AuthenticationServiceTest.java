@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.exception.AuthenticationFailedException;
 import org.chesscorp.club.exception.NotAuthenticatedException;
+import org.chesscorp.club.model.people.ClubPlayer;
+import org.chesscorp.club.model.people.Session;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -29,7 +31,10 @@ public class AuthenticationServiceTest {
         authenticationService.signup("alcibiade@alcibiade.org", "password", "Alcibiade");
         String token = authenticationService.signin("alcibiade@alcibiade.org", "password");
 
-        authenticationService.getSession(token);
+        Session session = authenticationService.getSession(token);
+        ClubPlayer player = (ClubPlayer) session.getAccount().getPlayer();
+        Assertions.assertThat(player.getAvatarHash()).isEqualTo("8709d36fb91de42e2d9534e573a54a24");
+
         authenticationService.revoke(token);
         authenticationService.getSession(token);
     }

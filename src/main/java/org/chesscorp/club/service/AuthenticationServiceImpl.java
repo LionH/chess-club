@@ -10,6 +10,7 @@ import org.chesscorp.club.model.people.Session;
 import org.chesscorp.club.persistence.AccountRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.chesscorp.club.persistence.SessionRepository;
+import org.chesscorp.club.utilities.hash.GravatarHashManager;
 import org.chesscorp.club.utilities.hash.HashManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private HashManager hashManager;
 
+    @Autowired
+    private GravatarHashManager gravatarHashManager;
+
     @PostConstruct
     private void hashClearTextPasswords() {
         accountRepository.readAllBySaltNull().forEach(account -> {
@@ -64,7 +68,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String salt = hashManager.createSalt();
         String passwordHash = hashManager.hash(salt, password);
 
-        Player p = playerRepository.save(new ClubPlayer(displayName));
+        String avatarHash = gravatarHashManager.hashGravatar(email);
+        Player p = playerRepository.save(new ClubPlayer(displayName, avatarHash));
         Account a = accountRepository.save(new Account(email, salt, passwordHash, p));
         logger.info("Account {} created for player {}", a, p);
     }
