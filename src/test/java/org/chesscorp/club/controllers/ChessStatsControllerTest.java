@@ -71,6 +71,8 @@ public class ChessStatsControllerTest {
             Thread.sleep(100);
         }
 
+        Thread.sleep(1000);
+
         ObjectMapper mapper = new ObjectMapper();
         StringWriter jsonWriter = new StringWriter();
         mapper.writeValue(jsonWriter, chessStatsController.relatedGames(game1.getId()));
