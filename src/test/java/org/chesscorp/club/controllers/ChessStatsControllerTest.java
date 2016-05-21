@@ -95,7 +95,7 @@ public class ChessStatsControllerTest {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(chessStatsController).build();
 
         mockMvc.perform(
-                get("/api/chess/stats/related/999")
+                get("/api/chess/stats/related/999999")
         ).andExpect(
                 status().is2xxSuccessful()
         ).andExpect(
