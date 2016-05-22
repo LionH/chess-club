@@ -66,6 +66,7 @@ public class ChessGameServiceImpl implements ChessGameService {
 
         ChessGame game = new ChessGame(white, black);
         game = chessGameRepository.save(game);
+        notifyGameUpdated(game);
         return game;
     }
 

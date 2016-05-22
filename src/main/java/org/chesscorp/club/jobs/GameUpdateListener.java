@@ -40,6 +40,12 @@ public class GameUpdateListener {
     public void gameUpdated(Long gameId) {
         logger.debug("Game {} updated", gameId);
 
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            logger.warn(e.getLocalizedMessage(), e);
+        }
+
         ChessGame game = chessGameService.getGame(gameId);
         checkForRobotMove(game);
 
@@ -56,6 +62,7 @@ public class GameUpdateListener {
      */
     private ChessGame checkForRobotMove(ChessGame game) {
         Player nextPlayer = game.getNextPlayer();
+        logger.debug("Next player in game {} is {} ({} moves)", game.getId(), nextPlayer, game.getMoves().size());
 
         if (nextPlayer instanceof RobotPlayer) {
             RobotPlayer robotPlayer = (RobotPlayer) nextPlayer;

@@ -1,5 +1,6 @@
 package org.chesscorp.club.persistence;
 
+import com.sun.xml.internal.stream.Entity;
 import org.alcibiade.chess.model.ChessGameStatus;
 import org.chesscorp.club.model.game.ChessGame;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,5 @@ public interface ChessGameRepository extends JpaRepository<ChessGame, Number> {
 
     Stream<ChessGame> findByWhitePlayerIdAndBlackPlayerIdAndStartDate(Number whitePlayerId, Number blackPlayerId, OffsetDateTime startDate);
 
+    Stream<ChessGame> findAllByStatus(ChessGameStatus status);
 }

@@ -1,5 +1,6 @@
 package org.chesscorp.club.service;
 
+import org.alcibiade.chess.model.ChessGameStatus;
 import org.alcibiade.chess.model.ChessMovePath;
 import org.alcibiade.chess.model.ChessPosition;
 import org.alcibiade.chess.persistence.PgnMarshaller;
@@ -16,6 +17,7 @@ import org.chesscorp.club.utilities.hash.HashManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
