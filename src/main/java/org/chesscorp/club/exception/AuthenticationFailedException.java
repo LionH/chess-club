@@ -1,7 +1,7 @@
 package org.chesscorp.club.exception;
 
 /**
- * Created by yk on 18/07/15.
+ * General exception for authentication failure.
  */
 public class AuthenticationFailedException extends AuthenticationException {
 

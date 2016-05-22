@@ -97,8 +97,6 @@ public class ChessOpeningsServiceImpl implements ChessOpeningsService {
         List<ChessOpeningDescription> openings = new ArrayList<>();
         ChessPosition position = chessRules.getInitialPosition();
 
-        OpeningNode node = openingNodes;
-
         for (String move : moves) {
             ChessMovePath movePath = pgnMarshaller.convertPgnToMove(position, move);
             position = ChessHelper.applyMoveAndSwitch(chessRules, position, movePath);
@@ -106,7 +104,7 @@ public class ChessOpeningsServiceImpl implements ChessOpeningsService {
 
         String positionText = positionMarshaller.convertPositionToString(position);
 
-        node = positionIndex.get(positionText);
+        OpeningNode node = positionIndex.get(positionText);
 
         if (node != null && node != openingNodes) {
             openings.add(new ChessOpeningDescription(node.getName(), node.getNextMoves().keySet()));

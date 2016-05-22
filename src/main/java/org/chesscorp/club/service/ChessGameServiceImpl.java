@@ -10,7 +10,6 @@ import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.game.ChessMove;
 import org.chesscorp.club.model.game.EloRating;
 import org.chesscorp.club.model.people.Player;
-import org.chesscorp.club.model.people.RobotPlayer;
 import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.ChessMoveRepository;
 import org.chesscorp.club.persistence.EloRatingRepository;

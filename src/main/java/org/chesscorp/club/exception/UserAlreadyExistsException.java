@@ -1,7 +1,7 @@
 package org.chesscorp.club.exception;
 
 /**
- * Created by yk on 18/07/15.
+ * User information clash.
  */
 public class UserAlreadyExistsException extends AuthenticationException {
 

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 /**
- * Created by yk on 16/07/15.
+ * Configuration of H2 backend persistence.
  */
 @Configuration
 @Profile("h2console")

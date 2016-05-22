@@ -1,6 +1,5 @@
 package org.chesscorp.club.persistence;
 
-import com.sun.xml.internal.stream.Entity;
 import org.alcibiade.chess.model.ChessGameStatus;
 import org.chesscorp.club.model.game.ChessGame;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -3,7 +3,6 @@ package org.chesscorp.club.model.game;
 import org.alcibiade.chess.model.ChessGameStatus;
 import org.chesscorp.club.model.people.Player;
 import org.hibernate.annotations.Proxy;
-import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
