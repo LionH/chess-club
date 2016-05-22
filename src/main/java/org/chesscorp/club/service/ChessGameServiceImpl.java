@@ -50,8 +50,7 @@ public class ChessGameServiceImpl implements ChessGameService {
     private PgnMarshaller pgnMarshaller;
     @Autowired
     private EloRatingCalculator eloRatingCalculator;
-    @Autowired
-    private ChessRobotService chessRobotService;
+
     @Autowired
     private JmsTemplate jmsTemplate;
 
@@ -67,7 +66,6 @@ public class ChessGameServiceImpl implements ChessGameService {
 
         ChessGame game = new ChessGame(white, black);
         game = chessGameRepository.save(game);
-        game = checkForRobotMove(game);
         return game;
     }
 
@@ -101,9 +99,7 @@ public class ChessGameServiceImpl implements ChessGameService {
             ChessMove move = chessMoveRepository.save(new ChessMove(game, OffsetDateTime.now(), canonicalPgn));
             ChessGame updatedGame = chessGameRepository.save(new ChessGame(game, move, status));
 
-            if (updatedGame.getStatus() == ChessGameStatus.OPEN) {
-                updatedGame = checkForRobotMove(updatedGame);
-            } else {
+            if (updatedGame.getStatus() != ChessGameStatus.OPEN) {
                 updatePostGame(game);
             }
 
@@ -122,7 +118,7 @@ public class ChessGameServiceImpl implements ChessGameService {
      */
     private void notifyGameUpdated(ChessGame game) {
         jmsTemplate.send("chess-game-update", session -> {
-            return session.createTextMessage(game.getId().toString());
+            return session.createObjectMessage(game.getId());
         });
     }
 
@@ -295,26 +291,4 @@ public class ChessGameServiceImpl implements ChessGameService {
         return game;
     }
 
-    /**
-     * Make a robot move if this game's turn is on a robot.
-     *
-     * @param game the current game object
-     * @return the new value of the game object
-     */
-    private ChessGame checkForRobotMove(ChessGame game) {
-        Player nextPlayer = game.getNextPlayer();
-
-        if (nextPlayer instanceof RobotPlayer) {
-            RobotPlayer robotPlayer = (RobotPlayer) nextPlayer;
-
-            List<String> moves = game.getMoves().stream()
-                    .map(ChessMove::getPgn)
-                    .collect(Collectors.toList());
-
-            String robotMove = chessRobotService.play(robotPlayer, moves);
-            game = move(game, robotMove);
-        }
-
-        return game;
-    }
 }

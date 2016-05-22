@@ -4,6 +4,7 @@ import org.alcibiade.chess.model.ChessGameStatus;
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.exception.InvalidChessMoveException;
+import org.chesscorp.club.jobs.GameUpdateListener;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.game.ChessMove;
 import org.chesscorp.club.model.people.ClubPlayer;
@@ -48,6 +49,9 @@ public class ChessGameServiceTest {
     @Autowired
     private EloRatingRepository eloRatingRepository;
 
+    @Autowired
+    private GameUpdateListener gameUpdateListener;
+
     @Test
     @Transactional
     public void testGameOperations() throws InterruptedException {
@@ -90,13 +94,16 @@ public class ChessGameServiceTest {
 
     @Test
     @Transactional
-    public void testRobotAsBlack() {
+    public void testRobotAsBlack() throws InterruptedException {
         Player p1 = playerRepository.save(new ClubPlayer("Player 1"));
         RobotPlayer rob = robotRepository.save(new RobotPlayer("rob", "randomAI", ""));
 
         ChessGame game = chessGameService.createGame(p1.getId(), rob.getId());
         Assertions.assertThat(game.getMoves()).isEmpty();
         game = chessGameService.move(game, "e4");
+        Assertions.assertThat(game.getMoves()).hasSize(1);
+        gameUpdateListener.gameUpdated(game.getId());
+        game = chessGameService.getGame(game.getId());
         Assertions.assertThat(game.getMoves()).hasSize(2);
     }
 
@@ -107,6 +114,9 @@ public class ChessGameServiceTest {
         RobotPlayer rob = robotRepository.save(new RobotPlayer("rob", "randomAI", "{level=3}"));
 
         ChessGame game = chessGameService.createGame(rob.getId(), p1.getId());
+        Assertions.assertThat(game.getMoves()).isEmpty();
+        gameUpdateListener.gameUpdated(game.getId());
+        game = chessGameService.getGame(game.getId());
         Assertions.assertThat(game.getMoves()).isNotEmpty();
     }
 
@@ -117,6 +127,7 @@ public class ChessGameServiceTest {
         RobotPlayer rob = robotRepository.save(new RobotPlayer("rob", "bogusAI", "{level=3}"));
 
         ChessGame game = chessGameService.createGame(rob.getId(), p1.getId());
+        gameUpdateListener.gameUpdated(game.getId());
     }
 
     @Test(expected = IllegalStateException.class)

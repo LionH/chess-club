@@ -2,6 +2,7 @@ package org.chesscorp.club.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.chesscorp.club.Application;
+import org.chesscorp.club.jobs.GameUpdateListener;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.persistence.ChessMoveToPositionRepository;
@@ -45,6 +46,8 @@ public class ChessStatsControllerTest {
     private ChessPositionRepository positionRepository;
     @Autowired
     private ChessMoveToPositionRepository moveToPositionRepository;
+    @Autowired
+    private GameUpdateListener gameUpdateListener;
 
     @Test
     @Transactional(propagation = Propagation.NEVER)
@@ -65,14 +68,10 @@ public class ChessStatsControllerTest {
         chessGameController.postMove(alcibiadeToken, game2.getId(), "e4");
         chessGameController.postMove(bobToken, game2.getId(), "e5");
 
+        gameUpdateListener.gameUpdated(game1.getId());
+        gameUpdateListener.gameUpdated(game2.getId());
+
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(chessStatsController).build();
-
-        while (positionRepository.count() < 2 && moveToPositionRepository.count() < 4) {
-            Thread.sleep(100);
-        }
-
-        Thread.sleep(1000);
-
         ObjectMapper mapper = new ObjectMapper();
         StringWriter jsonWriter = new StringWriter();
         mapper.writeValue(jsonWriter, chessStatsController.relatedGames(game1.getId()));
