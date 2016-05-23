@@ -3,10 +3,10 @@ package org.chesscorp.club.jobs;
 import org.alcibiade.chess.model.ChessGameStatus;
 import org.chesscorp.club.model.people.RobotPlayer;
 import org.chesscorp.club.persistence.ChessGameRepository;
+import org.chesscorp.club.service.MessagingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,7 @@ public class RobotRecoveryJob {
     private Logger logger = LoggerFactory.getLogger(RobotRecoveryJob.class);
 
     @Autowired
-    private JmsTemplate jmsTemplate;
+    private MessagingService messagingService;
 
     @Autowired
     private ChessGameRepository chessGameRepository;
@@ -32,9 +32,7 @@ public class RobotRecoveryJob {
                 .filter(g -> g.getNextPlayer() instanceof RobotPlayer)
                 .forEach(g -> {
                     logger.debug("Triggering post-update job for game {}", g);
-                    jmsTemplate.send("chess-game-update", session -> {
-                        return session.createObjectMessage(g.getId());
-                    });
+                    messagingService.notifyGameUpdated(g);
                 });
     }
 

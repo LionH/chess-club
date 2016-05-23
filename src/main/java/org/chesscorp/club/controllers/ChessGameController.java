@@ -6,12 +6,14 @@ import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.service.AuthenticationService;
 import org.chesscorp.club.service.ChessGameService;
+import org.chesscorp.club.service.MessagingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -28,13 +30,16 @@ public class ChessGameController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @Autowired
+    private MessagingService messagingService;
+
     /**
      * Search for games.
      *
      * @param playerId identifier of a player involved in the game.
      * @return a list of games
      */
-    @Transactional
+    @Transactional(readOnly = true)
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public List<ChessGame> search(
             @RequestParam Number playerId,
@@ -47,13 +52,14 @@ public class ChessGameController {
     }
 
     /**
-     * Create a new game between two players.
+     * Create a new game between two players. This operation does not fully support wrapping transaction as it requires
+     * updates to be applied before sending the notification message.
      *
      * @param whitePlayerId identifier of the white player
      * @param blackPlayerId identifier of the black player
      * @return the created game model
      */
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS)
     @RequestMapping(method = RequestMethod.POST)
     public ChessGame createGame(
             @CookieValue(value = AuthenticationController.AUTHENTICATION_TOKEN) String authenticationToken,
@@ -70,10 +76,12 @@ public class ChessGameController {
         ChessGame created = chessGameService.createGame(whitePlayerId, blackPlayerId);
         logger.info("Game created {} vs. {} created: {}", whitePlayerId, blackPlayerId, created);
 
+        messagingService.notifyGameUpdated(created);
+
         return created;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @RequestMapping(value = "/{gameId}", method = RequestMethod.GET)
     public ChessGame getGame(@PathVariable Number gameId) {
         ChessGame game = chessGameService.getGame(gameId.longValue());
@@ -82,7 +90,7 @@ public class ChessGameController {
         return game;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS)
     @RequestMapping(value = "/{gameId}", method = RequestMethod.POST)
     public ChessGame postMove(
             @CookieValue(value = AuthenticationController.AUTHENTICATION_TOKEN) String authenticationToken,
@@ -100,12 +108,14 @@ public class ChessGameController {
         game = chessGameService.move(game, move);
         logger.info("Move {} played in {}", move, game);
 
+        messagingService.notifyGameUpdated(game);
+
         return game;
     }
 
     @Transactional
     @RequestMapping(value = "/{gameId}/resign", method = RequestMethod.POST)
-    public ChessGame postMove(
+    public ChessGame resign(
             @CookieValue(value = AuthenticationController.AUTHENTICATION_TOKEN) String authenticationToken,
             @PathVariable Number gameId) {
         Player player = authenticationService.getSession(authenticationToken).getAccount().getPlayer();

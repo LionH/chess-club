@@ -39,12 +39,6 @@ public class GameUpdateListener {
     public void gameUpdated(Long gameId) {
         logger.debug("Game {} updated", gameId);
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            logger.warn(e.getLocalizedMessage(), e);
-        }
-
         ChessGame game = chessGameService.getGame(gameId);
         checkForRobotMove(game);
 

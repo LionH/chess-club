@@ -19,7 +19,6 @@ import org.chesscorp.club.utilities.elo.EloRatingCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,9 +49,6 @@ public class ChessGameServiceImpl implements ChessGameService {
     @Autowired
     private EloRatingCalculator eloRatingCalculator;
 
-    @Autowired
-    private JmsTemplate jmsTemplate;
-
     @Override
     @Transactional
     public ChessGame createGame(Number whitePlayer, Number blackPlayer) {
@@ -65,7 +61,6 @@ public class ChessGameServiceImpl implements ChessGameService {
 
         ChessGame game = new ChessGame(white, black);
         game = chessGameRepository.save(game);
-        notifyGameUpdated(game);
         return game;
     }
 
@@ -103,23 +98,10 @@ public class ChessGameServiceImpl implements ChessGameService {
                 updatePostGame(game);
             }
 
-            notifyGameUpdated(game);
-
             return updatedGame;
         } catch (org.alcibiade.chess.model.ChessException e) {
             throw new InvalidChessMoveException(pgnMove, e);
         }
-    }
-
-    /**
-     * Notify game update on messaging bus.
-     *
-     * @param game a game that has been updated
-     */
-    private void notifyGameUpdated(ChessGame game) {
-        jmsTemplate.send("chess-game-update", session -> {
-            return session.createObjectMessage(game.getId());
-        });
     }
 
     /**
