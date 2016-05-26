@@ -26,14 +26,9 @@ public class PerformanceMonitorImpl implements PerformanceMonitor {
 
     @Override
     public void register(String component, String operation, long items, String itemType, long duration) {
-
         String message = String.format("%20s - %-16s : %5d %s(s) in %8.3fs (%6.1f %s(s)/s)",
                 component, operation, items, itemType, duration / 1000., 1000. * items / duration, itemType);
 
-        if (items == 0) {
-            logger.debug(message);
-        } else {
-            logger.info(message);
-        }
+        logger.debug(message);
     }
 }

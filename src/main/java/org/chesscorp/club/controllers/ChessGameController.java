@@ -74,7 +74,7 @@ public class ChessGameController {
         }
 
         ChessGame created = chessGameService.createGame(whitePlayerId, blackPlayerId);
-        logger.info("Game created {} vs. {} created: {}", whitePlayerId, blackPlayerId, created);
+        logger.info("Game created: {}", created);
 
         messagingService.notifyGameUpdated(created);
 
@@ -85,7 +85,7 @@ public class ChessGameController {
     @RequestMapping(value = "/{gameId}", method = RequestMethod.GET)
     public ChessGame getGame(@PathVariable Number gameId) {
         ChessGame game = chessGameService.getGame(gameId.longValue());
-        logger.info("Game fetched: {}", game);
+        logger.debug("Game fetched: {}", game);
 
         return game;
     }
