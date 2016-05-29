@@ -67,7 +67,8 @@ public class BootStrapServiceImpl implements BootstrapService {
             for (int l = 1; l < 8; l++) {
                 robotRepository.save(new RobotPlayer("GnuChess Level " + l, "gnuchessAI", Integer.toString(l)));
                 robotRepository.save(new RobotPlayer("Phalanx Level " + l, "phalanxAI", Integer.toString(l)));
-                robotRepository.save(new RobotPlayer("Crafty Level " + l, "craftyAI", Integer.toString(l)));
+                // This should only occur if the ai-crafty profile is set
+                // robotRepository.save(new RobotPlayer("Crafty Level " + l, "craftyAI", Integer.toString(l)));
             }
 
             logger.info("Creating sample players");

@@ -5,8 +5,6 @@ import org.chesscorp.club.Application;
 import org.chesscorp.club.jobs.GameUpdateListener;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.people.Player;
-import org.chesscorp.club.persistence.ChessMoveToPositionRepository;
-import org.chesscorp.club.persistence.ChessPositionRepository;
 import org.chesscorp.club.service.AuthenticationService;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -26,7 +24,6 @@ import java.io.StringWriter;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,10 +39,6 @@ public class ChessStatsControllerTest {
     private ChessGameController chessGameController;
     @Autowired
     private AuthenticationService authenticationService;
-    @Autowired
-    private ChessPositionRepository positionRepository;
-    @Autowired
-    private ChessMoveToPositionRepository moveToPositionRepository;
     @Autowired
     private GameUpdateListener gameUpdateListener;
 
