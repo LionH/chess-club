@@ -3,7 +3,6 @@ package org.chesscorp.club.controllers;
 import org.alcibiade.chess.model.ChessGameStatus;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.model.game.ChessGame;
-import org.chesscorp.club.model.game.ChessMove;
 import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.ExternalPlayer;
 import org.chesscorp.club.model.people.Player;
@@ -21,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.transaction.Transactional;
-
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
