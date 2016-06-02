@@ -16,6 +16,7 @@ import org.chesscorp.club.utilities.hash.HashManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +51,8 @@ public class BootStrapServiceImpl implements BootstrapService {
 
     @Autowired
     private PgnMarshaller pgnMarshaller;
+    @Autowired
+    private Environment environment;
 
     @Override
     @Transactional
@@ -67,8 +70,10 @@ public class BootStrapServiceImpl implements BootstrapService {
             for (int l = 1; l < 8; l++) {
                 robotRepository.save(new RobotPlayer("GnuChess Level " + l, "gnuchessAI", Integer.toString(l)));
                 robotRepository.save(new RobotPlayer("Phalanx Level " + l, "phalanxAI", Integer.toString(l)));
-                // This should only occur if the ai-crafty profile is set
-                // robotRepository.save(new RobotPlayer("Crafty Level " + l, "craftyAI", Integer.toString(l)));
+                if (environment.acceptsProfiles("ai-crafty")) {
+                    // This should only occur if the ai-crafty profile is set
+                    robotRepository.save(new RobotPlayer("Crafty Level " + l, "craftyAI", Integer.toString(l)));
+                }
             }
 
             logger.info("Creating sample players");
