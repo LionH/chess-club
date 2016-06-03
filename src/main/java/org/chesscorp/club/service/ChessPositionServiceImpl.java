@@ -15,10 +15,6 @@ import org.chesscorp.club.persistence.ChessGameRepository;
 import org.chesscorp.club.persistence.ChessMoveRepository;
 import org.chesscorp.club.persistence.ChessMoveToPositionRepository;
 import org.chesscorp.club.persistence.ChessPositionRepository;
-import org.ehcache.UserManagedCache;
-import org.ehcache.UserManagedCacheBuilder;
-import org.ehcache.config.ResourcePoolsBuilder;
-import org.ehcache.config.units.EntryUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,27 +64,14 @@ public class ChessPositionServiceImpl implements ChessPositionService {
             lastMoveId = lastProcessedMove.getChessMoveId();
         }
 
-        UserManagedCache<Long, ChessPosition> positionCache =
-                UserManagedCacheBuilder.newUserManagedCacheBuilder(Long.class, ChessPosition.class)
-                        .withResourcePools(ResourcePoolsBuilder.newResourcePoolsBuilder()
-                                .heap(1000L, EntryUnit.ENTRIES))
-                        .build(true);
-
         long movesProcessedCount = chessMoveRepository.findAllByIdGreaterThan(lastMoveId).map(m -> {
             ChessGame game = m.getGame();
 
             try {
                 ChessPosition position = chessRules.getInitialPosition();
                 for (ChessMove move : game.getMoves()) {
-                    ChessPosition cachedPosition = positionCache.get(move.getId());
-
-                    if (cachedPosition == null) {
-                        ChessMovePath path = pgnMarshaller.convertPgnToMove(position, move.getPgn());
-                        position = ChessHelper.applyMoveAndSwitch(chessRules, position, path);
-                        positionCache.put(move.getId(), position);
-                    } else {
-                        position = cachedPosition;
-                    }
+                    ChessMovePath path = pgnMarshaller.convertPgnToMove(position, move.getPgn());
+                    position = ChessHelper.applyMoveAndSwitch(chessRules, position, path);
 
                     if (move.getId().equals(m.getId())) {
                         break;
@@ -110,8 +93,6 @@ public class ChessPositionServiceImpl implements ChessPositionService {
                 throw new IllegalStateException("Failed to parse game " + game.getId(), chessEx);
             }
         }).collect(Collectors.counting());
-
-        positionCache.close();
 
         return movesProcessedCount;
     }

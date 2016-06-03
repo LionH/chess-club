@@ -84,7 +84,7 @@ public class ChessOpeningsServiceImpl implements ChessOpeningsService {
             }
 
 
-            logger.debug("Opening {} registered as {}", openingName, gameModel.getMoves());
+            logger.trace("Opening {} registered as {}", openingName, gameModel.getMoves());
 
             node.setName(openingName);
 
