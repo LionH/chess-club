@@ -20,9 +20,9 @@ import java.util.ArrayList;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @Rollback
-public class ChessRobotServiceTest {
+public class ChessRobotServiceImplTest {
 
-    private Logger logger = LoggerFactory.getLogger(ChessRobotServiceTest.class);
+    private Logger logger = LoggerFactory.getLogger(ChessRobotServiceImplTest.class);
 
     @Autowired
     private ChessRobotService chessRobotService;

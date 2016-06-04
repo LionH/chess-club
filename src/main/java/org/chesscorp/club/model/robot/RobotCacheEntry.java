@@ -1,36 +1,39 @@
 package org.chesscorp.club.model.robot;
 
-import org.chesscorp.club.model.people.RobotPlayer;
-import org.chesscorp.club.model.stats.ChessClubPosition;
-
 import javax.persistence.*;
 
 /**
  * Chess position reference.
  */
 @Entity
-@Table(name = "robotcache")
+@Table(name = "robotcache", indexes = {
+        @Index(columnList = "engine,parameters,position", unique = true)
+})
 @SequenceGenerator(name = "robotcache_seq", initialValue = 1, allocationSize = 1, sequenceName = "robotcache_seq")
 public class RobotCacheEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "robotcache_seq")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private RobotPlayer robotPlayer;
+    @Column(length = 16, nullable = false)
+    private String engine;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private ChessClubPosition chessClubPosition;
+    @Column(length = 64, nullable = false)
+    private String parameters;
 
-    @Column(length = 12)
+    @Column(length = 70, nullable = false)
+    private String position;
+
+    @Column(length = 12, nullable = true)
     private String pgnMoveText;
 
     public RobotCacheEntry() {
     }
 
-    public RobotCacheEntry(RobotPlayer robotPlayer, ChessClubPosition chessClubPosition, String pgnMoveText) {
-        this.robotPlayer = robotPlayer;
-        this.chessClubPosition = chessClubPosition;
+    public RobotCacheEntry(String engine, String parameters, String position, String pgnMoveText) {
+        this.engine = engine;
+        this.parameters = parameters;
+        this.position = position;
         this.pgnMoveText = pgnMoveText;
     }
 
@@ -38,12 +41,16 @@ public class RobotCacheEntry {
         return id;
     }
 
-    public RobotPlayer getRobotPlayer() {
-        return robotPlayer;
+    public String getEngine() {
+        return engine;
     }
 
-    public ChessClubPosition getChessClubPosition() {
-        return chessClubPosition;
+    public String getParameters() {
+        return parameters;
+    }
+
+    public String getPosition() {
+        return position;
     }
 
     public String getPgnMoveText() {
@@ -54,8 +61,9 @@ public class RobotCacheEntry {
     public String toString() {
         return "RobotCacheEntry{" +
                 "id=" + id +
-                ", robotPlayer=" + robotPlayer +
-                ", chessClubPosition=" + chessClubPosition +
+                ", engine='" + engine + '\'' +
+                ", parameters='" + parameters + '\'' +
+                ", position='" + position + '\'' +
                 ", pgnMoveText='" + pgnMoveText + '\'' +
                 '}';
     }

@@ -12,7 +12,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
 /**
- * Hash management for password management.
+ * Hash management for passwords.
  */
 @Component
 public class HashManager {

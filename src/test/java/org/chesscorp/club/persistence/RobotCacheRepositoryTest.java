@@ -7,7 +7,6 @@ import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.model.people.RobotPlayer;
 import org.chesscorp.club.model.robot.RobotCacheEntry;
-import org.chesscorp.club.model.stats.ChessClubPosition;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,11 +48,10 @@ public class RobotCacheRepositoryTest {
 
         String moveText = "e4";
         ChessPosition position = chessRules.getInitialPosition();
-        ChessClubPosition clubPosition = new ChessClubPosition(positionMarshaller.convertPositionToString(position));
-        clubPosition = positionRepository.save(clubPosition);
+        String positionString = positionMarshaller.convertPositionToString(position);
 
         RobotPlayer player = robotRepository.save(new RobotPlayer("Robot", "basicengine", "{}"));
-        RobotCacheEntry cacheEntry = new RobotCacheEntry(player, clubPosition, moveText);
+        RobotCacheEntry cacheEntry = new RobotCacheEntry(player.getEngine(), player.getParameters(), positionString, moveText);
         robotCacheRepository.save(cacheEntry);
 
         Assertions.assertThat(robotCacheRepository.findAll()).hasSize(1);

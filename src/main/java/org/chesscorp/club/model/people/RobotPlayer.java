@@ -20,13 +20,21 @@ public class RobotPlayer extends RegisteredPlayer {
     @Column(length = 64)
     private String parameters;
 
+    @Column
+    private boolean cacheable;
+
     public RobotPlayer() {
     }
 
     public RobotPlayer(String displayName, String engine, String parameters) {
+        this(displayName, engine, parameters, false);
+    }
+
+    public RobotPlayer(String displayName, String engine, String parameters, boolean cacheable) {
         super(displayName, OffsetDateTime.now());
         this.engine = engine;
         this.parameters = parameters;
+        this.cacheable = cacheable;
     }
 
     public String getEngine() {
@@ -35,6 +43,10 @@ public class RobotPlayer extends RegisteredPlayer {
 
     public String getParameters() {
         return parameters;
+    }
+
+    public boolean isCacheable() {
+        return cacheable;
     }
 
     @Override

@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface RobotCacheRepository extends JpaRepository<RobotCacheEntry, Long> {
 
+    RobotCacheEntry findOneByEngineAndParametersAndPosition(String engine, String parameters, String position);
 }

@@ -6,8 +6,7 @@
         </encoder>
     </appender>
 
-    <!--<logger name="org.chesscorp" level="DEBUG"/>-->
-    <!--<logger name="org.chesscorp.club.service.ChessPositionServiceImpl" level="TRACE"/>-->
+    <logger name="org.chesscorp" level="OFF"/>
 
     <root level="OFF">
         <appender-ref ref="STDOUT" />
