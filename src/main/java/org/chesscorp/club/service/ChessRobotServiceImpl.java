@@ -26,6 +26,11 @@ public class ChessRobotServiceImpl implements ChessRobotService {
             throw new IllegalStateException("Unknwown AI: " + robotPlayer.getEngine() + " for robotPlayer " + robotPlayer.getId());
         }
 
+        // If game is over, directly return null instead of invoking the AI
+        if (!moves.isEmpty() && moves.get(moves.size() - 1).endsWith("#")) {
+            return null;
+        }
+
         String robotMove = ai.computeNextMove(robotPlayer.getParameters(), moves);
 
         return robotMove;
