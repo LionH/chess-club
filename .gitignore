@@ -4,3 +4,4 @@
 /.idea/
 /src/main/webapp/
 /import/
+*.log
