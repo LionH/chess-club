@@ -8,9 +8,11 @@ import org.chesscorp.club.monitoring.PerformanceMonitor;
 import org.chesscorp.club.service.ChessGameService;
 import org.chesscorp.club.service.ChessPositionService;
 import org.chesscorp.club.service.ChessRobotService;
+import org.chesscorp.club.service.MessagingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,10 @@ public class GameUpdateListener {
     private ChessRobotService chessRobotService;
     @Autowired
     private ChessGameService chessGameService;
+    @Autowired
+    private MessagingService messagingService;
+    @Value("${ai.prepare.halfMoves:4}")
+    private int halfMoves;
 
     @JmsListener(destination = "chess-game-update")
     @Transactional
@@ -65,7 +71,11 @@ public class GameUpdateListener {
                     .collect(Collectors.toList());
 
             String robotMove = chessRobotService.play(robotPlayer, moves);
-            chessGameService.move(game, robotMove);
+            if (robotMove != null) {
+                moves.add(robotMove);
+                game = chessGameService.move(game, robotMove);
+                messagingService.notifyPrepareRobot(robotPlayer, moves, halfMoves);
+            }
         }
 
         return game;
