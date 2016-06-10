@@ -55,6 +55,6 @@ public class RobotPreparationListener {
             moves.add(move);
         }
 
-        performanceMonitor.register("robots", "prepare", robotPreparationQuery.getHalfMoves(), "move");
+        performanceMonitor.register("RobotPreparationListener", "prepare", robotPreparationQuery.getHalfMoves(), "move");
     }
 }
