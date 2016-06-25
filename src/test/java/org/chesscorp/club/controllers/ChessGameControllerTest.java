@@ -6,7 +6,6 @@ import org.chesscorp.club.exception.ChessClubException;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.game.ChessMove;
 import org.chesscorp.club.model.people.Player;
-import org.chesscorp.club.persistence.PlayerRepository;
 import org.chesscorp.club.service.AuthenticationService;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -42,9 +41,6 @@ public class ChessGameControllerTest {
 
     @Autowired
     private AuthenticationService authenticationService;
-
-    @Autowired
-    private PlayerRepository playerRepository;
 
     @Test
     public void testEmptyMvcController() throws Exception {

@@ -17,4 +17,5 @@ public interface ChessRobotService {
      * @return the robot move in pgn movetext, or null if no move was available.
      */
     String play(RobotPlayer robotPlayer, List<String> moves);
+
 }

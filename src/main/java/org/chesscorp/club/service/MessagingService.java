@@ -25,4 +25,11 @@ public interface MessagingService {
      * @param halfMoves   the preparation depth.
      */
     void notifyPrepareRobot(RobotPlayer robotPlayer, List<String> moves, int halfMoves);
+
+    /**
+     * A chess position has been created. It should be post-processed by a dedicated listener.
+     *
+     * @param id the identifier of the new position
+     */
+    void notifyPositionCreated(Long id);
 }

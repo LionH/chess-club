@@ -13,9 +13,14 @@ public class ChessClubPosition {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chessposition_seq")
     private Long id;
 
-    @Column(length = 70, unique = true)
+    @Column(length = 70, unique = true, nullable = false)
     private String text;
 
+    @Column(nullable = true)
+    private Integer score;
+
+    @Column(length = 128, nullable = true)
+    private String expected;
 
     public ChessClubPosition() {
     }
@@ -32,11 +37,29 @@ public class ChessClubPosition {
         return text;
     }
 
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+    public String getExpected() {
+        return expected;
+    }
+
+    public void setExpected(String expected) {
+        this.expected = expected;
+    }
+
     @Override
     public String toString() {
         return "ChessClubPosition{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
+                ", score=" + score +
+                ", expected='" + expected + '\'' +
                 '}';
     }
 }

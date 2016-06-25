@@ -40,7 +40,7 @@ public class GameUpdateListener {
     @Value("${ai.prepare.halfMoves:4}")
     private int halfMoves;
 
-    @JmsListener(destination = "chess-game-update")
+    @JmsListener(destination = "chess-game-updated")
     @Transactional
     public void gameUpdated(Long gameId) {
         logger.debug("Game {} updated", gameId);

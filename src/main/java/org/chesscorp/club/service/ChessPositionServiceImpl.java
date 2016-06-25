@@ -47,6 +47,8 @@ public class ChessPositionServiceImpl implements ChessPositionService {
     @Autowired
     private PgnMarshaller pgnMarshaller;
     @Autowired
+    private MessagingService messagingService;
+    @Autowired
     @Qualifier("fixed")
     private PositionMarshaller positionMarshaller;
 
@@ -84,6 +86,7 @@ public class ChessPositionServiceImpl implements ChessPositionService {
                 ChessClubPosition clubPosition = chessPositionRepository.findOneByText(positionText);
                 if (clubPosition == null) {
                     clubPosition = chessPositionRepository.saveAndFlush(new ChessClubPosition(positionText));
+                    messagingService.notifyPositionCreated(clubPosition.getId());
                 }
 
                 chessMoveToPositionRepository.saveAndFlush(new ChessMoveToPosition(m.getId(), clubPosition));
@@ -117,6 +120,7 @@ public class ChessPositionServiceImpl implements ChessPositionService {
                     ChessClubPosition clubPosition = chessPositionRepository.findOneByText(positionText);
                     if (clubPosition == null) {
                         clubPosition = chessPositionRepository.saveAndFlush(new ChessClubPosition(positionText));
+                        messagingService.notifyPositionCreated(clubPosition.getId());
                     }
 
                     chessMoveToPositionRepository.saveAndFlush(new ChessMoveToPosition(move.getId(), clubPosition));
@@ -164,6 +168,7 @@ public class ChessPositionServiceImpl implements ChessPositionService {
 
         if (position == null) {
             position = chessPositionRepository.save(new ChessClubPosition(positionText));
+            messagingService.notifyPositionCreated(position.getId());
         }
 
         return position;

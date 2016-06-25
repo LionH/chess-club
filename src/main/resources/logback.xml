@@ -19,6 +19,7 @@
     </appender>
 
     <logger name="org.chesscorp" level="INFO"/>
+    <logger name="org.chesscorp.club.monitoring.PerformanceMonitorImpl" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

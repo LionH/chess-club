@@ -25,7 +25,7 @@ public class MessagingServiceImpl implements MessagingService {
      */
     @Override
     public void notifyGameUpdated(ChessGame game) {
-        jmsTemplate.send("chess-game-update", session -> {
+        jmsTemplate.send("chess-game-updated", session -> {
             return session.createObjectMessage(game.getId());
         });
     }
@@ -36,6 +36,13 @@ public class MessagingServiceImpl implements MessagingService {
             return session.createObjectMessage(new RobotPreparationQuery(
                     robotPlayer.getId(), moves, halfMoves
             ));
+        });
+    }
+
+    @Override
+    public void notifyPositionCreated(Long id) {
+        jmsTemplate.send("chess-position-created", session -> {
+            return session.createObjectMessage(id);
         });
     }
 
