@@ -3,10 +3,13 @@ jdk:
 - oraclejdk8
 before_install:
 - sudo apt-get update -qq
-- sudo apt-get install -y gnuchess phalanx crafty
-- sudo ln -sf /usr/games/gnuchess /usr/bin/gnuchess
+- sudo apt-get install -y phalanx crafty
 - sudo ln -sf /usr/games/phalanx /usr/bin/phalanx
 - sudo ln -sf /usr/games/crafty /usr/bin/crafty
+- wget http://ftp.gnu.org/gnu/chess/gnuchess-6.2.2.tar.gz
+- tar xvfz gnuchess-6.2.2.tar.gz
+- pushd gnuchess-6.2.2 && ./configure && make && popd
+- sudo ln -sf $PWD/gnuchess-6.2.2/src/gnuchess /usr/bin/gnuchess
 after_success:
 - mkdir deploy
 - mv target/chess-club-${TRAVIS_TAG}.jar deploy/
