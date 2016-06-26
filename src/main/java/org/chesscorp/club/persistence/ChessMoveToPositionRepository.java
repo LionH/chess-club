@@ -14,5 +14,11 @@ public interface ChessMoveToPositionRepository extends JpaRepository<ChessMoveTo
      */
     ChessMoveToPosition findFirstByOrderByChessMoveIdDesc();
 
+    /**
+     * Find 10 distinct moves for a given position ID.
+     *
+     * @param positionId an existing position ID
+     * @return a collection of distinct moves
+     */
     List<ChessMoveToPosition> findFirst10ByChessClubPositionId(Long positionId);
 }

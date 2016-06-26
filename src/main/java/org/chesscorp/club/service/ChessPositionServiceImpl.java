@@ -7,6 +7,8 @@ import org.alcibiade.chess.persistence.PgnMarshaller;
 import org.alcibiade.chess.persistence.PositionMarshaller;
 import org.alcibiade.chess.rules.ChessHelper;
 import org.alcibiade.chess.rules.ChessRules;
+import org.chesscorp.club.dto.ChessAnalysis;
+import org.chesscorp.club.dto.ChessAnalysisMove;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.game.ChessMove;
 import org.chesscorp.club.model.stats.ChessClubPosition;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Position management implementations.
@@ -172,5 +175,38 @@ public class ChessPositionServiceImpl implements ChessPositionService {
         }
 
         return position;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ChessAnalysis getGameAnalysis(Number gameId) {
+        ChessGame game = chessGameRepository.findOne(gameId.longValue());
+        if (game == null) {
+            return null;
+        }
+
+        List<ChessAnalysisMove> movesAnalysis = IntStream.range(0, game.getMoves().size())
+                .mapToObj(moveIndex -> {
+                    ChessMove move = game.getMoves().get(moveIndex);
+                    ChessMoveToPosition moveToPosition = chessMoveToPositionRepository.findOne(move.getId());
+                    ChessClubPosition chessPosition = moveToPosition.getChessPosition();
+
+                    if (chessPosition == null || chessPosition.getScore() == null) {
+                        return null;
+                    }
+
+                    ChessAnalysisMove moveAnalysis = new ChessAnalysisMove(
+                            move.getId(),
+                            moveIndex,
+                            chessPosition.getScore(),
+                            chessPosition.getExpected()
+                    );
+
+                    return moveAnalysis;
+                })
+                .filter(ma -> (ma != null))
+                .collect(Collectors.toList());
+
+        return new ChessAnalysis(game.getId(), movesAnalysis);
     }
 }

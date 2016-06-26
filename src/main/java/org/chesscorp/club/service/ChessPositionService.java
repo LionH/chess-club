@@ -1,5 +1,6 @@
 package org.chesscorp.club.service;
 
+import org.chesscorp.club.dto.ChessAnalysis;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.stats.ChessClubPosition;
 
@@ -40,4 +41,12 @@ public interface ChessPositionService {
      * @return a position object from the repository
      */
     ChessClubPosition findOrCreatePosition(String positionText);
+
+    /**
+     * Get game analysis information
+     *
+     * @param gameId identifier of a game
+     * @return an analysis model
+     */
+    ChessAnalysis getGameAnalysis(Number gameId);
 }
