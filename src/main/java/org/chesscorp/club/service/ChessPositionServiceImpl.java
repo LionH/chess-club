@@ -189,6 +189,11 @@ public class ChessPositionServiceImpl implements ChessPositionService {
                 .mapToObj(moveIndex -> {
                     ChessMove move = game.getMoves().get(moveIndex);
                     ChessMoveToPosition moveToPosition = chessMoveToPositionRepository.findOne(move.getId());
+
+                    if (moveToPosition == null) {
+                        return null;
+                    }
+
                     ChessClubPosition chessPosition = moveToPosition.getChessPosition();
 
                     if (chessPosition == null || chessPosition.getScore() == null) {
