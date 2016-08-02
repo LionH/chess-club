@@ -1,7 +1,6 @@
 FROM ubuntu:16.04
 
-RUN apt-get update
-RUN apt-get install -y nmon htop openjdk-8-jdk maven phalanx gnuchess
+RUN apt-get update && apt-get install -y nmon htop openjdk-8-jdk maven phalanx gnuchess
 RUN update-ca-certificates -f
 RUN ln -s /usr/games/gnuchess /usr/bin/gnuchess
 RUN ln -s /usr/games/phalanx /usr/bin/phalanx
