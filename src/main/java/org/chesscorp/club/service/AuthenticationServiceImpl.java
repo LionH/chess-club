@@ -7,11 +7,14 @@ import org.chesscorp.club.model.people.Account;
 import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.model.people.Session;
+import org.chesscorp.club.model.token.Token;
+import org.chesscorp.club.model.token.TokenType;
 import org.chesscorp.club.persistence.AccountRepository;
 import org.chesscorp.club.persistence.PlayerRepository;
 import org.chesscorp.club.persistence.SessionRepository;
 import org.chesscorp.club.utilities.hash.GravatarHashManager;
 import org.chesscorp.club.utilities.hash.HashManager;
+import org.chesscorp.club.utilities.token.TokenGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.UUID;
 
 /**
  * Authentication mechanisms based on account/player repositories.
@@ -43,6 +45,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private GravatarHashManager gravatarHashManager;
+
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private TokenGenerator tokenGenerator;
 
     @PostConstruct
     private void hashClearTextPasswords() {
@@ -72,6 +83,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Player p = playerRepository.save(new ClubPlayer(displayName, avatarHash));
         Account a = accountRepository.save(new Account(email, salt, passwordHash, p));
         logger.info("Account {} created for player {}", a, p);
+
+        Token token = tokenService.registerToken(TokenType.ACCOUNT_VALIDATION, a.getIdentifier(), 30);
+        mailService.sendAccountValidationLink(displayName, email, token.getText());
     }
 
     @Override
@@ -79,7 +93,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public String signin(String email, String password) {
         Account account = getAccount(email, password);
 
-        String token = UUID.randomUUID().toString();
+        String token = tokenGenerator.generateToken();
         sessionRepository.save(new Session(token, account));
 
         return token;

@@ -9,47 +9,54 @@ import org.springframework.mail.MailParseException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.Locale;
 
 /**
  * A JavaMail SMTP sender implementation.
  */
 @Component
 @Profile("mail")
-public class MailServiceSmtp {
+public class MailServiceSmtp implements MailService {
     private Logger logger = LoggerFactory.getLogger(MailServiceSmtp.class);
 
     private String sender;
-    private String recipient;
     private JavaMailSender mailSender;
+    private SpringTemplateEngine templateEngine;
 
     @Autowired
     public MailServiceSmtp(JavaMailSender mailSender,
-                           @Value("${pan-discovery.reports.recipient}") String recipient,
-                           @Value("${pan-discovery.reports.sender}") String sender) {
+                           @Value("${pan-discovery.reports.sender}") String sender,
+                           SpringTemplateEngine templateEngine) {
         this.sender = sender;
         this.mailSender = mailSender;
-        this.recipient = recipient;
+        this.templateEngine = templateEngine;
     }
 
-    public void sendAccountValidationToken() {
+    @Override
+    public void sendAccountValidationLink(String recipientName, String recipientAddress, String validationToken) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setTo(this.recipient);
+            helper.setTo(recipientAddress);
             helper.setFrom(sender);
             helper.setSubject("...");
-            helper.setText("....");
 
+            Locale locale = Locale.getDefault();
+            Context ctx = new Context(locale);
+            ctx.setVariable("name", recipientName);
+            ctx.setVariable("token", validationToken);
 
-            // FileSystemResource fileSystemResource = new FileSystemResource(reportFile);
-            // helper.addAttachment(fileSystemResource.getFilename(), fileSystemResource);
+            String htmlContent = this.templateEngine.process("email-account-validation.html", ctx);
+            helper.setText(htmlContent, true); // true = isHtml
 
             this.mailSender.send(message);
-            logger.info("Reports sent to {}", recipient);
+            logger.info("Account validation token sent to {}", recipientAddress);
         } catch (MessagingException e) {
             throw new MailParseException(e);
         }
