@@ -25,25 +25,19 @@ public class MessagingServiceImpl implements MessagingService {
      */
     @Override
     public void notifyGameUpdated(ChessGame game) {
-        jmsTemplate.send("chess-game-updated", session -> {
-            return session.createObjectMessage(game.getId());
-        });
+        jmsTemplate.send("chess-game-updated", session -> session.createObjectMessage(game.getId()));
     }
 
     @Override
     public void notifyPrepareRobot(RobotPlayer robotPlayer, List<String> moves, int halfMoves) {
-        jmsTemplate.send("robot-prepare", session -> {
-            return session.createObjectMessage(new RobotPreparationQuery(
-                    robotPlayer.getId(), moves, halfMoves
-            ));
-        });
+        jmsTemplate.send("robot-prepare", session -> session.createObjectMessage(new RobotPreparationQuery(
+                robotPlayer.getId(), moves, halfMoves
+        )));
     }
 
     @Override
     public void notifyPositionCreated(Long id) {
-        jmsTemplate.send("chess-position-created", session -> {
-            return session.createObjectMessage(id);
-        });
+        jmsTemplate.send("chess-position-created", session -> session.createObjectMessage(id));
     }
 
 }

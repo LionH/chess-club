@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by yk on 23/09/15.
+ * Test some features of the CORS filter behavior.
  */
 
 public class CorsFilterTest {
