@@ -6,10 +6,9 @@ import org.chesscorp.club.exception.AuthenticationFailedException;
 import org.chesscorp.club.exception.NotAuthenticatedException;
 import org.chesscorp.club.model.people.ClubPlayer;
 import org.chesscorp.club.model.people.Session;
+import org.chesscorp.club.persistence.TokenRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.Rollback;
@@ -20,15 +19,18 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringApplicationConfiguration(classes = Application.class)
 @Rollback
 public class AuthenticationServiceTest {
-    private Logger logger = LoggerFactory.getLogger(AuthenticationServiceTest.class);
 
     @Autowired
     private AuthenticationService authenticationService;
+
+    @Autowired
+    private TokenRepository tokenRepository;
 
     @Test(expected = NotAuthenticatedException.class)
     @Transactional
     public void testRegistration() {
         authenticationService.signup("alcibiade@alcibiade.org", "password", "Alcibiade");
+        Assertions.assertThat(tokenRepository.findAll()).hasSize(1);
         String token = authenticationService.signin("alcibiade@alcibiade.org", "password");
 
         Session session = authenticationService.getSession(token);
