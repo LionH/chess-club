@@ -30,7 +30,7 @@ public class MailServiceSmtp implements MailService {
 
     @Autowired
     public MailServiceSmtp(JavaMailSender mailSender,
-                           @Value("${pan-discovery.reports.sender}") String sender,
+                           @Value("${chesscorp.mail.sender}") String sender,
                            SpringTemplateEngine templateEngine) {
         this.sender = sender;
         this.mailSender = mailSender;
@@ -52,7 +52,7 @@ public class MailServiceSmtp implements MailService {
             ctx.setVariable("name", recipientName);
             ctx.setVariable("token", validationToken);
 
-            String htmlContent = this.templateEngine.process("email-account-validation.html", ctx);
+            String htmlContent = this.templateEngine.process("email-account-validation", ctx);
             helper.setText(htmlContent, true); // true = isHtml
 
             this.mailSender.send(message);
