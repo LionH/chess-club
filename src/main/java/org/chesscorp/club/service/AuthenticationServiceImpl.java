@@ -31,29 +31,36 @@ import javax.annotation.PostConstruct;
 public class AuthenticationServiceImpl implements AuthenticationService {
     private Logger logger = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
 
-    @Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
     private PlayerRepository playerRepository;
 
-    @Autowired
     private SessionRepository sessionRepository;
 
-    @Autowired
     private HashManager hashManager;
 
-    @Autowired
     private GravatarHashManager gravatarHashManager;
 
-    @Autowired
     private MailService mailService;
 
-    @Autowired
     private TokenService tokenService;
 
-    @Autowired
     private TokenGenerator tokenGenerator;
+
+    @Autowired
+    public AuthenticationServiceImpl(AccountRepository accountRepository, PlayerRepository playerRepository,
+                                     SessionRepository sessionRepository, HashManager hashManager,
+                                     GravatarHashManager gravatarHashManager, MailService mailService,
+                                     TokenService tokenService, TokenGenerator tokenGenerator) {
+        this.accountRepository = accountRepository;
+        this.playerRepository = playerRepository;
+        this.sessionRepository = sessionRepository;
+        this.hashManager = hashManager;
+        this.gravatarHashManager = gravatarHashManager;
+        this.mailService = mailService;
+        this.tokenService = tokenService;
+        this.tokenGenerator = tokenGenerator;
+    }
 
     @PostConstruct
     private void hashClearTextPasswords() {

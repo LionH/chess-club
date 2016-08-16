@@ -15,8 +15,13 @@ import java.util.List;
 @Component
 public class MessagingServiceImpl implements MessagingService {
 
-    @Autowired
     private JmsTemplate jmsTemplate;
+
+    @Autowired
+    public MessagingServiceImpl(JmsTemplate jmsTemplate) {
+        this.jmsTemplate = jmsTemplate;
+    }
+
 
     /**
      * Notify game update on messaging bus.

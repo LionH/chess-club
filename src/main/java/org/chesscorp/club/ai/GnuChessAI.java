@@ -14,8 +14,12 @@ import java.util.List;
 @Component("gnuchessAI")
 public class GnuChessAI implements ChessAI {
 
-    @Autowired
     private GnuChessEngineImpl gnuChessEngine;
+
+    @Autowired
+    public GnuChessAI(GnuChessEngineImpl gnuChessEngine) {
+        this.gnuChessEngine = gnuChessEngine;
+    }
 
     @Override
     public String computeNextMove(String options, List<String> pgnMoves) throws PgnMoveException, IllegalMoveException {

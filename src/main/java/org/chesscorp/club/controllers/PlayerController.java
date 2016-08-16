@@ -21,8 +21,12 @@ import java.util.List;
 public class PlayerController {
     private Logger logger = LoggerFactory.getLogger(PlayerController.class);
 
-    @Autowired
     private PlayerService playerService;
+
+    @Autowired
+    public PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
+    }
 
     @Transactional(readOnly = true)
     @RequestMapping(value = "/search", method = RequestMethod.POST)

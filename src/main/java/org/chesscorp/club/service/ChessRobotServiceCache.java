@@ -26,19 +26,23 @@ import java.util.List;
 @Primary
 public class ChessRobotServiceCache implements ChessRobotService {
     private Logger logger = LoggerFactory.getLogger(ChessRobotServiceCache.class);
-    @Autowired
     private RobotCacheRepository robotCacheRepository;
+    private ChessRules chessRules;
+    private PgnMarshaller pgnMarshaller;
+    private PositionMarshaller positionMarshaller;
+    private ChessRobotService directService;
 
     @Autowired
-    private ChessRules chessRules;
-    @Autowired
-    private PgnMarshaller pgnMarshaller;
-    @Autowired
-    @Qualifier("fixed")
-    private PositionMarshaller positionMarshaller;
-    @Autowired
-    @Qualifier("direct")
-    private ChessRobotService directService;
+    public ChessRobotServiceCache(RobotCacheRepository robotCacheRepository, ChessRules chessRules,
+                                  PgnMarshaller pgnMarshaller,
+                                  @Qualifier("fixed") PositionMarshaller positionMarshaller,
+                                  @Qualifier("direct") ChessRobotService directService) {
+        this.robotCacheRepository = robotCacheRepository;
+        this.chessRules = chessRules;
+        this.pgnMarshaller = pgnMarshaller;
+        this.positionMarshaller = positionMarshaller;
+        this.directService = directService;
+    }
 
     @Override
     @Transactional

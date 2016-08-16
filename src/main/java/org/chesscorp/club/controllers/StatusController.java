@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/status")
 public class StatusController {
-    @Autowired
     private ServerStatusService serverStatusService;
+
+    @Autowired
+    public StatusController(ServerStatusService serverStatusService) {
+        this.serverStatusService = serverStatusService;
+    }
 
     @Transactional(readOnly = true)
     @RequestMapping(value = "/release", method = RequestMethod.GET)

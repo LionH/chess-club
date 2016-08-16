@@ -37,23 +37,31 @@ import java.util.stream.IntStream;
 public class ChessPositionServiceImpl implements ChessPositionService {
     private static final List<ChessGame> EMPTY_GAMES_LIST = new ArrayList<>();
     private Logger logger = LoggerFactory.getLogger(ChessPositionServiceImpl.class);
-    @Autowired
     private ChessPositionRepository chessPositionRepository;
-    @Autowired
     private ChessGameRepository chessGameRepository;
-    @Autowired
     private ChessMoveToPositionRepository chessMoveToPositionRepository;
-    @Autowired
     private ChessMoveRepository chessMoveRepository;
-    @Autowired
     private ChessRules chessRules;
-    @Autowired
     private PgnMarshaller pgnMarshaller;
-    @Autowired
     private MessagingService messagingService;
-    @Autowired
-    @Qualifier("fixed")
     private PositionMarshaller positionMarshaller;
+
+    @Autowired
+    public ChessPositionServiceImpl(ChessPositionRepository chessPositionRepository,
+                                    ChessGameRepository chessGameRepository,
+                                    ChessMoveToPositionRepository chessMoveToPositionRepository,
+                                    ChessMoveRepository chessMoveRepository, ChessRules chessRules,
+                                    PgnMarshaller pgnMarshaller, MessagingService messagingService,
+                                    @Qualifier("fixed") PositionMarshaller positionMarshaller) {
+        this.chessPositionRepository = chessPositionRepository;
+        this.chessGameRepository = chessGameRepository;
+        this.chessMoveToPositionRepository = chessMoveToPositionRepository;
+        this.chessMoveRepository = chessMoveRepository;
+        this.chessRules = chessRules;
+        this.pgnMarshaller = pgnMarshaller;
+        this.messagingService = messagingService;
+        this.positionMarshaller = positionMarshaller;
+    }
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)

@@ -16,8 +16,12 @@ import java.util.List;
 @Profile("ai-crafty")
 public class CraftyAI implements ChessAI {
 
-    @Autowired
     private CraftyEngineImpl craftyEngine;
+
+    @Autowired
+    public CraftyAI(CraftyEngineImpl craftyEngine) {
+        this.craftyEngine = craftyEngine;
+    }
 
     @Override
     public String computeNextMove(String options, List<String> pgnMoves) throws PgnMoveException, IllegalMoveException {

@@ -23,14 +23,16 @@ import java.util.List;
 public class RobotPreparationListener {
     private Logger logger = LoggerFactory.getLogger(RobotPreparationListener.class);
 
-    @Autowired
     private ChessRobotService chessRobotService;
-
-    @Autowired
     private PlayerService playerService;
+    private PerformanceMonitor performanceMonitor;
 
     @Autowired
-    private PerformanceMonitor performanceMonitor;
+    public RobotPreparationListener(ChessRobotService chessRobotService, PlayerService playerService, PerformanceMonitor performanceMonitor) {
+        this.chessRobotService = chessRobotService;
+        this.playerService = playerService;
+        this.performanceMonitor = performanceMonitor;
+    }
 
     @JmsListener(destination = "robot-prepare")
     @Transactional

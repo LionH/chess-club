@@ -22,8 +22,12 @@ import java.util.List;
 public class ChessStatsController {
     private Logger logger = LoggerFactory.getLogger(ChessStatsController.class);
 
-    @Autowired
     private ChessPositionService chessPositionService;
+
+    @Autowired
+    public ChessStatsController(ChessPositionService chessPositionService) {
+        this.chessPositionService = chessPositionService;
+    }
 
     /**
      * Search for related games.

@@ -13,10 +13,15 @@ import javax.annotation.PostConstruct;
 @Profile("bootstrap")
 public class Bootstrap {
 
-    @Autowired
     private BootstrapService bootstrapService;
-    @Autowired
     private ChessPositionService chessPositionService;
+
+    @Autowired
+    public Bootstrap(BootstrapService bootstrapService, ChessPositionService chessPositionService) {
+        this.bootstrapService = bootstrapService;
+        this.chessPositionService = chessPositionService;
+    }
+
 
     @PostConstruct
     public void init() {

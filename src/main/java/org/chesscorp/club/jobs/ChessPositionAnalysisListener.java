@@ -16,11 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChessPositionAnalysisListener {
     private Logger logger = LoggerFactory.getLogger(ChessPositionAnalysisListener.class);
 
-    @Autowired
     private ChessAnalysisService chessAnalysisService;
+    private PerformanceMonitor performanceMonitor;
 
     @Autowired
-    private PerformanceMonitor performanceMonitor;
+    public ChessPositionAnalysisListener(ChessAnalysisService chessAnalysisService,
+                                         PerformanceMonitor performanceMonitor) {
+        this.chessAnalysisService = chessAnalysisService;
+        this.performanceMonitor = performanceMonitor;
+    }
 
     @JmsListener(destination = "chess-position-created")
     @Transactional

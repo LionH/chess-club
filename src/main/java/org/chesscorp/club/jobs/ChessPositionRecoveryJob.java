@@ -17,13 +17,16 @@ public class ChessPositionRecoveryJob {
 
     private Logger logger = LoggerFactory.getLogger(ChessPositionRecoveryJob.class);
 
-    @Autowired
     private MessagingService messagingService;
-
-    @Autowired
     private ChessPositionRepository positionRepository;
 
     private boolean executed = false;
+
+    @Autowired
+    public ChessPositionRecoveryJob(MessagingService messagingService, ChessPositionRepository positionRepository) {
+        this.messagingService = messagingService;
+        this.positionRepository = positionRepository;
+    }
 
     @Scheduled(initialDelay = 10_000, fixedDelay = 3600_000)
     @Transactional

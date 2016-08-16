@@ -27,18 +27,24 @@ import java.util.stream.Collectors;
 public class GameUpdateListener {
     private Logger logger = LoggerFactory.getLogger(GameUpdateListener.class);
 
-    @Autowired
     private ChessPositionService chessPositionService;
-    @Autowired
     private PerformanceMonitor performanceMonitor;
-    @Autowired
     private ChessRobotService chessRobotService;
-    @Autowired
     private ChessGameService chessGameService;
-    @Autowired
     private MessagingService messagingService;
-    @Value("${ai.prepare.halfMoves:4}")
     private int halfMoves;
+
+    @Autowired
+    public GameUpdateListener(ChessPositionService chessPositionService, PerformanceMonitor performanceMonitor,
+                              ChessRobotService chessRobotService, ChessGameService chessGameService,
+                              MessagingService messagingService, @Value("${ai.prepare.halfMoves:4}") int halfMoves) {
+        this.chessPositionService = chessPositionService;
+        this.performanceMonitor = performanceMonitor;
+        this.chessRobotService = chessRobotService;
+        this.chessGameService = chessGameService;
+        this.messagingService = messagingService;
+        this.halfMoves = halfMoves;
+    }
 
     @JmsListener(destination = "chess-game-updated")
     @Transactional

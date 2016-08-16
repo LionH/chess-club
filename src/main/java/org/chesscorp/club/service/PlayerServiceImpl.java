@@ -24,20 +24,22 @@ import java.util.stream.Stream;
 public class PlayerServiceImpl implements PlayerService {
     private Logger logger = LoggerFactory.getLogger(PlayerServiceImpl.class);
 
-    @Autowired
     private PlayerRepository playerRepository;
-
-    @Autowired
     private RobotRepository robotRepository;
-
-    @Autowired
     private ClubPlayerRepository clubPlayerRepository;
-
-    @Autowired
     private ChessGameRepository chessGameRepository;
+    private EloRatingRepository eloRatingRepository;
 
     @Autowired
-    private EloRatingRepository eloRatingRepository;
+    public PlayerServiceImpl(PlayerRepository playerRepository, RobotRepository robotRepository,
+                             ClubPlayerRepository clubPlayerRepository, ChessGameRepository chessGameRepository,
+                             EloRatingRepository eloRatingRepository) {
+        this.playerRepository = playerRepository;
+        this.robotRepository = robotRepository;
+        this.clubPlayerRepository = clubPlayerRepository;
+        this.chessGameRepository = chessGameRepository;
+        this.eloRatingRepository = eloRatingRepository;
+    }
 
     @Override
     @Transactional(readOnly = true)

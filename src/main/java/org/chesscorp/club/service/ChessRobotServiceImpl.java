@@ -15,8 +15,12 @@ import java.util.Map;
 @Component
 @Qualifier("direct")
 public class ChessRobotServiceImpl implements ChessRobotService {
-    @Autowired
     private Map<String, ChessAI> aiMap;
+
+    @Autowired
+    public ChessRobotServiceImpl(Map<String, ChessAI> aiMap) {
+        this.aiMap = aiMap;
+    }
 
     @Override
     public String play(RobotPlayer robotPlayer, List<String> moves) {

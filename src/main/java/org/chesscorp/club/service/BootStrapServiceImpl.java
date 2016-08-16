@@ -28,31 +28,31 @@ public class BootStrapServiceImpl implements BootstrapService {
 
     private Logger logger = LoggerFactory.getLogger(BootStrapServiceImpl.class);
 
-    @Autowired
     private PlayerRepository playerRepository;
-
-    @Autowired
     private RobotRepository robotRepository;
-
-    @Autowired
     private ChessGameRepository chessGameRepository;
-
-    @Autowired
     private ChessMoveRepository chessMoveRepository;
-
-    @Autowired
     private AccountRepository accountRepository;
-
-    @Autowired
     private HashManager hashManager;
-
-    @Autowired
     private ChessRules chessRules;
+    private PgnMarshaller pgnMarshaller;
+    private Environment environment;
 
     @Autowired
-    private PgnMarshaller pgnMarshaller;
-    @Autowired
-    private Environment environment;
+    public BootStrapServiceImpl(PlayerRepository playerRepository, RobotRepository robotRepository,
+                                ChessGameRepository chessGameRepository, ChessMoveRepository chessMoveRepository,
+                                AccountRepository accountRepository, HashManager hashManager, ChessRules chessRules,
+                                PgnMarshaller pgnMarshaller, Environment environment) {
+        this.playerRepository = playerRepository;
+        this.robotRepository = robotRepository;
+        this.chessGameRepository = chessGameRepository;
+        this.chessMoveRepository = chessMoveRepository;
+        this.accountRepository = accountRepository;
+        this.hashManager = hashManager;
+        this.chessRules = chessRules;
+        this.pgnMarshaller = pgnMarshaller;
+        this.environment = environment;
+    }
 
     @Override
     @Transactional
@@ -98,7 +98,7 @@ public class BootStrapServiceImpl implements BootstrapService {
     @Override
     @Transactional
     public void fixPgnNotationInGames() {
-        chessGameRepository.findAll().stream().forEach(g -> {
+        chessGameRepository.findAll().forEach(g -> {
             ChessPosition position = chessRules.getInitialPosition();
 
             for (ChessMove move : g.getMoves()) {

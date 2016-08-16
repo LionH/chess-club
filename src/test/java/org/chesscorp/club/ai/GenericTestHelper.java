@@ -5,7 +5,6 @@ import org.alcibiade.chess.model.ChessPosition;
 import org.alcibiade.chess.persistence.PgnMarshaller;
 import org.alcibiade.chess.rules.ChessRules;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,6 @@ public class GenericTestHelper {
         this.pgnMarshaller = pgnMarshaller;
     }
 
-    @Test
     public void testAI(ChessAI ai) {
         ChessPosition initialPosition = chessRules.getInitialPosition();
         Set<ChessMovePath> availableMoves = chessRules.getAvailableMoves(initialPosition);

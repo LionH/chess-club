@@ -20,8 +20,12 @@ public class AuthenticationController {
     public static final String AUTHENTICATION_TOKEN = "AUTH_TOKEN";
     private Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
-    @Autowired
     private AuthenticationService authenticationService;
+
+    @Autowired
+    public AuthenticationController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @Transactional
     @RequestMapping(value = "/signup", method = RequestMethod.POST)

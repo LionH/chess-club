@@ -28,16 +28,21 @@ public class PgnImportProcessor {
 
     private Logger logger = LoggerFactory.getLogger(PgnImportProcessor.class);
 
-    @Autowired
     private ChessGameService chessGameService;
-
-    @Autowired
     private ChessPositionService chessPositionService;
-
-    @Autowired
     private PerformanceMonitor performanceMonitor;
 
     private boolean updatePositionRepository = true;
+
+    @Autowired
+    public PgnImportProcessor(ChessGameService chessGameService,
+                              ChessPositionService chessPositionService,
+                              PerformanceMonitor performanceMonitor) {
+        this.chessGameService = chessGameService;
+        this.chessPositionService = chessPositionService;
+        this.performanceMonitor = performanceMonitor;
+    }
+
 
     public void setUpdatePositionRepository(boolean updatePositionRepository) {
         this.updatePositionRepository = updatePositionRepository;

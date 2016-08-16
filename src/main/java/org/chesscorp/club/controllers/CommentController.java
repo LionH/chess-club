@@ -17,11 +17,14 @@ import java.util.List;
 @RequestMapping("/api/comment")
 public class CommentController {
 
-    @Autowired
     private AuthenticationService authenticationService;
+    private ChessCommentService chessCommentService;
 
     @Autowired
-    private ChessCommentService chessCommentService;
+    public CommentController(AuthenticationService authenticationService, ChessCommentService chessCommentService) {
+        this.authenticationService = authenticationService;
+        this.chessCommentService = chessCommentService;
+    }
 
     @Transactional
     @RequestMapping(value = "/game/{gameId}", method = RequestMethod.GET)

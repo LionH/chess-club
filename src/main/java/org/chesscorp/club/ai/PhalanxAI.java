@@ -14,8 +14,12 @@ import java.util.List;
 @Component("phalanxAI")
 public class PhalanxAI implements ChessAI {
 
-    @Autowired
     private PhalanxEngineImpl phalanxEngine;
+
+    @Autowired
+    public PhalanxAI(PhalanxEngineImpl phalanxEngine) {
+        this.phalanxEngine = phalanxEngine;
+    }
 
     @Override
     public String computeNextMove(String options, List<String> pgnMoves) throws PgnMoveException, IllegalMoveException {

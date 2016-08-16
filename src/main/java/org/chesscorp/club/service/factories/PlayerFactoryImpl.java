@@ -14,11 +14,14 @@ import javax.transaction.Transactional;
 @Component
 public class PlayerFactoryImpl implements PlayerFactory {
 
-    @Autowired
     private PlayerRepository playerRepository;
+    private TextNormalizer textNormalizer;
 
     @Autowired
-    private TextNormalizer textNormalizer;
+    public PlayerFactoryImpl(PlayerRepository playerRepository, TextNormalizer textNormalizer) {
+        this.playerRepository = playerRepository;
+        this.textNormalizer = textNormalizer;
+    }
 
     @Override
     @Transactional

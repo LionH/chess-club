@@ -32,22 +32,29 @@ import java.util.stream.Collectors;
 public class ChessGameServiceImpl implements ChessGameService {
     private Logger logger = LoggerFactory.getLogger(ChessGameServiceImpl.class);
 
-    @Autowired
     private ChessGameRepository chessGameRepository;
-    @Autowired
     private ChessMoveRepository chessMoveRepository;
-    @Autowired
     private PlayerRepository playerRepository;
-    @Autowired
     private EloRatingRepository eloRatingRepository;
-    @Autowired
     private PlayerFactory playerFactory;
-    @Autowired
     private ChessRules chessRules;
-    @Autowired
     private PgnMarshaller pgnMarshaller;
-    @Autowired
     private EloRatingCalculator eloRatingCalculator;
+
+    @Autowired
+    public ChessGameServiceImpl(ChessGameRepository chessGameRepository, ChessMoveRepository chessMoveRepository,
+                                PlayerRepository playerRepository, EloRatingRepository eloRatingRepository,
+                                PlayerFactory playerFactory, ChessRules chessRules, PgnMarshaller pgnMarshaller,
+                                EloRatingCalculator eloRatingCalculator) {
+        this.chessGameRepository = chessGameRepository;
+        this.chessMoveRepository = chessMoveRepository;
+        this.playerRepository = playerRepository;
+        this.eloRatingRepository = eloRatingRepository;
+        this.playerFactory = playerFactory;
+        this.chessRules = chessRules;
+        this.pgnMarshaller = pgnMarshaller;
+        this.eloRatingCalculator = eloRatingCalculator;
+    }
 
     @Override
     @Transactional
@@ -230,7 +237,7 @@ public class ChessGameServiceImpl implements ChessGameService {
 
         pgnGameModel.getMoves().forEach(m -> chessGame.addMove(gameDate, m));
         ChessGame result = chessGameRepository.save(chessGame);
-        chessGame.getMoves().stream().forEach(chessMoveRepository::save);
+        chessGame.getMoves().forEach(chessMoveRepository::save);
 
         return result;
     }

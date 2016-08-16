@@ -17,11 +17,14 @@ import java.util.Set;
 @Component("randomAI")
 public class RandomAI implements ChessAI {
 
-    @Autowired
     private ChessRules chessRules;
+    private PgnMarshaller pgnMarshaller;
 
     @Autowired
-    private PgnMarshaller pgnMarshaller;
+    public RandomAI(ChessRules chessRules, PgnMarshaller pgnMarshaller) {
+        this.chessRules = chessRules;
+        this.pgnMarshaller = pgnMarshaller;
+    }
 
     @Override
     public String computeNextMove(String options, List<String> pgnMoves) throws PgnMoveException, IllegalMoveException {

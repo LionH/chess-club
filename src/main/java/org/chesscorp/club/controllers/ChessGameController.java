@@ -24,14 +24,18 @@ import java.util.List;
 public class ChessGameController {
     private Logger logger = LoggerFactory.getLogger(ChessGameController.class);
 
-    @Autowired
     private ChessGameService chessGameService;
-
-    @Autowired
     private AuthenticationService authenticationService;
+    private MessagingService messagingService;
 
     @Autowired
-    private MessagingService messagingService;
+    public ChessGameController(ChessGameService chessGameService,
+                               AuthenticationService authenticationService,
+                               MessagingService messagingService) {
+        this.chessGameService = chessGameService;
+        this.authenticationService = authenticationService;
+        this.messagingService = messagingService;
+    }
 
     /**
      * Search for games.

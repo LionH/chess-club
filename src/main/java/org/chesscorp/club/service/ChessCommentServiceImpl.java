@@ -5,8 +5,6 @@ import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.people.Player;
 import org.chesscorp.club.persistence.ChessCommentRepository;
 import org.chesscorp.club.persistence.ChessGameRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,13 +14,16 @@ import java.util.List;
 
 @Component
 public class ChessCommentServiceImpl implements ChessCommentService {
-    private Logger logger = LoggerFactory.getLogger(ChessCommentServiceImpl.class);
 
-    @Autowired
     private ChessCommentRepository chessCommentRepository;
+    private ChessGameRepository chessGameRepository;
 
     @Autowired
-    private ChessGameRepository chessGameRepository;
+    public ChessCommentServiceImpl(ChessCommentRepository chessCommentRepository,
+                                   ChessGameRepository chessGameRepository) {
+        this.chessCommentRepository = chessCommentRepository;
+        this.chessGameRepository = chessGameRepository;
+    }
 
     @Override
     @Transactional(readOnly = true)

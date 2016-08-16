@@ -28,20 +28,19 @@ import java.util.*;
 public class ChessOpeningsServiceImpl implements ChessOpeningsService {
 
     private Logger logger = LoggerFactory.getLogger(ChessOpeningsServiceImpl.class);
-
     private OpeningNode openingNodes = new OpeningNode();
-
     private Map<String, OpeningNode> positionIndex;
-
-    @Autowired
     private ChessRules chessRules;
-
-    @Autowired
     private PgnMarshaller pgnMarshaller;
+    private PositionMarshaller positionMarshaller;
 
     @Autowired
-    @Qualifier("fixed")
-    private PositionMarshaller positionMarshaller;
+    public ChessOpeningsServiceImpl(ChessRules chessRules, PgnMarshaller pgnMarshaller,
+                                    @Qualifier("fixed") PositionMarshaller positionMarshaller) {
+        this.chessRules = chessRules;
+        this.pgnMarshaller = pgnMarshaller;
+        this.positionMarshaller = positionMarshaller;
+    }
 
     @PostConstruct
     public void init() throws IOException {

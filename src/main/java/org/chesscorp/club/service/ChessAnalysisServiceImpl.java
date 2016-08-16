@@ -26,14 +26,21 @@ public class ChessAnalysisServiceImpl implements ChessAnalysisService {
 
     private Logger logger = LoggerFactory.getLogger(ChessAnalysisServiceImpl.class);
 
-    @Autowired
     private ChessPositionRepository positionRepository;
-    @Autowired
     private ChessMoveToPositionRepository moveToPositionRepository;
-    @Autowired
     private ChessEngineAnalyticalController analyticalController;
-    @Autowired
     private ChessMoveRepository moveRepository;
+
+    @Autowired
+    public ChessAnalysisServiceImpl(ChessPositionRepository positionRepository,
+                                    ChessMoveToPositionRepository moveToPositionRepository,
+                                    ChessEngineAnalyticalController analyticalController,
+                                    ChessMoveRepository moveRepository) {
+        this.positionRepository = positionRepository;
+        this.moveToPositionRepository = moveToPositionRepository;
+        this.analyticalController = analyticalController;
+        this.moveRepository = moveRepository;
+    }
 
     @Override
     @Transactional

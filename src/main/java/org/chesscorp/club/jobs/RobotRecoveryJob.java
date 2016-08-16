@@ -19,11 +19,14 @@ public class RobotRecoveryJob {
 
     private Logger logger = LoggerFactory.getLogger(RobotRecoveryJob.class);
 
-    @Autowired
     private MessagingService messagingService;
+    private ChessGameRepository chessGameRepository;
 
     @Autowired
-    private ChessGameRepository chessGameRepository;
+    public RobotRecoveryJob(MessagingService messagingService, ChessGameRepository chessGameRepository) {
+        this.messagingService = messagingService;
+        this.chessGameRepository = chessGameRepository;
+    }
 
     @Scheduled(initialDelay = 10_000, fixedDelay = 3600_000)
     @Transactional
