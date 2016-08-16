@@ -24,6 +24,8 @@ public class Token {
     private OffsetDateTime expirationDate;
     @Column(nullable = true, length = 32)
     private String systemReference;
+    @Column(nullable = false)
+    private Integer usages;
 
     public Token() {
     }
@@ -36,6 +38,7 @@ public class Token {
         this.issueDate = issueDate;
         this.expirationDate = expirationDate;
         this.systemReference = systemReference;
+        this.usages = 0;
     }
 
     public Long getIdentifier() {
@@ -62,6 +65,14 @@ public class Token {
         return systemReference;
     }
 
+    public Integer getUsages() {
+        return usages;
+    }
+
+    public void setUsages(Integer usages) {
+        this.usages = usages;
+    }
+
     @Override
     public String toString() {
         return "Token{" +
@@ -69,6 +80,7 @@ public class Token {
                 ", type='" + type + '\'' +
                 ", text='" + text + '\'' +
                 ", systemReference='" + systemReference + '\'' +
+                ", usages='" + usages + '\'' +
                 '}';
     }
 }
