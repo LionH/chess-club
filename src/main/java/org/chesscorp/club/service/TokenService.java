@@ -9,4 +9,6 @@ import org.chesscorp.club.model.token.TokenType;
 public interface TokenService {
 
     Token registerToken(TokenType tokenType, String systemIdentifier, int daysValidity);
+
+    boolean validateToken(TokenType tokenType, String tokenText);
 }
