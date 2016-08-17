@@ -30,9 +30,11 @@ public class TokenServiceImpl implements TokenService {
     @Transactional
     public Token registerToken(TokenType tokenType, String systemIdentifier, int daysValidity) {
         String tokenString = tokenGenerator.generateToken();
+        OffsetDateTime now = OffsetDateTime.now();
+        OffsetDateTime exp = now.plusDays(daysValidity);
         Token token = new Token(
                 tokenType, tokenString,
-                OffsetDateTime.now(), OffsetDateTime.now(),
+                now, exp,
                 systemIdentifier);
 
         return tokenRepository.saveAndFlush(token);

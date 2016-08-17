@@ -3,6 +3,7 @@ package org.chesscorp.club.service;
 
 import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
+import org.chesscorp.club.model.token.Token;
 import org.chesscorp.club.model.token.TokenType;
 import org.chesscorp.club.persistence.TokenRepository;
 import org.junit.Test;
@@ -27,7 +28,19 @@ public class TokenServiceTest {
     @Test
     @Transactional
     public void testTokenGeneration() {
-        tokenService.registerToken(TokenType.ACCOUNT_VALIDATION, "SYS1", 30);
+        Token token = tokenService.registerToken(TokenType.ACCOUNT_VALIDATION, "SYS1", 30);
         Assertions.assertThat(tokenRepository.findAll()).hasSize(1);
+        Assertions.assertThat(token.getIssueDate()).isBefore(token.getExpirationDate());
+        Assertions.assertThat(token.getText()).isNotEmpty();
+    }
+
+    @Test
+    @Transactional
+    public void testTokenUnicity() {
+        Token token1 = tokenService.registerToken(TokenType.ACCOUNT_VALIDATION, "SYS1", 30);
+        Token token2 = tokenService.registerToken(TokenType.ACCOUNT_VALIDATION, "SYS1", 30);
+        Assertions.assertThat(tokenRepository.findAll()).hasSize(2);
+
+        Assertions.assertThat(token1.getText()).isNotEmpty().isNotEqualTo(token2.getText());
     }
 }
