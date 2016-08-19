@@ -24,6 +24,8 @@ ENV dbddl      update
 CMD java \
      -Dserver.port=80 \
      -Dspring.datasource.url=${dburl}		\
-     -Dspring.jpa.database=${dbdatabase}		\
+     -Dspring.datasource.username=${dbusername}	\
+     -Dspring.datasource.password=${dbpassword}	\
+     -Dspring.jpa.database=${dbdatabase}	\
      -Dspring.jpa.hibernate.ddl-auto=${dbddl}	\
      -jar /usr/local/chesscorp/target/chess-club-*.jar
