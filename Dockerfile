@@ -12,14 +12,18 @@ COPY . /usr/local/chesscorp/
 
 RUN /usr/local/chesscorp/src/main/scripts/docker_build.sh
 
-EXPOSE 8080
+EXPOSE 80
 VOLUME /data
 
 ENV dburl      jdbc:h2:file:/data/chess1
+ENV dbusername chess
+ENV dbpassword chess
 ENV dbdatabase H2
 ENV dbddl      update
 
-CMD java -Dspring.datasource.url=${dburl}		\
-	 -Dspring.jpa.database=${dbdatabase}		\
-	 -Dspring.jpa.hibernate.ddl-auto=${dbddl}	\
-	 -jar /usr/local/chesscorp/target/*.jar
+CMD java \
+     -Dserver.port=80 \
+     -Dspring.datasource.url=${dburl}		\
+     -Dspring.jpa.database=${dbdatabase}		\
+     -Dspring.jpa.hibernate.ddl-auto=${dbddl}	\
+     -jar /usr/local/chesscorp/target/chess-club-*.jar

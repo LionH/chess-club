@@ -8,5 +8,5 @@ if test -f target/chess-club-*.jar
 then
 	echo "Target build already present, skipping build"
 else
-	mvn -DskipTests=true clean package
+	mvn -Ppostgresql -DskipTests=true clean package
 fi
