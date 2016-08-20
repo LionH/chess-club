@@ -73,6 +73,8 @@ public class AuthenticationControllerTest {
     @Transactional
     public void testCredentialsAuthenticated() {
         AuthenticationResult auth = authenticationController.signup("a@b.c", "Password1", "A");
+//        authenticationController.validateAccount();
+
         AuthenticationResult credentials = authenticationController.getCredentials(auth.getToken());
         Assertions.assertThat(credentials).isEqualToComparingFieldByField(auth);
     }

@@ -26,6 +26,8 @@ public class Account {
     private String password;
     @ManyToOne(optional = false)
     private Player player;
+    @Column(nullable = false)
+    private Boolean validated;
 
     public Account() {
     }
@@ -35,6 +37,7 @@ public class Account {
         this.salt = salt;
         this.password = password;
         this.player = player;
+        this.validated = false;
     }
 
     public String getIdentifier() {
@@ -59,6 +62,14 @@ public class Account {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public boolean isValidated() {
+        return validated;
+    }
+
+    public void setValidated(boolean validated) {
+        this.validated = validated;
     }
 
     @Override

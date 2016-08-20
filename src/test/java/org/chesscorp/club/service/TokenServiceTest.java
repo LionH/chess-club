@@ -50,9 +50,9 @@ public class TokenServiceTest {
         Token token1 = tokenService.registerToken(TokenType.ACCOUNT_VALIDATION, "SYS1", 30);
         Token token2 = tokenService.registerToken(TokenType.ACCOUNT_VALIDATION, "SYS1", 30);
 
-        Assertions.assertThat(tokenService.validateToken(TokenType.ACCOUNT_VALIDATION, "Hello")).isFalse();
-        Assertions.assertThat(tokenService.validateToken(TokenType.ACCOUNT_VALIDATION, token1.getText())).isTrue();
-        Assertions.assertThat(tokenRepository.getOne(token1.getIdentifier()).getUsages()).isEqualTo(1);
-        Assertions.assertThat(tokenRepository.getOne(token2.getIdentifier()).getUsages()).isEqualTo(0);
+        Assertions.assertThat(tokenService.validateToken(TokenType.ACCOUNT_VALIDATION, "Hello")).isNull();
+        Assertions.assertThat(tokenService.validateToken(TokenType.ACCOUNT_VALIDATION, token1.getText())).isNotNull();
+        Assertions.assertThat(tokenRepository.getOne(token1.getId()).getUsages()).isEqualTo(1);
+        Assertions.assertThat(tokenRepository.getOne(token2.getId()).getUsages()).isEqualTo(0);
     }
 }

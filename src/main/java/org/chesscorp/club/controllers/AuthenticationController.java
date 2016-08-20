@@ -62,6 +62,15 @@ public class AuthenticationController {
     }
 
     @Transactional
+    @RequestMapping(value = "/validate", method = RequestMethod.POST)
+    public void validateAccount(
+            @RequestParam String tokenText) {
+        logger.debug("Validating account token {}", tokenText);
+
+        authenticationService.validateAccount(tokenText);
+    }
+
+    @Transactional
     @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
     public void updatePassword(
             @CookieValue(value = AUTHENTICATION_TOKEN) String token,

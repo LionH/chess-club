@@ -10,5 +10,5 @@ public interface TokenService {
 
     Token registerToken(TokenType tokenType, String systemIdentifier, int daysValidity);
 
-    boolean validateToken(TokenType tokenType, String tokenText);
+    Token validateToken(TokenType tokenType, String tokenText);
 }

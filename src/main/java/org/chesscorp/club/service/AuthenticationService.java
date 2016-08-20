@@ -16,4 +16,5 @@ public interface AuthenticationService {
 
     void revoke(String token);
 
+    void validateAccount(String tokenText);
 }

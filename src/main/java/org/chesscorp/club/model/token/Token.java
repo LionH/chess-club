@@ -41,7 +41,7 @@ public class Token {
         this.usages = 0;
     }
 
-    public Long getIdentifier() {
+    public Long getId() {
         return id;
     }
 

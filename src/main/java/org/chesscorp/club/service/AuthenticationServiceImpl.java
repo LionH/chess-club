@@ -137,6 +137,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         sessionRepository.delete(token);
     }
 
+    @Override
+    @Transactional
+    public void validateAccount(String tokenText) {
+        Token token = tokenService.validateToken(TokenType.ACCOUNT_VALIDATION, tokenText);
+        Account account = accountRepository.getOne(token.getSystemReference());
+        account.setValidated(true);
+        accountRepository.saveAndFlush(account);
+    }
+
     private Account getAccount(String email, String password) {
         Account account = accountRepository.findOne(email);
 

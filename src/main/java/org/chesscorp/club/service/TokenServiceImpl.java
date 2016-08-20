@@ -42,15 +42,14 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     @Transactional
-    public boolean validateToken(TokenType tokenType, String tokenText) {
+    public Token validateToken(TokenType tokenType, String tokenText) {
         Token token = tokenRepository.getOneByTypeAndText(tokenType, tokenText);
-        boolean result = token != null && token.getExpirationDate().isAfter(OffsetDateTime.now());
 
-        if (result) {
+        if (token != null) {
             token.setUsages(token.getUsages() + 1);
             tokenRepository.saveAndFlush(token);
         }
 
-        return result;
+        return token;
     }
 }
