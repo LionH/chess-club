@@ -18,6 +18,7 @@ import org.chesscorp.club.utilities.token.TokenGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,11 +48,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private TokenGenerator tokenGenerator;
 
+    private Boolean mandatoryValidation;
+
     @Autowired
     public AuthenticationServiceImpl(AccountRepository accountRepository, PlayerRepository playerRepository,
                                      SessionRepository sessionRepository, HashManager hashManager,
                                      GravatarHashManager gravatarHashManager, MailService mailService,
-                                     TokenService tokenService, TokenGenerator tokenGenerator) {
+                                     TokenService tokenService, TokenGenerator tokenGenerator,
+                                     @Value("${chesscorp.account.validationRequired}") Boolean mandatoryValidation) {
         this.accountRepository = accountRepository;
         this.playerRepository = playerRepository;
         this.sessionRepository = sessionRepository;
@@ -60,6 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.mailService = mailService;
         this.tokenService = tokenService;
         this.tokenGenerator = tokenGenerator;
+        this.mandatoryValidation = mandatoryValidation;
     }
 
     @PostConstruct
@@ -157,6 +162,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         if (!account.getPassword().equals(passwordHash)) {
             throw new AuthenticationFailedException("Invalid password");
+        }
+
+        if (mandatoryValidation && !account.isValidated()) {
+            throw new AuthenticationFailedException("Account is not validated");
         }
 
         return account;

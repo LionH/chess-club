@@ -58,4 +58,11 @@ public class AuthenticationServiceTest {
 
         authenticationService.signin("alcibiade@alcibiade.org", "anotherPassword");
     }
+
+    @Test
+    @Transactional
+    public void testAuthWithoutMandatoryValidation() {
+        authenticationService.signup("alcibiade@alcibiade.org", "password", "Alcibiade");
+        authenticationService.signin("alcibiade@alcibiade.org", "password");
+    }
 }
