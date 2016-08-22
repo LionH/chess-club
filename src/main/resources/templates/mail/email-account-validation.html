@@ -1,12 +1,16 @@
 <!DOCTYPE HTML>
-<html>
-
 <head>
     <title>Account validation page</title>
 </head>
 
 <body>
-<h1>Email Account Validation</h1>
+<h2>Account Validation</h2>
+
+<p>Hello <span th:text="${recipientName}">recipient</span></p>
+
+<p>To validate your ChessCorp account, use the following link:
+    <span th:text="${baseUrl}">baseurl</span>#!/accountValidation/<span th:text="${token}">token</span>
+</p>
 </body>
 
 </html>

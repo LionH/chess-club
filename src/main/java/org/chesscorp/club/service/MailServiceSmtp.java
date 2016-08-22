@@ -27,14 +27,17 @@ public class MailServiceSmtp implements MailService {
     private String sender;
     private JavaMailSender mailSender;
     private SpringTemplateEngine templateEngine;
+    private String baseUrl;
 
     @Autowired
     public MailServiceSmtp(JavaMailSender mailSender,
                            @Value("${chesscorp.mail.sender}") String sender,
-                           SpringTemplateEngine templateEngine) {
+                           SpringTemplateEngine templateEngine,
+                           @Value("${chesscorp.mail.baseUrl}") String baseUrl) {
         this.sender = sender;
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
+        this.baseUrl = baseUrl;
     }
 
     @Override
@@ -45,11 +48,12 @@ public class MailServiceSmtp implements MailService {
 
             helper.setTo(recipientAddress);
             helper.setFrom(sender);
-            helper.setSubject("...");
+            helper.setSubject("ChessCorp Account Validation");
 
             Locale locale = Locale.getDefault();
             Context ctx = new Context(locale);
-            ctx.setVariable("name", recipientName);
+            ctx.setVariable("recipientName", recipientName);
+            ctx.setVariable("baseUrl", baseUrl);
             ctx.setVariable("token", validationToken);
 
             String htmlContent = this.templateEngine.process("email-account-validation", ctx);
