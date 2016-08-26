@@ -1,6 +1,7 @@
 package org.chesscorp.club.config;
 
 import com.fasterxml.classmate.TypeResolver;
+import org.chesscorp.club.service.ServerStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.schema.WildcardType;
+import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.SecurityReference;
@@ -36,14 +38,24 @@ public class SwaggerConfig {
     @Autowired
     private TypeResolver typeResolver;
 
+    @Autowired
+    private ServerStatusService serverStatusService;
+
     @Bean
     public Docket clubApi() {
+        ApiInfo apiInfo = new ApiInfo(
+                "ChessCorp chess-club API",
+                "An online chess club API covering account management, games, comments, statistics, ...",
+                serverStatusService.getReleaseInformation().getRevision(),
+                null, "contact@chesscorp.org", "MIT", "https://opensource.org/licenses/MIT");
+
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build()
                 .pathMapping("/")
+                .apiInfo(apiInfo)
                 .genericModelSubstitutes(ResponseEntity.class)
                 .alternateTypeRules(
                         newRule(
@@ -58,8 +70,7 @@ public class SwaggerConfig {
                                 .responseModel(new ModelRef("Error"))
                                 .build()))
                 .securitySchemes(newArrayList(apiKey()))
-                .securityContexts(newArrayList(securityContext()))
-                ;
+                .securityContexts(newArrayList(securityContext()));
     }
 
     private ApiKey apiKey() {
