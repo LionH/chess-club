@@ -9,12 +9,9 @@ import org.springframework.mail.MailParseException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.Locale;
 
 /**
  * A JavaMail SMTP sender implementation.
@@ -26,18 +23,15 @@ public class MailServiceSmtp implements MailService {
 
     private String sender;
     private JavaMailSender mailSender;
-    private SpringTemplateEngine templateEngine;
-    private String baseUrl;
+    private TemplateService templateService;
 
     @Autowired
     public MailServiceSmtp(JavaMailSender mailSender,
                            @Value("${chesscorp.mail.sender}") String sender,
-                           SpringTemplateEngine templateEngine,
-                           @Value("${chesscorp.mail.baseUrl}") String baseUrl) {
+                           TemplateService templateService) {
         this.sender = sender;
         this.mailSender = mailSender;
-        this.templateEngine = templateEngine;
-        this.baseUrl = baseUrl;
+        this.templateService = templateService;
     }
 
     @Override
@@ -50,13 +44,7 @@ public class MailServiceSmtp implements MailService {
             helper.setFrom(sender);
             helper.setSubject("ChessCorp Account Validation");
 
-            Locale locale = Locale.getDefault();
-            Context ctx = new Context(locale);
-            ctx.setVariable("recipientName", recipientName);
-            ctx.setVariable("baseUrl", baseUrl);
-            ctx.setVariable("token", validationToken);
-
-            String htmlContent = this.templateEngine.process("email-account-validation", ctx);
+            String htmlContent = templateService.buildEmailAccountValidation(recipientName, validationToken);
             helper.setText(htmlContent, true); // true = isHtml
 
             this.mailSender.send(message);
