@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.thymeleaf.exceptions.TemplateInputException;
 
 /**
  * Test message sending.
@@ -23,9 +22,9 @@ public class TemplateServiceTest {
     private TemplateService templateService;
 
     /**
-     * We currently expect an exception until the template implementation is fixed.
+     * Build a simple template.
      */
-    @Test(expected = TemplateInputException.class)
+    @Test
     public void testAccountValidation() {
         String html = templateService.buildEmailAccountValidation("John Doe", "###Token###");
         Assertions.assertThat(html).contains("John Doe");
