@@ -29,8 +29,8 @@ public class AuthenticationControllerTest {
     @Test
     @Transactional
     public void testSignUpAndSignIn() {
-        authenticationController.signup("a@b.c", "Password1", "A");
-        authenticationController.signin("a@b.c", "Password1");
+        authenticationController.signup("a@b.comom", "Password1", "A");
+        authenticationController.signin("a@b.com", "Password1");
     }
     
     @Transactional
@@ -43,30 +43,30 @@ public class AuthenticationControllerTest {
     @Test
     @Transactional
     public void testChangePassword() {
-        authenticationController.signup("a@b.c", "Password1", "A");
-        AuthenticationResult authenticationResult = authenticationController.signin("a@b.c", "Password1");
+        authenticationController.signup("a@b.com", "Password1", "A");
+        AuthenticationResult authenticationResult = authenticationController.signin("a@b.com", "Password1");
         authenticationController.updatePassword(authenticationResult.getToken(), "Password1", "Password2");
-        authenticationController.signin("a@b.c", "Password2");
+        authenticationController.signin("a@b.com", "Password2");
     }
 
     @Test
     @Transactional
     public void testSignUpAndSignOut() {
-        AuthenticationResult auth = authenticationController.signup("a@b.c", "Password1", "A");
+        AuthenticationResult auth = authenticationController.signup("a@b.com", "Password1", "A");
         authenticationController.signout(auth.getToken());
     }
 
     @Test(expected = AuthenticationFailedException.class)
     @Transactional
     public void testUserNotFound() {
-        authenticationController.signin("a@b.c", "Password1");
+        authenticationController.signin("a@b.com", "Password1");
     }
 
     @Test(expected = UserAlreadyExistsException.class)
     @Transactional
     public void testUserAlreadyExisting() {
-        authenticationController.signup("a@b.c", "Password1", "A");
-        authenticationController.signup("a@b.c", "Password1", "A");
+        authenticationController.signup("a@b.com", "Password1", "A");
+        authenticationController.signup("a@b.com", "Password1", "A");
     }
 
     @Test
@@ -80,7 +80,7 @@ public class AuthenticationControllerTest {
     @Test
     @Transactional
     public void testCredentialsAuthenticated() {
-        AuthenticationResult auth = authenticationController.signup("a@b.c", "Password1", "A");
+        AuthenticationResult auth = authenticationController.signup("a@b.com", "Password1", "A");
 //        authenticationController.validateAccount();
 
         AuthenticationResult credentials = authenticationController.getCredentials(auth.getToken());

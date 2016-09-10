@@ -51,12 +51,12 @@ public class ChessStatsControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     public void testRelatedGame() throws Exception {
-        authenticationService.signup("a@b.c", "pwd", "Alcibiade");
-        String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
+        authenticationService.signup("a@b.com", "pwd", "Alcibiade");
+        String alcibiadeToken = authenticationService.signin("a@b.com", "pwd");
         Player alcibiade = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
 
-        authenticationService.signup("b@b.c", "pwd", "Bob");
-        String bobToken = authenticationService.signin("b@b.c", "pwd");
+        authenticationService.signup("b@b.com", "pwd", "Bob");
+        String bobToken = authenticationService.signin("b@b.com", "pwd");
         Player bob = authenticationService.getSession(bobToken).getAccount().getPlayer();
 
         ChessGame game1 = chessGameController.createGame(alcibiadeToken, alcibiade.getId(), bob.getId());

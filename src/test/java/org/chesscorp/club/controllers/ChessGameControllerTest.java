@@ -58,13 +58,13 @@ public class ChessGameControllerTest {
     @Test
     @Transactional
     public void testBasicGame() throws Exception {
-        authenticationService.signup("a@b.c", "pwd", "Alcibiade");
-        String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
+        authenticationService.signup("a@b.com", "pwd", "Alcibiade");
+        String alcibiadeToken = authenticationService.signin("a@b.com", "pwd");
         Player alcibiade = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
 
 
-        authenticationService.signup("b@b.c", "pwd", "Bob");
-        String bobToken = authenticationService.signin("b@b.c", "pwd");
+        authenticationService.signup("b@b.com", "pwd", "Bob");
+        String bobToken = authenticationService.signin("b@b.com", "pwd");
         Player bob = authenticationService.getSession(bobToken).getAccount().getPlayer();
 
         /*
@@ -162,16 +162,16 @@ public class ChessGameControllerTest {
     @Test(expected = ChessClubException.class)
     @Transactional
     public void testRefuseThirdPartyCreation() throws InterruptedException {
-        authenticationService.signup("a@b.c", "pwd", "Alcibiade");
-        String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
+        authenticationService.signup("a@b.com", "pwd", "Alcibiade");
+        String alcibiadeToken = authenticationService.signin("a@b.com", "pwd");
         Player alcibiade = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
 
-        authenticationService.signup("b@b.c", "pwd", "Bob");
-        String bobToken = authenticationService.signin("b@b.c", "pwd");
+        authenticationService.signup("b@b.com", "pwd", "Bob");
+        String bobToken = authenticationService.signin("b@b.com", "pwd");
         Player bob = authenticationService.getSession(bobToken).getAccount().getPlayer();
 
-        authenticationService.signup("c@b.c", "pwd", "Charlie");
-        String charlieToken = authenticationService.signin("c@b.c", "pwd");
+        authenticationService.signup("c@b.com", "pwd", "Charlie");
+        String charlieToken = authenticationService.signin("c@b.com", "pwd");
 
         ChessGame game1 = chessGameController.createGame(charlieToken, alcibiade.getId(), bob.getId());
         Thread.sleep(10);
@@ -187,12 +187,12 @@ public class ChessGameControllerTest {
     @Test(expected = ChessClubException.class)
     @Transactional
     public void testRefuseMove() {
-        authenticationService.signup("a@b.c", "pwd", "Alcibiade");
-        String alcibiadeToken = authenticationService.signin("a@b.c", "pwd");
+        authenticationService.signup("a@b.com", "pwd", "Alcibiade");
+        String alcibiadeToken = authenticationService.signin("a@b.com", "pwd");
         Player alcibiade = authenticationService.getSession(alcibiadeToken).getAccount().getPlayer();
 
-        authenticationService.signup("b@b.c", "pwd", "Bob");
-        String bobToken = authenticationService.signin("b@b.c", "pwd");
+        authenticationService.signup("b@b.com", "pwd", "Bob");
+        String bobToken = authenticationService.signin("b@b.com", "pwd");
         Player bob = authenticationService.getSession(bobToken).getAccount().getPlayer();
 
         ChessGame game1 = chessGameController.createGame(alcibiadeToken, alcibiade.getId(), bob.getId());
