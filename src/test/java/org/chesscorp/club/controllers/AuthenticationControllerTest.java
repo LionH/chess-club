@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.chesscorp.club.Application;
 import org.chesscorp.club.dto.AuthenticationResult;
 import org.chesscorp.club.exception.AuthenticationFailedException;
+import org.chesscorp.club.exception.InvalidSignupException;
 import org.chesscorp.club.exception.UserAlreadyExistsException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +31,13 @@ public class AuthenticationControllerTest {
     public void testSignUpAndSignIn() {
         authenticationController.signup("a@b.c", "Password1", "A");
         authenticationController.signin("a@b.c", "Password1");
+    }
+    
+    @Transactional
+    @Test(expected = InvalidSignupException.class)
+    public void testInvalidSignUpAndSignIn() {
+    	authenticationController.signup("a@b.", "Password1", "A");
+        authenticationController.signin("a@b.", "Password1");
     }
 
     @Test

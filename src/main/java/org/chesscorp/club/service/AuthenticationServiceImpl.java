@@ -1,6 +1,11 @@
 package org.chesscorp.club.service;
 
+import javax.annotation.PostConstruct;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.chesscorp.club.exception.AuthenticationFailedException;
+import org.chesscorp.club.exception.InvalidSignupException;
 import org.chesscorp.club.exception.NotAuthenticatedException;
 import org.chesscorp.club.exception.UserAlreadyExistsException;
 import org.chesscorp.club.model.people.Account;
@@ -22,8 +27,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Authentication mechanisms based on account/player repositories.
@@ -84,6 +87,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     @Transactional
     public void signup(String email, String password, String displayName) {
+    	if (StringUtils.isBlank(email) 
+    			|| !EmailValidator.getInstance().isValid(email)) {
+    		throw new InvalidSignupException("Email is invalid");
+    	}
         if (accountRepository.exists(email)) {
             throw new UserAlreadyExistsException();
         }
