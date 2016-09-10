@@ -1,17 +1,19 @@
 package org.chesscorp.club.ai;
 
+import java.util.List;
+
 import org.alcibiade.chess.engine.GnuChessEngineImpl;
 import org.alcibiade.chess.model.IllegalMoveException;
 import org.alcibiade.chess.model.PgnMoveException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * GnuChess external engine AI.
  */
 @Component("gnuchessAI")
+@Profile("ai-gnuchess")
 public class GnuChessAI implements ChessAI {
 
     private GnuChessEngineImpl gnuChessEngine;

@@ -1,6 +1,7 @@
 package org.chesscorp.club.ai;
 
 import org.chesscorp.club.Application;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringApplicationConfiguration(classes = Application.class)
 @ActiveProfiles("ai-crafty")
 @Rollback
+@Ignore
 public class CraftyAITest {
 
     @Autowired

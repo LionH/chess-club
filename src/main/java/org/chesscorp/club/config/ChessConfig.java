@@ -16,11 +16,13 @@ import org.springframework.context.annotation.Profile;
 public class ChessConfig {
 
     @Bean
+    @Profile("ai-gnuchess")
     public GnuChessEngineImpl getGnuChessEngine() {
         return new GnuChessEngineImpl();
     }
 
     @Bean
+    @Profile("ai-phalanx")
     public PhalanxEngineImpl getPhalanxEngine() {
         return new PhalanxEngineImpl();
     }
