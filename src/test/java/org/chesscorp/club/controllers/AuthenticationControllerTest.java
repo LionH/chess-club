@@ -29,7 +29,7 @@ public class AuthenticationControllerTest {
     @Test
     @Transactional
     public void testSignUpAndSignIn() {
-        authenticationController.signup("a@b.comom", "Password1", "A");
+        authenticationController.signup("a@b.com", "Password1", "A");
         authenticationController.signin("a@b.com", "Password1");
     }
     
@@ -37,7 +37,7 @@ public class AuthenticationControllerTest {
     @Test(expected = InvalidSignupException.class)
     public void testInvalidSignUpAndSignIn() {
     	authenticationController.signup("a@b.", "Password1", "A");
-        authenticationController.signin("a@b.", "Password1");
+        authenticationController.signup("a@b.c", "Password1", "B");
     }
 
     @Test
