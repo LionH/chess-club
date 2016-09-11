@@ -2,6 +2,7 @@ package org.chesscorp.club.service;
 
 import org.alcibiade.chess.engine.ChessEngineAnalyticalController;
 import org.alcibiade.chess.engine.EngineAnalysisReport;
+import org.alcibiade.chess.engine.GnuChessEngineImpl;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.game.ChessMove;
 import org.chesscorp.club.model.stats.ChessClubPosition;
@@ -34,7 +35,7 @@ public class ChessAnalysisServiceImpl implements ChessAnalysisService {
     @Autowired
     public ChessAnalysisServiceImpl(ChessPositionRepository positionRepository,
                                     ChessMoveToPositionRepository moveToPositionRepository,
-                                    ChessEngineAnalyticalController analyticalController,
+                                    GnuChessEngineImpl analyticalController,
                                     ChessMoveRepository moveRepository) {
         this.positionRepository = positionRepository;
         this.moveToPositionRepository = moveToPositionRepository;
