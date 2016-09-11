@@ -14,7 +14,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringApplicationConfiguration(classes = Application.class)
 @ActiveProfiles("phalanx")
 @Rollback
-@Ignore
 public class PhalanxAITest {
 
     @Autowired
