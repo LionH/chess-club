@@ -1,8 +1,11 @@
 package org.chesscorp.club.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.alcibiade.chess.engine.ChessEngineAnalyticalController;
 import org.alcibiade.chess.engine.EngineAnalysisReport;
-import org.alcibiade.chess.engine.GnuChessEngineImpl;
 import org.chesscorp.club.model.game.ChessGame;
 import org.chesscorp.club.model.game.ChessMove;
 import org.chesscorp.club.model.stats.ChessClubPosition;
@@ -12,12 +15,9 @@ import org.chesscorp.club.persistence.ChessPositionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Engine analysis features.
@@ -35,7 +35,7 @@ public class ChessAnalysisServiceImpl implements ChessAnalysisService {
     @Autowired
     public ChessAnalysisServiceImpl(ChessPositionRepository positionRepository,
                                     ChessMoveToPositionRepository moveToPositionRepository,
-                                    GnuChessEngineImpl analyticalController,
+                                    @Qualifier("gnuchess") ChessEngineAnalyticalController analyticalController,
                                     ChessMoveRepository moveRepository) {
         this.positionRepository = positionRepository;
         this.moveToPositionRepository = moveToPositionRepository;
