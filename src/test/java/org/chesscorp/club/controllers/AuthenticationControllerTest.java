@@ -25,18 +25,17 @@ public class AuthenticationControllerTest {
     @Autowired
     private AuthenticationController authenticationController;
 
-
     @Test
     @Transactional
     public void testSignUpAndSignIn() {
         authenticationController.signup("a@b.com", "Password1", "A");
         authenticationController.signin("a@b.com", "Password1");
     }
-    
+
     @Transactional
     @Test(expected = InvalidSignupException.class)
     public void testInvalidSignUpAndSignIn() {
-    	authenticationController.signup("a@b.", "Password1", "A");
+        authenticationController.signup("a@b.", "Password1", "A");
         authenticationController.signup("a@b.c", "Password1", "B");
     }
 
@@ -81,7 +80,7 @@ public class AuthenticationControllerTest {
     @Transactional
     public void testCredentialsAuthenticated() {
         AuthenticationResult auth = authenticationController.signup("a@b.com", "Password1", "A");
-//        authenticationController.validateAccount();
+        // authenticationController.validateAccount();
 
         AuthenticationResult credentials = authenticationController.getCredentials(auth.getToken());
         Assertions.assertThat(credentials).isEqualToComparingFieldByField(auth);

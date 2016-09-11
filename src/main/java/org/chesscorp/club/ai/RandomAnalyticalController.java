@@ -11,18 +11,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RandomAnalyticalController implements ChessEngineAnalyticalController {
-	
-	@Autowired
-	private RandomAI randomAI;
 
-	@Override
-	public String computeNextMove(int depth, int random, Collection<String> moves) throws ChessEngineFailureException {
-		return randomAI.computeNextMove("", new ArrayList<>(moves));
-	}
+    @Autowired
+    private RandomAI randomAI;
 
-	@Override
-	public EngineAnalysisReport analyze(Collection<String> moves) throws ChessEngineFailureException {
-		return new EngineAnalysisReport(1,new ArrayList<>(moves));
-	}
+    @Override
+    public String computeNextMove(int depth, int random, Collection<String> moves) throws ChessEngineFailureException {
+        return randomAI.computeNextMove("", new ArrayList<>(moves));
+    }
+
+    @Override
+    public EngineAnalysisReport analyze(Collection<String> moves) throws ChessEngineFailureException {
+        return new EngineAnalysisReport(1, new ArrayList<>(moves));
+    }
 
 }

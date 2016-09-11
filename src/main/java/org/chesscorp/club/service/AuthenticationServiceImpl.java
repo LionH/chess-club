@@ -87,9 +87,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     @Transactional
     public void signup(String email, String password, String displayName) {
-    	if (!EmailValidator.getInstance().isValid(email)) {
-    		throw new InvalidSignupException("Email is invalid");
-    	}
+        if (!EmailValidator.getInstance().isValid(email)) {
+            throw new InvalidSignupException("Email is invalid");
+        }
         if (accountRepository.exists(email)) {
             throw new UserAlreadyExistsException();
         }
