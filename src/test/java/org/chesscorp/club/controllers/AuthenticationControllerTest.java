@@ -8,8 +8,6 @@ import org.chesscorp.club.exception.InvalidSignupException;
 import org.chesscorp.club.exception.UserAlreadyExistsException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.Rollback;
@@ -20,7 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringApplicationConfiguration(classes = Application.class)
 @Rollback
 public class AuthenticationControllerTest {
-    private Logger logger = LoggerFactory.getLogger(AuthenticationControllerTest.class);
+
+    //private Logger logger = LoggerFactory.getLogger(AuthenticationControllerTest.class);
 
     @Autowired
     private AuthenticationController authenticationController;
